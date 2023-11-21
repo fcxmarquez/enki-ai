@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
 
 const config: Config = {
   content: [
@@ -26,7 +27,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        primary: ["Inter", "sans-serif"],
+        primary: ["var(--font-primary)"],
         secondary: ["Mono", "monospace"],
       },
     },
