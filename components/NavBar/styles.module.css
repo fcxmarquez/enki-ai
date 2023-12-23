@@ -1,0 +1,30 @@
+.hamburger {
+  cursor: pointer;
+  width: 30px; /* Adjust size as needed */
+  height: 20px; /* Adjust size as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px; /* Adjust thickness as needed */
+  width: 100%;
+  background: #000; /* Color of hamburger lines */
+  transition: all 0.3s ease;
+}
+
+.hamburger.open .hamburger-top {
+  transform: rotate(45deg);
+  transform-origin: top left;
+}
+
+.hamburger.open .hamburger-middle {
+  opacity: 0;
+}
+
+.hamburger.open .hamburger-bottom {
+  transform: rotate(-45deg);
+  transform-origin: bottom left;
+}
