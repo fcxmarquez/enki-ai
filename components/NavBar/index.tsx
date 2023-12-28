@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import styles from "./styles.module.css";
+import { HamburgerButton } from "@/components/HamburgerButton";
 
 export const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    console.log(isOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+    console.log(isOpen);
   };
 
   useEffect(() => {
@@ -27,18 +29,9 @@ export const NavBar = () => {
     };
   }, []);
 
-  const menuIconClass = isOpen ? "open" : "";
-
   return (
-    <header className="h-12 bg-primary-light">
-      <button
-        className={`${styles.hamburger} ${menuIconClass} focus:outline-none`}
-        onClick={toggleMenu}
-      >
-        <span className={`${styles["hamburger-top"]} ${menuIconClass}`}></span>
-        <span className={`${styles["hamburger-middle"]} ${menuIconClass}`}></span>
-        <span className={`${styles["hamburger-bottom"]} ${menuIconClass}`}></span>
-      </button>
+    <header className="align-center flex h-12 items-center justify-between bg-primary-light">
+      <HamburgerButton isOpen={isOpen} toggleMenu={toggleMenu} />
       <nav
         ref={navRef}
         style={{ width: "80vw" }}
