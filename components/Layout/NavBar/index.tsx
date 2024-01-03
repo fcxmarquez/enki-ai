@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { HamburgerButton } from "@/components/HamburgerButton";
+import { HamburgerButton } from "@/components/Buttons/HamburgerButton";
+import SideNav from "@/components/Layout/SideNav";
 
 export const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,24 +33,7 @@ export const NavBar = () => {
   return (
     <header className="align-center flex h-12 items-center justify-between bg-primary-light">
       <HamburgerButton isOpen={isOpen} toggleMenu={toggleMenu} />
-      <nav
-        ref={navRef}
-        style={{ width: "80vw" }}
-        className={`fixed left-0 top-0 z-50 h-screen overflow-auto transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } bg-red-500`}
-      >
-        <div className="bg-red-500">
-          <ul>
-            <li>HI</li>
-          </ul>
-        </div>
-      </nav>
-      <div
-        className={`fixed inset-0 z-40 bg-black opacity-50 transition-opacity duration-300 ease-in-out ${
-          isOpen ? "opacity-50" : "pointer-events-none opacity-0"
-        }`}
-      ></div>
+      <SideNav ref={navRef} isOpen={isOpen} />
     </header>
   );
 };
