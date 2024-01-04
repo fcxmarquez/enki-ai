@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 /** @type {import('tailwindcss').Config} */
+import { breakpoints } from "./constants/breakpoints";
 
 const config: Config = {
   content: [
@@ -33,6 +34,7 @@ const config: Config = {
         secondary: ["Mono", "monospace"],
       },
     },
+    screens: breakpoints,
   },
   plugins: [],
 };
