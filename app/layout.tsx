@@ -20,12 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="pt-12">
-        <UIProvider>
-          <Providers>
+        <Providers>
+          <UIProvider>
             <NavBar />
-            <div className="desktop:pl-72">{children}</div>
-          </Providers>
-        </UIProvider>
+            <main className="desktop:pl-72">{children}</main>
+          </UIProvider>
+        </Providers>
       </body>
     </html>
   );

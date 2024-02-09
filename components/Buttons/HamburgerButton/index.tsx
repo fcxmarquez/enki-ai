@@ -9,7 +9,7 @@ type HamburgerButtonProps = {
 export const HamburgerButton: FC<HamburgerButtonProps> = ({ isOpen, toggleMenu }) => {
   return (
     <button
-      className={`${styles.hamburgerNew}  ${
+      className={`${styles.hamburgerNew} z-50 ${
         isOpen ? styles.open : ""
       } focus:outline-none`}
       onClick={toggleMenu}
