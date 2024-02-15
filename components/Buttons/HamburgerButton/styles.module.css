@@ -9,8 +9,6 @@
   cursor: pointer;
 }
 
-/* translate the hamburgerNew to the position right 20px */
-
 .hamburgerNew.open {
   transform: translateX(80vw);
   transition: 200ms ease-in-out;
@@ -41,7 +39,6 @@
 }
 
 .hamburgerNew.open span:nth-child(1) {
-  /* transform: rotate(135deg); */
   opacity: 0;
   transform: translateX(-20px);
 }

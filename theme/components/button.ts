@@ -1,7 +1,13 @@
-import { defineStyleConfig } from "@chakra-ui/styled-system";
+import { defineStyleConfig, defineStyle } from "@chakra-ui/styled-system";
+import { colors } from "@/constants/systemDesign";
+
+const buttonPrimary = defineStyle({
+  background: colors.button.default,
+});
 
 export const buttonTheme = defineStyleConfig({
-  baseStyle: {
-    bg: "red.500",
+  variants: {
+    buttonPrimary,
   },
+  defaultProps: { variant: "buttonPrimary" },
 });

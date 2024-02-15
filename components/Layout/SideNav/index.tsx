@@ -14,8 +14,8 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
   const navClass = isMobile
     ? `fixed left-0 top-0 z-50 h-screen overflow-auto transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } bg-primary-light`
-    : `h-screen overflow-auto bg-primary-light self-start fixed`;
+      } bg-background-sideNav`
+    : `h-screen overflow-auto bg-background-sideNav self-start fixed`;
 
   const navStyle = isMobile ? { width: "80vw" } : { width: "300px" };
 
@@ -33,7 +33,7 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
             </div>
           </Box>
         </Flex>
-        <Button variant="custom">Hi Im a button</Button>
+        <Button>Hi Im a button</Button>
         {/* Chat history */}
         <div>
           <div className="flex items-center justify-center">

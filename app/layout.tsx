@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <UIProvider>
             <NavBar />
-            <main className="desktop:pl-72">{children}</main>
+            <main className="flex grow flex-col desktop:pl-72">{children}</main>
           </UIProvider>
         </Providers>
       </body>
