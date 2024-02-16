@@ -40,7 +40,7 @@ export default function Home() {
         reprehenderit praesentium nobis numquam quis fugit velit, vero quos quibusdam vel
         nam tenetur in quas officia non. Rem, quaerat.
       </div>
-      <div className="sticky bottom-0 flex h-24 w-full justify-center bg-background-default pt-4">
+      <div className="sticky bottom-0 flex w-full flex-col items-center justify-center border-t bg-background-default p-6">
         <Input className="w-3/4 " placeholder="Let's to chat" />
       </div>
     </div>
