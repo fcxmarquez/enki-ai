@@ -1,9 +1,9 @@
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import { NavBar } from "@/components/Layout/NavBar";
 import { UIProvider } from "@/store/ui";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,11 +19,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <body className="pt-12">
+      <body className=" bg-background-default">
         <Providers>
           <UIProvider>
             <NavBar />
-            <main className="flex grow flex-col desktop:pl-72">{children}</main>
+            <main className="flex h-screen flex-col pt-12 desktop:pl-72">{children}</main>
           </UIProvider>
         </Providers>
       </body>
