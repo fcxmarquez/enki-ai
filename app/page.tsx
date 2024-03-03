@@ -1,5 +1,5 @@
-import { Input } from "@chakra-ui/react";
 import { BubbleChat } from "@/components/Feedback/BubbleChat";
+import { InputChat } from "@/components/InputChat";
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
           message="Hi, im a message"
           name="EnkiGPT"
         />
-        <BubbleChat
+        {/* <BubbleChat
           profileImg="https://source.unsplash.com/random"
           message="Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3."
           name="EnkiGPT"
@@ -29,10 +29,10 @@ export default function Home() {
           profileImg="https://source.unsplash.com/random"
           message="Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3. Hi, im a really really really very really loooong message multiplied by 3."
           name="EnkiGPT"
-        />
+        /> */}
       </div>
       <div className="sticky bottom-0 flex w-full flex-col items-center justify-center border-t bg-background-default p-6">
-        <Input className="w-3/4 " placeholder="Let's to chat" />
+        <InputChat />
       </div>
     </div>
   );
