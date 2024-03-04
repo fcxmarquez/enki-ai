@@ -1,6 +1,8 @@
 import { useViewMobile } from "@/hooks/useViewMobile";
 import { FC, ForwardedRef, forwardRef } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import { ConversationGroup } from "@/components/ConversationGroup";
+import { Conversation } from "@/components/Conversation";
 
 type SideNavProps = {
   isOpen: boolean;
@@ -19,8 +21,6 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
 
   const navStyle = isMobile ? { width: "80vw" } : undefined;
 
-  const chatHistoryBoxClassname = "flex items-center p-1";
-
   return (
     <>
       <nav ref={ref} style={navStyle} className={navClass}>
@@ -32,16 +32,14 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
           </div>
         </Flex>
         {/* Chat history */}
-        <Flex direction={"column"} className="p-4">
-          <Box className={chatHistoryBoxClassname}>
-            <div className="text-white">Chat history</div>
-          </Box>
-          <Box className={chatHistoryBoxClassname}>
-            <div className="text-white">Chat history</div>
-          </Box>
-          <Box className={chatHistoryBoxClassname}>
-            <div className="text-white">Chat history</div>
-          </Box>
+        <Flex direction={"column"} className="gap-4 p-4">
+          <ConversationGroup range={"Today"}>
+            <Conversation title={"Chat history"} selected />
+            <Conversation title={"Chat history"} />
+          </ConversationGroup>
+          <ConversationGroup range={"Yesterday"}>
+            <Conversation title={"Chat history"} />
+          </ConversationGroup>
         </Flex>
       </nav>
       {/* Close button */}

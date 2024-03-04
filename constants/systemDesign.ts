@@ -34,7 +34,8 @@ const brand = {
 export const colors = {
   brand,
   text: {
-    default: "#8A8A8A",
+    default: "#FFFFFF",
+    paragraph: darkPallete[300],
   },
   header: {
     default: brand.default,
@@ -42,6 +43,7 @@ export const colors = {
   background: {
     default: brand.default,
     sideNav: darkPallete[600],
+    conversation: darkPallete[400],
   },
   button: {
     default: brand.secondary,

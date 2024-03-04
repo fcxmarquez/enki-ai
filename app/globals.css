@@ -51,5 +51,16 @@ body::-webkit-scrollbar-button {
   background-color: transparent;
 }
 
-/* General Classes */
+/* text */
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-text-default;
+}
 
+/* General Classes */
