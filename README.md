@@ -5,3 +5,5 @@ This is a ChatGPT like app and aims to provide a better user experience among an
 ## Planned features
 
 Working on it.
+
+![299shots_so](https://github.com/fcxmarquez/enki-ai/assets/63473082/ab4cde1d-09e4-4873-9054-aa0284771dc6)
