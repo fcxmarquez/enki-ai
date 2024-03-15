@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 /** @type {import('tailwindcss').Config} */
-import { breakpoints } from "./constants/breakpoints";
-import { colors } from "./constants/systemDesign";
+import { breakpoints } from "./constants/systemDesign/breakpoints";
+import { colors } from "./constants/systemDesign/colors";
 
 const config: Config = {
   content: [

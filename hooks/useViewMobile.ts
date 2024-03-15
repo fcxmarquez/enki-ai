@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { breakpoints } from "@/constants/breakpoints";
+import { breakpoints } from "@/constants/systemDesign";
 
 export const useViewMobile = (toDesktop: boolean, viewport?: number) => {
   const [width, setWidth] = useState(0);

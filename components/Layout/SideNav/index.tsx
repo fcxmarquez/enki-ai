@@ -3,6 +3,8 @@ import { FC, ForwardedRef, forwardRef } from "react";
 import { Flex } from "@chakra-ui/react";
 import { ConversationGroup } from "@/components/ConversationGroup";
 import { Conversation } from "@/components/Conversation";
+import { HiMiniPencilSquare } from "react-icons/hi2";
+import { IoSettingsOutline } from "react-icons/io5";
 
 type SideNavProps = {
   isOpen: boolean;
@@ -21,18 +23,22 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
 
   const navStyle = isMobile ? { width: "80vw" } : undefined;
 
+  // todo: discuss with ai about the decision of separate each section into a component, is it necessary?
+
   return (
     <>
-      <nav ref={ref} style={navStyle} className={navClass}>
-        {/* The user profile */}
-        <Flex justify={"start"} className="p-4">
-          <div className="h-8 w-8 rounded-lg bg-red-500"></div>
-          <div className="ml-4 flex items-center justify-center">
-            <div className="text-white">Username</div>
+      <nav ref={ref} style={navStyle} className={`${navClass} flex flex-col`}>
+        {/* Header */}
+        <Flex className="direction flex-row justify-between p-4">
+          <div className="flex items-center justify-center">
+            <h1 className="text-xl italic">EnkiAI</h1>
+          </div>
+          <div className="flex items-center justify-center">
+            <HiMiniPencilSquare size={"1.5rem"} />
           </div>
         </Flex>
         {/* Chat history */}
-        <Flex direction={"column"} className="gap-4 p-4">
+        <Flex direction={"column"} className="grow gap-4 p-4">
           <ConversationGroup range={"Today"}>
             <Conversation title={"Chat history"} selected />
             <Conversation title={"Chat history"} />
@@ -40,6 +46,16 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
           <ConversationGroup range={"Yesterday"}>
             <Conversation title={"Chat history"} />
           </ConversationGroup>
+        </Flex>
+        {/* The user profile */}
+        <Flex className="center items-center p-4 pb-6">
+          <div className="flex grow">
+            <div className="h-8 w-8 rounded-lg bg-red-500"></div>
+            <div className="ml-4 flex items-center justify-center">
+              <div className="text-white">Username</div>
+            </div>
+          </div>
+          <IoSettingsOutline size={"1.5rem"} />
         </Flex>
       </nav>
       {/* Close button */}
