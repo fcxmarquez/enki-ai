@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 import { NavBar } from "@/components/Layout/NavBar";
 import { UIProvider } from "@/store/ui";
 import "./globals.css";
+import { ModalRender } from "@/components/Modals/ModalRender";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className=" bg-background-default">
         <Providers>
           <UIProvider>
+            <ModalRender />
             <NavBar />
             <main className="flex h-screen flex-col pt-12 desktop:pl-72">{children}</main>
           </UIProvider>

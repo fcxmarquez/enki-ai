@@ -17,7 +17,13 @@ const initialState: UIState = {
     message: "",
   },
   app: {
-    modals: {},
+    modal: {
+      isOpen: false,
+      children: <></>,
+    },
+    states: {
+      config: false,
+    },
   },
 };
 
@@ -35,24 +41,22 @@ const UIReducer = (state: UIState, action: UIAction): UIState => {
         ...state,
         app: {
           ...state.app,
-          modals: {
-            ...state.app.modals,
-            [action.modalId]: {
-              isOpen: true,
-              message: action.message,
-              title: action.title,
-            },
+          modal: {
+            isOpen: true,
+            children: action.children,
           },
         },
       };
     case ActionType.HIDE_MODAL:
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [action.modalId]: _, ...restModals } = state.app.modals;
       return {
         ...state,
         app: {
           ...state.app,
-          modals: restModals,
+          modal: {
+            isOpen: false,
+            children: <></>,
+          },
         },
       };
     case ActionType.SET_STATUS:
@@ -64,6 +68,7 @@ const UIReducer = (state: UIState, action: UIAction): UIState => {
           message: action.message,
         },
       };
+
     default:
       throw new Error(`Unhandled action type: ${action}`);
   }
@@ -82,20 +87,20 @@ export const useUI = () => {
   if (!context) {
     throw new Error("useUI must be used within a UIProvider");
   }
-  return context;
+  return context[0];
 };
 
 // Hook to use UI mutations
 export const useUIMutation = () => {
-  const [, dispatch] = useUI();
+  const [, dispatch] = useContext(UIContext);
 
   // Functions to dispatch actions
-  const showModal = (modalId: string, title: string, message: string) => {
-    dispatch({ type: ActionType.SHOW_MODAL, modalId, title, message });
+  const showModal = (children: JSX.Element) => {
+    dispatch({ type: ActionType.SHOW_MODAL, children });
   };
 
-  const hideModal = (modalId: string) => {
-    dispatch({ type: ActionType.HIDE_MODAL, modalId });
+  const hideModal = () => {
+    dispatch({ type: ActionType.HIDE_MODAL });
   };
 
   const setStatus = (

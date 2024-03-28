@@ -7,14 +7,11 @@ export enum ActionType {
 
 export interface ShowModalAction {
   type: ActionType.SHOW_MODAL;
-  modalId: string;
-  message: string;
-  title: string;
+  children: JSX.Element;
 }
 
 export interface HideModalAction {
   type: ActionType.HIDE_MODAL;
-  modalId: string;
 }
 
 export interface SetStatusAction {
@@ -25,19 +22,16 @@ export interface SetStatusAction {
 
 export type UIAction = ShowModalAction | HideModalAction | SetStatusAction;
 
-export // Define the state structure
-interface UIState {
+export interface UIState {
   data: {
     status: "idle" | "loading" | "success" | "error";
     message: string;
   };
   app: {
-    modals: {
-      [modalId: string]: {
-        isOpen: boolean;
-        message: string;
-        title: string;
-      };
+    modal: {
+      isOpen: boolean;
+      children: JSX.Element;
     };
+    states: object;
   };
 }
