@@ -1,5 +1,5 @@
 import { BubbleChat } from "@/components/Feedback/BubbleChat";
-import { InputChat } from "@/components/InputChat";
+import { InputChat } from "@/components/inputs/InputChat";
 
 const messageExample = `
 Certainly! Here's a sonnet for you:

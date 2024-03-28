@@ -44,6 +44,7 @@ export const colors = {
     default: brand.default,
     sideNav: darkPallete[600],
     conversation: darkPallete[400],
+    modal: darkPallete[500],
   },
   button: {
     default: brand.secondary,

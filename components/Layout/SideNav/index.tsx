@@ -4,7 +4,7 @@ import { Flex } from "@chakra-ui/react";
 import { ConversationGroup } from "@/components/ConversationGroup";
 import { Conversation } from "@/components/Conversation";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { IoSettingsOutline } from "react-icons/io5";
+import { UserProfile } from "@/components/UserProfile";
 
 type SideNavProps = {
   isOpen: boolean;
@@ -48,15 +48,7 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
           </ConversationGroup>
         </Flex>
         {/* The user profile */}
-        <Flex className="center items-center p-4 pb-6">
-          <div className="flex grow">
-            <div className="h-8 w-8 rounded-lg bg-red-500"></div>
-            <div className="ml-4 flex items-center justify-center">
-              <div className="text-white">Username</div>
-            </div>
-          </div>
-          <IoSettingsOutline size={"1.5rem"} />
-        </Flex>
+        <UserProfile username={"User"} />
       </nav>
       {/* Close button */}
       <div
