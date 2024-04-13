@@ -17,7 +17,7 @@ export const InputConfig: FC<InputConfigProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-col  gap-2">
       <label htmlFor={id} className="w-24 whitespace-nowrap">
         {label}
       </label>

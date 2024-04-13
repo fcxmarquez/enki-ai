@@ -15,11 +15,21 @@ type SideNavProps = {
 const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) => {
   const isMobile = useViewMobile(true);
 
+  const baseNavClass = "fixed left-0 top-0 h-screen overflow-auto bg-background-sideNav";
+  const mobileNavClass = "z-50 transition-transform duration-300 ease-in-out";
+  const desktopNavClass = "self-start w-72";
+
   const navClass = isMobile
-    ? `fixed left-0 top-0 z-50 h-screen overflow-auto transition-transform duration-300 ease-in-out ${
+    ? `${baseNavClass} ${mobileNavClass} ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } bg-background-sideNav`
-    : `fixed left-0 h-screen overflow-auto bg-background-sideNav self-start fixed w-72`;
+      }`
+    : `${baseNavClass} ${desktopNavClass}`;
+
+  const backdropStyle = {
+    backdropFilter: "blur(30px)",
+    WebkitBackdropFilter: "blur(30px)",
+    backgroundColor: "rgba(var(--background-navbar), 0.7)",
+  };
 
   const navStyle = isMobile ? { width: "80vw" } : undefined;
 
@@ -27,9 +37,13 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
 
   return (
     <>
-      <nav ref={ref} style={navStyle} className={`${navClass} flex flex-col`}>
+      <nav
+        ref={ref}
+        style={{ ...navStyle, ...backdropStyle }}
+        className={`${navClass} flex flex-col`}
+      >
         {/* Header */}
-        <Flex className="direction flex-row justify-between p-4">
+        <Flex className="flex-row justify-between p-4">
           <div className="flex items-center justify-center">
             <h1 className="text-xl italic">EnkiAI</h1>
           </div>

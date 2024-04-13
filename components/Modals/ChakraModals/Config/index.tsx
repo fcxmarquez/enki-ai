@@ -7,17 +7,17 @@ import {
 } from "@chakra-ui/react";
 import { InputConfig } from "@/components/inputs/InputConfig";
 
+const sectionClassName = "config-section mb-4 flex flex-col gap-4 pb-6";
+
 export const ModalConfig = () => {
   return (
     <ModalContent>
       <ModalHeader>Settings</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        <div className="config-section border-b-2 pb-2">
-          <h2>API Keys</h2>
-          <p>
-            <strong>Introduce your API keys here</strong>
-          </p>
+        <div className={sectionClassName}>
+          <h2 className="font-bold">API Keys</h2>
+          <p>Introduce your API keys here</p>
           <InputConfig
             label="OpenAI Key"
             id="openAIKey"
@@ -28,7 +28,19 @@ export const ModalConfig = () => {
             id="antropicKey"
             placeholder="Enter your Antropic Key"
           />
-          <Button>Save</Button>
+          <div className="flex w-full justify-start">
+            <Button width={"100%"} maxWidth={"100px"} size="sm">
+              Save
+            </Button>
+          </div>
+        </div>
+        <div className={sectionClassName}>
+          <h2 className="font-bold">Profile</h2>
+          <div className="flex w-full justify-start">
+            <Button width={"100%"} maxWidth={"100px"} size="sm">
+              Logout
+            </Button>
+          </div>
         </div>
       </ModalBody>
     </ModalContent>
