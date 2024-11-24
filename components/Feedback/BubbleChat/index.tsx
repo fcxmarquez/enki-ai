@@ -1,24 +1,28 @@
-import { Box } from "@chakra-ui/react";
-import Image from "next/image";
-
-export type BubbleChatProps = {
+interface BubbleChatProps {
   profileImg: string;
-  name: string;
   message: string;
-} & React.HTMLAttributes<HTMLDivElement>;
+  name: string;
+  isTyping?: boolean;
+}
 
-export const BubbleChat = (props: BubbleChatProps) => {
-  const { profileImg, name, message, ...rest } = props;
-
+export const BubbleChat = ({ profileImg, message, name, isTyping }: BubbleChatProps) => {
   return (
-    <Box className="flex gap-4" {...rest}>
-      <div className="relative h-10 w-10 shrink-0 tablet:h-12 tablet:w-12">
-        <Image src={profileImg} alt={name} className="rounded-full" fill />
+    <div className="flex items-start gap-4">
+      <img src={profileImg} alt={name} className="h-10 w-10 rounded-full object-cover" />
+      <div className="flex flex-col gap-1">
+        <span className="text-sm font-semibold">{name}</span>
+        <div className="bg-muted rounded-lg p-4">
+          {isTyping ? (
+            <div className="flex gap-1">
+              <span className="animate-bounce">.</span>
+              <span className="animate-bounce delay-100">.</span>
+              <span className="animate-bounce delay-200">.</span>
+            </div>
+          ) : (
+            <p className="whitespace-pre-wrap">{message}</p>
+          )}
+        </div>
       </div>
-      <div className="flex w-full grow flex-col px-1">
-        <p className="font-semibold">{name}</p>
-        <p>{message}</p>
-      </div>
-    </Box>
+    </div>
   );
 };
