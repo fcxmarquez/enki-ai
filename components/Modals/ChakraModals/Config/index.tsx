@@ -5,7 +5,7 @@ import {
   ModalCloseButton,
   Button,
 } from "@chakra-ui/react";
-import { InputConfig } from "@/components/inputs/InputConfig";
+import { InputConfig } from "@/components/Inputs/InputConfig";
 
 const sectionClassName = "config-section mb-4 flex flex-col gap-4 pb-6";
 

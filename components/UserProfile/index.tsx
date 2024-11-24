@@ -1,4 +1,4 @@
-import { useUI, useUIMutation } from "@/store/ui";
+import { useUI, useUIActions } from "@/store";
 import { Flex } from "@chakra-ui/react";
 import { FC } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -10,9 +10,8 @@ export type UserProfileProps = {
 };
 
 export const UserProfile: FC<UserProfileProps> = ({ username }) => {
-  const { app } = useUI();
-  const { modal } = app;
-  const { showModal, hideModal } = useUIMutation();
+  const { modal } = useUI();
+  const { showModal, hideModal } = useUIActions();
 
   const onSettingsClick = () => {
     if (modal.isOpen) return hideModal();

@@ -1,12 +1,11 @@
 "use client";
 
-import { useUI, useUIMutation } from "@/store/ui";
+import { useUI, useUIActions } from "@/store";
 import { Modal, ModalOverlay } from "@chakra-ui/react";
 
 export const ModalRender = () => {
-  const { hideModal } = useUIMutation();
-  const { app } = useUI();
-  const { modal } = app;
+  const { hideModal } = useUIActions();
+  const { modal } = useUI();
 
   return (
     <Modal isOpen={modal.isOpen} onClose={hideModal} isCentered size="xl">
