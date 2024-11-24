@@ -4,18 +4,26 @@ import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { IoMdSend } from "react-icons/io";
 import styles from "./styles.module.css";
 import { useState } from "react";
-import { useUIActions, useChatActions } from "@/store";
+import { useUIActions, useChatActions, useChat } from "@/store";
 import { useSendMessage } from "@/fetch/chat/mutations";
 
 export const InputChat = () => {
   const [message, setMessage] = useState("");
   const { setStatus } = useUIActions();
-  const { addMessage, setTyping } = useChatActions();
+  const { addMessage, setTyping, createNewConversation } = useChatActions();
+  const { currentConversationId } = useChat();
 
   const sendMessage = useSendMessage();
 
   const handleSubmit = async () => {
     if (!message.trim()) return;
+
+    let activeConversationId = currentConversationId;
+
+    // Create new conversation if none exists
+    if (!activeConversationId) {
+      activeConversationId = createNewConversation(message);
+    }
 
     // Add user message to chat immediately
     addMessage({

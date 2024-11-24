@@ -15,7 +15,8 @@ export const useStore = create<StoreState>()(
         name: "chat-store",
         partialize: (state) => ({
           chat: {
-            messages: state.chat.messages,
+            conversations: state.chat.conversations,
+            currentConversationId: state.chat.currentConversationId,
           },
         }),
       }
@@ -23,10 +24,9 @@ export const useStore = create<StoreState>()(
   )
 );
 
-// Selector hooks for better performance
+// Selector hooks
 export const useUI = () => useStore((state) => state.ui);
 
-// Split the actions into individual hooks for better memoization
 export const useUIActions = () => {
   const setStatus = useStore((state) => state.setStatus);
   const showModal = useStore((state) => state.showModal);
@@ -41,18 +41,36 @@ export const useUIActions = () => {
   };
 };
 
-export const useChat = () => useStore((state) => state.chat);
+export const useChat = () => {
+  const chat = useStore((state) => state.chat);
+  const currentConversation = useStore((state) =>
+    state.chat.conversations.find((conv) => conv.id === state.chat.currentConversationId)
+  );
+
+  return {
+    ...chat,
+    messages: currentConversation?.messages || [],
+  };
+};
 
 export const useChatActions = () => {
   const addMessage = useStore((state) => state.addMessage);
   const setTyping = useStore((state) => state.setTyping);
   const setChatError = useStore((state) => state.setChatError);
   const clearChat = useStore((state) => state.clearChat);
+  const createNewConversation = useStore((state) => state.createNewConversation);
+  const setCurrentConversation = useStore((state) => state.setCurrentConversation);
+  const updateConversationTitle = useStore((state) => state.updateConversationTitle);
+  const deleteConversation = useStore((state) => state.deleteConversation);
 
   return {
     addMessage,
     setTyping,
     setChatError,
     clearChat,
+    createNewConversation,
+    setCurrentConversation,
+    updateConversationTitle,
+    deleteConversation,
   };
 };
