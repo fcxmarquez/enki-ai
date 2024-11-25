@@ -32,7 +32,12 @@ export interface ChatSlice {
   deleteConversation: (conversationId: string) => void;
 }
 
-export const createChatSlice: StateCreator<StoreState, [], [], ChatSlice> = (set) => ({
+export const createChatSlice: StateCreator<
+  StoreState,
+  [["zustand/devtools", never]],
+  [],
+  ChatSlice
+> = (set) => ({
   chat: {
     conversations: [],
     currentConversationId: null,

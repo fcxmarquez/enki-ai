@@ -2,14 +2,16 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { createUISlice } from "./slices/uiSlice";
 import { createChatSlice } from "./slices/chatSlice";
+import { createConfigSlice } from "./slices/configSlice";
 import { StoreState } from "./types";
 
 export const useStore = create<StoreState>()(
   devtools(
     persist(
-      (...a) => ({
-        ...createUISlice(...a),
-        ...createChatSlice(...a),
+      (set, get, api) => ({
+        ...createUISlice(set, get, api),
+        ...createChatSlice(set, get, api),
+        ...createConfigSlice(set, get, api),
       }),
       {
         name: "chat-store",
@@ -18,6 +20,7 @@ export const useStore = create<StoreState>()(
             conversations: state.chat.conversations,
             currentConversationId: state.chat.currentConversationId,
           },
+          config: state.config,
         }),
       }
     )
@@ -31,13 +34,11 @@ export const useUIActions = () => {
   const setStatus = useStore((state) => state.setStatus);
   const showModal = useStore((state) => state.showModal);
   const hideModal = useStore((state) => state.hideModal);
-  const setConfig = useStore((state) => state.setConfig);
 
   return {
     setStatus,
     showModal,
     hideModal,
-    setConfig,
   };
 };
 
@@ -72,5 +73,19 @@ export const useChatActions = () => {
     setCurrentConversation,
     updateConversationTitle,
     deleteConversation,
+  };
+};
+
+export const useConfig = () => {
+  const config = useStore((state) => state.config);
+  const setConfig = useStore((state) => state.setConfig);
+  const clearConfig = useStore((state) => state.clearConfig);
+  const hasValidApiKey = useStore((state) => state.hasValidApiKey);
+
+  return {
+    config,
+    setConfig,
+    clearConfig,
+    hasValidApiKey,
   };
 };

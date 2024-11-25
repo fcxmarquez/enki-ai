@@ -1,16 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChatService } from "@/lib/langchain/chatService";
-import { env } from "@/lib/environment";
+import { useConfig } from "@/store";
+import { ModelType } from "@/store/types";
 
-// Initialize chat service
-const createChatService = () => {
-  console.log("env", env);
-  console.log("env.OPENAI_API_KEY", env.OPENAI_API_KEY);
-
-  if (!env.OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is not configured");
+// Initialize chat service with provided config
+const createChatService = (config: {
+  openAIKey?: string;
+  anthropicKey?: string;
+  selectedModel: ModelType;
+}) => {
+  if (!config.openAIKey && !config.anthropicKey) {
+    throw new Error("No API keys configured. Please add your API keys in settings.");
   }
-  return new ChatService(env.OPENAI_API_KEY);
+
+  return new ChatService({
+    openAIKey: config.openAIKey,
+    anthropicKey: config.anthropicKey,
+    selectedModel: config.selectedModel,
+  });
 };
 
 interface SendMessageVariables {
@@ -21,7 +28,8 @@ interface SendMessageVariables {
 
 export const useSendMessage = () => {
   const queryClient = useQueryClient();
-  const chatService = createChatService();
+  const { config } = useConfig();
+  const chatService = createChatService(config);
 
   return useMutation({
     mutationFn: async ({ message }: SendMessageVariables) => {

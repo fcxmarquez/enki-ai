@@ -4,7 +4,7 @@ import { Flex } from "@chakra-ui/react";
 import { ConversationGroup } from "@/components/ConversationGroup";
 import { Conversation } from "@/components/Conversation";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { HiTrash } from "react-icons/hi2";
+import { Trash2 } from "lucide-react";
 import { UserProfile } from "@/components/UserProfile";
 import { useChat, useChatActions } from "@/store";
 
@@ -12,6 +12,17 @@ type SideNavProps = {
   isOpen: boolean;
   onClickOutside?: () => void;
   ref?: ForwardedRef<HTMLDivElement>;
+};
+
+// Helper function to get the group key for a date
+const getGroupKey = (date: Date): string => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) return "Today";
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+  return "Previous 7 Days";
 };
 
 const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) => {
@@ -37,25 +48,14 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
     e: React.MouseEvent<HTMLButtonElement>,
     conversationId: string
   ) => {
-    e.stopPropagation(); // Prevent triggering the conversation selection
+    e.stopPropagation();
     deleteConversation(conversationId);
   };
 
   // Group conversations by date
   const groupedConversations = conversations.reduce<Record<string, typeof conversations>>(
     (groups, conv) => {
-      const date = new Date(conv.lastModified);
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      let groupKey = "Previous 7 Days";
-      if (date.toDateString() === today.toDateString()) {
-        groupKey = "Today";
-      } else if (date.toDateString() === yesterday.toDateString()) {
-        groupKey = "Yesterday";
-      }
-
+      const groupKey = getGroupKey(new Date(conv.lastModified));
       if (!groups[groupKey]) {
         groups[groupKey] = [];
       }
@@ -116,10 +116,12 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
                   </button>
                   <button
                     onClick={(e) => handleDeleteConversation(e, conv.id)}
-                    className="absolute right-2 rounded p-1 text-red-500 opacity-0 transition-opacity duration-200 hover:bg-red-500/10 group-hover:opacity-100"
+                    className={`absolute right-2 rounded p-1 text-white transition-opacity duration-200 hover:bg-red-500/10 ${
+                      isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}
                     aria-label="Delete conversation"
                   >
-                    <HiTrash size={"1.2rem"} />
+                    <Trash2 size={20} />
                   </button>
                 </div>
               ))}

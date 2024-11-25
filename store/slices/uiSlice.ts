@@ -1,23 +1,20 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
+import { UIState } from "../types";
 
 export interface UISlice {
-  ui: {
-    status: "idle" | "loading" | "success" | "error";
-    message: string;
-    modal: {
-      isOpen: boolean;
-      children: JSX.Element | null;
-    };
-    config: boolean;
-  };
-  setStatus: (status: UISlice["ui"]["status"], message: string) => void;
+  ui: UIState;
+  setStatus: (status: UIState["status"], message: string) => void;
   showModal: (children: JSX.Element) => void;
   hideModal: () => void;
-  setConfig: (value: boolean) => void;
 }
 
-export const createUISlice: StateCreator<StoreState, [], [], UISlice> = (set) => ({
+export const createUISlice: StateCreator<
+  StoreState,
+  [["zustand/devtools", never]],
+  [],
+  UISlice
+> = (set) => ({
   ui: {
     status: "idle",
     message: "",
@@ -25,7 +22,6 @@ export const createUISlice: StateCreator<StoreState, [], [], UISlice> = (set) =>
       isOpen: false,
       children: null,
     },
-    config: false,
   },
 
   setStatus: (status, message) =>
@@ -36,6 +32,4 @@ export const createUISlice: StateCreator<StoreState, [], [], UISlice> = (set) =>
 
   hideModal: () =>
     set((state) => ({ ui: { ...state.ui, modal: { isOpen: false, children: null } } })),
-
-  setConfig: (value) => set((state) => ({ ui: { ...state.ui, config: value } })),
 });
