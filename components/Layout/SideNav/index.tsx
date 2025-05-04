@@ -6,7 +6,7 @@ import { Conversation } from "@/components/Conversation";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { Trash2 } from "lucide-react";
 import { UserProfile } from "@/components/UserProfile";
-import { useChat, useChatActions } from "@/store";
+import { useChat, useChatActions, useUser } from "@/store";
 
 type SideNavProps = {
   isOpen: boolean;
@@ -29,7 +29,7 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
   const isMobile = useViewMobile(true);
   const { conversations, currentConversationId } = useChat();
   const { setCurrentConversation, deleteConversation } = useChatActions();
-
+  const { email } = useUser();
   const handleNewChat = () => {
     setCurrentConversation("");
     if (isMobile && onClickOutside) {
@@ -129,7 +129,7 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
           ))}
         </Flex>
 
-        <UserProfile username={"User"} />
+        <UserProfile username={email} />
       </nav>
 
       <div

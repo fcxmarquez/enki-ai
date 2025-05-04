@@ -12,9 +12,10 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { InputConfig } from "@/components/Inputs/InputConfig";
-import { useConfig } from "@/store";
+import { useConfig, useUserActions } from "@/store";
 import { useState } from "react";
 import { Config, ModelType } from "@/store/types";
+import { createClient } from "@/utils/supabase/client";
 
 const sectionClassName = "config-section mb-4 flex flex-col gap-4 pb-6";
 
@@ -33,12 +34,38 @@ const MODEL_OPTIONS = [
 
 export const ModalConfig = () => {
   const { config, setConfig, clearConfig } = useConfig();
+  const { setLogout } = useUserActions();
   const toast = useToast();
   const [formData, setFormData] = useState<Config>({
     openAIKey: config.openAIKey || "",
     anthropicKey: config.anthropicKey || "",
     selectedModel: config.selectedModel || "claude-3-5-sonnet-20241022",
   });
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to logout",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+
+    setLogout();
+    clearConfig();
+
+    toast({
+      title: "Success",
+      description: "Logged out successfully",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -79,17 +106,6 @@ export const ModalConfig = () => {
     toast({
       title: "Success",
       description: "Settings saved successfully",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
-  const handleLogout = () => {
-    clearConfig();
-    toast({
-      title: "Success",
-      description: "Logged out successfully",
       status: "success",
       duration: 3000,
       isClosable: true,
