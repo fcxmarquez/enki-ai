@@ -1,8 +1,14 @@
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
 
-export function middleware(req: NextRequest) {
-  return updateSession(req);
+export async function middleware(req: NextRequest) {
+  try {
+    return await updateSession(req);
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return NextResponse.next();
+  }
 }
 
 export const config = {
