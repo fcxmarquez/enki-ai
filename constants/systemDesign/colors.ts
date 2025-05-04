@@ -26,6 +26,20 @@ const purplePallete = {
   950: "#0C021A",
 };
 
+const yellowPallete = {
+  50: "#FFFDE7",
+  100: "#FFF9C4",
+  200: "#FFF59D", 
+  300: "#FFF176",
+  400: "#FFEE58",
+  500: "#FFEB3B", // Main yellow
+  600: "#FDD835",
+  700: "#FBC02D",
+  800: "#F9A825",
+  900: "#F57F17",
+  950: "#F4511E",
+};
+
 const brand = {
   default: darkPallete[950],
   secondary: purplePallete[500],
@@ -39,7 +53,7 @@ export const colors = {
     inverted: darkPallete[900],
   },
   header: {
-    default: brand.default,
+    default: yellowPallete[500],
   },
   background: {
     default: darkPallete[950],
