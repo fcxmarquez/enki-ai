@@ -1,33 +1,45 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-export async function updateSession(req: NextRequest) {
-  const res = NextResponse.next();
+export async function updateSession(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
 
-  // Create a server client with cookies configured
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll: () => req.cookies.getAll(),
-        setAll: (cookies) =>
-          cookies.forEach(({ name, value, options }) =>
-            res.cookies.set({ name, value, ...options })
-          ),
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
       },
     }
   );
 
-  // Forces a refresh if the JWT is expired
+  // Do not run code between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !req.nextUrl.pathname.startsWith("/auth")) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+  if (!user && !request.nextUrl.pathname.startsWith("/auth")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
   }
 
-  return res;
+  // IMPORTANT: You *must* return the supabaseResponse object as is.
+  return supabaseResponse;
 }
