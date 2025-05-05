@@ -1,6 +1,7 @@
 import { UISlice } from "./slices/uiSlice";
 import { ChatSlice } from "./slices/chatSlice";
 import { ConfigSlice } from "./slices/configSlice";
+import { UserSlice } from "./slices/userSlice";
 
 export type ModelType = "claude-3-5-sonnet-20241022" | "gpt-4o-mini";
 
@@ -19,4 +20,4 @@ export interface UIState {
   };
 }
 
-export type StoreState = UISlice & ChatSlice & ConfigSlice;
+export type StoreState = UISlice & ChatSlice & ConfigSlice & UserSlice;

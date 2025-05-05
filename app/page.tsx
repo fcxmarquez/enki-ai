@@ -15,7 +15,9 @@ import {
 } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { ModalConfig } from "@/components/Modals/ChakraModals/Config";
+import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
+import { hasActiveSession } from "@/utils/supabase/session";
 
 export default function Home() {
   const { messages, isTyping } = useChat();
@@ -23,12 +25,29 @@ export default function Home() {
   const { showModal } = useUIActions();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [hasSession, setHasSession] = useState<boolean | null>(null);
+
+  // Check for active session
+  useEffect(() => {
+    const checkSession = async () => {
+      const sessionExists = await hasActiveSession();
+      setHasSession(sessionExists);
+
+      // If no session, show login modal
+      if (!sessionExists) {
+        showModal(<ModalLogin />);
+      }
+    };
+
+    if (isMounted) {
+      checkSession();
+    }
+  }, [isMounted, showModal]);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Auto scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -36,6 +55,31 @@ export default function Home() {
   // Prevent hydration issues by not rendering until client-side
   if (!isMounted) {
     return null;
+  }
+
+  if (hasSession === null) {
+    return (
+      <div className="flex h-full items-center justify-center p-4">
+        <Alert
+          status="info"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="auto"
+          className="max-w-md rounded-lg"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            Loading...
+          </AlertTitle>
+          <AlertDescription maxWidth="sm" mb={4}>
+            Checking authentication status...
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
   if (!hasValidApiKey()) {

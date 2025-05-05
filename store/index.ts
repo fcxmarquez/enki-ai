@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 import { createUISlice } from "./slices/uiSlice";
 import { createChatSlice } from "./slices/chatSlice";
 import { createConfigSlice } from "./slices/configSlice";
+import { createUserSlice } from "./slices/userSlice";
 import { StoreState } from "./types";
 
 export const useStore = create<StoreState>()(
@@ -12,6 +13,7 @@ export const useStore = create<StoreState>()(
         ...createUISlice(set, get, api),
         ...createChatSlice(set, get, api),
         ...createConfigSlice(set, get, api),
+        ...createUserSlice(set, get, api),
       }),
       {
         name: "chat-store",
@@ -88,4 +90,16 @@ export const useConfig = () => {
     clearConfig,
     hasValidApiKey,
   };
+};
+
+export const useUser = () => {
+  return useStore((state) => state.user);
+};
+
+export const useUserActions = () => {
+  const setIsSignedIn = useStore((state) => state.setIsSignedIn);
+  const setUserEmail = useStore((state) => state.setUserEmail);
+  const setLogout = useStore((state) => state.setLogout);
+
+  return { setIsSignedIn, setUserEmail, setLogout };
 };
