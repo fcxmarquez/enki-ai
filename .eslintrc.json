@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "tailwindcss", "cypress"],
+  "plugins": ["@typescript-eslint", "cypress"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
@@ -17,8 +17,7 @@
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
     "plugin:sonarjs/recommended",
-    "plugin:security/recommended",
-    "plugin:tailwindcss/recommended"
+    "plugin:security/recommended"
   ],
   "overrides": [
     {
@@ -64,7 +63,6 @@
     "import/prefer-default-export": "off",
     "sonarjs/no-duplicate-string": "off",
     "@typescript-eslint/no-unused-vars": 2,
-    "tailwindcss/no-custom-classname": "off",
     "sonarjs/cognitive-complexity": ["error", 21]
   },
   "settings": {

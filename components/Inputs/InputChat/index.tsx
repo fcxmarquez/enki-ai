@@ -106,7 +106,7 @@ export const InputChat = () => {
     <div className="relative">
       <InputGroup size="lg">
         <Input
-          className="min-h-[56px] rounded-xl border-0 pl-4 pr-14 shadow-sm"
+          className="min-h-[56px] rounded-xl border-0 pl-4 pr-14 shadow-xs"
           style={{
             backgroundColor: colors.background.input.dark,
             color: colors.text.default,

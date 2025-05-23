@@ -1,81 +1,149 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap");
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap')
+layer(utilities);
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-mobile: 375px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-large-desktop: 1440px;
+
+  --color-brand-default: #0d0d0d;
+  --color-brand-secondary: #7415ff;
+
+  --color-text-default: #ededed;
+  --color-text-paragraph: #cccccc;
+  --color-text-inverted: #1a1a1a;
+
+  --color-header-default: #0d0d0d;
+
+  --color-background-default: #0d0d0d;
+  --color-background-side-nav: #1a1a1a;
+
+  --color-background-conversation-light: #f7f7f7;
+  --color-background-conversation-dark: #1a1a1a;
+
+  --color-background-input-light: #ededed;
+  --color-background-input-dark: #333333;
+
+  --color-background-modal: #1a1a1a;
+
+  --color-button-default: #7415ff;
+  --color-button-hover: #5d11cc;
+
+  --color-chat-user-background: #7415ff;
+  --color-chat-user-text: #f7f7f7;
+
+  --color-chat-assistant-background-light: #f7f7f7;
+  --color-chat-assistant-background-dark: #1a1a1a;
+
+  --color-chat-assistant-text-light: #1a1a1a;
+  --color-chat-assistant-text-dark: #f7f7f7;
+
+  --font-primary: var(--font-primary);
+  --font-secondary: Mono, monospace;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  min-height: 100vh;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  text-wrap: balance;
+@layer utilities {
+  :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+  }
 
-  scrollbar-width: thin;
-  scrollbar-color: #888 transparent;
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --foreground-rgb: 255, 255, 255;
+      --background-start-rgb: 0, 0, 0;
+      --background-end-rgb: 0, 0, 0;
+    }
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    text-wrap: balance;
+
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+  }
+
+  /* Scrollbar styles */
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 20px;
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  body::-webkit-scrollbar-button {
+    background-color: transparent;
+  }
+
+  /* text */
+  p,
+  a,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-text-default;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  /* General Classes */
 }
-
-/* Scrollbar styles */
-body::-webkit-scrollbar {
-  width: 10px;
-}
-
-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-body::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 20px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-body::-webkit-scrollbar-button {
-  background-color: transparent;
-}
-
-/* text */
-p,
-a,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply text-text-default;
-}
-
-h1 {
-  @apply text-2xl;
-}
-
-h2 {
-  @apply text-xl;
-}
-
-h3 {
-  @apply text-lg;
-}
-
-/* General Classes */
 
 @layer base {
   :root {
