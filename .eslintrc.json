@@ -1,5 +1,6 @@
 {
   "root": true,
+  "ignorePatterns": ["db/migrations/**/*"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
