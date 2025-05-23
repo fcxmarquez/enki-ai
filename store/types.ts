@@ -16,7 +16,7 @@ export interface UIState {
   message: string;
   modal: {
     isOpen: boolean;
-    children: JSX.Element | null;
+    children: React.JSX.Element | null;
   };
 }
 

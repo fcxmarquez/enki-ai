@@ -5,7 +5,7 @@ import { UIState } from "../types";
 export interface UISlice {
   ui: UIState;
   setStatus: (status: UIState["status"], message: string) => void;
-  showModal: (children: JSX.Element) => void;
+  showModal: (children: React.JSX.Element) => void;
   hideModal: () => void;
 }
 

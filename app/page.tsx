@@ -160,7 +160,7 @@ export default function Home() {
         <div ref={messagesEndRef} />
       </Box>
       <Box
-        className="border-t backdrop-blur-sm"
+        className="border-t backdrop-blur-xs"
         style={{
           backgroundColor: colors.background.conversation.dark,
           borderColor: colors.background.conversation.dark,
