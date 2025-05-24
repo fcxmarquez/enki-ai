@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["db/migrations/**/*"],
+  "ignorePatterns": ["db/migrations/**/*", "stories/**/*", ".storybook/**/*"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
@@ -16,7 +16,8 @@
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
     "plugin:sonarjs/recommended",
-    "plugin:security/recommended"
+    "plugin:security/recommended",
+    "plugin:storybook/recommended"
   ],
   "overrides": [
     {
