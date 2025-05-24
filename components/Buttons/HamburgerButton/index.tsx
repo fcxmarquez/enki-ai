@@ -11,7 +11,7 @@ export const HamburgerButton: FC<HamburgerButtonProps> = ({ isOpen, toggleMenu }
     <button
       className={`${styles.hamburgerNew} z-50 ${
         isOpen ? styles.open : ""
-      } focus:outline-none`}
+      } focus:outline-hidden`}
       onClick={toggleMenu}
     >
       <span></span>

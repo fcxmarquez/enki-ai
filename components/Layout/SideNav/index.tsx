@@ -65,7 +65,7 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
     {}
   );
 
-  const baseNavClass = "fixed left-0 top-0 h-screen overflow-auto bg-background-sideNav";
+  const baseNavClass = "fixed left-0 top-0 h-screen overflow-auto bg-background-side-nav";
   const mobileNavClass = "z-50 transition-transform duration-300 ease-in-out";
   const desktopNavClass = "self-start w-72";
 
