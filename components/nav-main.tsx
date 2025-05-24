@@ -3,6 +3,12 @@
 import { type LucideIcon } from "lucide-react";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
+/**
+ * Renders a sidebar navigation menu with a list of items, each displaying an icon and title.
+ *
+ * @param items - Array of navigation items, each with a title, icon, and click handler.
+ * @returns A sidebar menu component populated with the provided navigation items.
+ */
 export function NavMain({
   items,
 }: {

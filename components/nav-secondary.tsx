@@ -10,6 +10,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+/**
+ * Renders a secondary navigation sidebar group with menu items, each displaying an icon, title, link, and optional badge.
+ *
+ * @param items - Array of navigation items, each with a title, URL, icon component, and optional badge to display.
+ */
 export function NavSecondary({
   items,
   ...props

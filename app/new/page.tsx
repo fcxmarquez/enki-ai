@@ -9,6 +9,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
+/**
+ * Renders a page layout with a sidebar, header, breadcrumb navigation, and main content area.
+ *
+ * The layout includes a sidebar with toggle functionality, a header with breadcrumb navigation labeled "Project Management & Task Tracking," navigation action buttons, and two styled content blocks centered within the main area.
+ */
 export default function Page() {
   return (
     <SidebarProvider>

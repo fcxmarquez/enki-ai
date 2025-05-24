@@ -19,6 +19,13 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+/**
+ * Renders a sidebar group labeled "Favorites" with a list of favorite items and associated actions.
+ *
+ * Each favorite item displays an emoji and name as a clickable link, along with a dropdown menu for actions such as removing from favorites, copying the link, opening in a new tab, and deleting. The dropdown menu's position and alignment adapt based on whether the sidebar is in mobile mode. A "More" menu item is displayed at the end of the list.
+ *
+ * @param favorites - Array of favorite items, each containing a name, URL, and emoji to display.
+ */
 export function NavFavorites({
   favorites,
 }: {
