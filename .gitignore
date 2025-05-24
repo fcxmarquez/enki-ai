@@ -40,3 +40,4 @@ ai/
 
 # environment
 .env
+*storybook.log
