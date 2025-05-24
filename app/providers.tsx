@@ -7,6 +7,13 @@ import { ErrorBoundary } from "react-error-boundary";
 import { hasActiveSession, getUser } from "@/utils/supabase/session";
 import { useUserActions } from "@/store";
 
+/**
+ * Wraps child components with global providers for error handling and React Query state management.
+ *
+ * Initializes user authentication state on mount and provides error boundaries and React Query context to all descendants.
+ *
+ * @param children - The React nodes to be rendered within the provider context.
+ */
 export function Providers({ children }: { children: React.ReactNode }) {
   const { setIsSignedIn, setUserEmail } = useUserActions();
 

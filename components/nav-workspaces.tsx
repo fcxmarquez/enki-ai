@@ -18,6 +18,14 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
+/**
+ * Renders a sidebar navigation group for multiple workspaces, each with collapsible menus and page submenus.
+ *
+ * Displays a labeled "Workspaces" section where each workspace is shown as a collapsible menu item with its emoji and name. Expanding a workspace reveals its associated pages, each with their own emoji and name. Includes action buttons for workspace-level actions and a static "More" menu item at the end.
+ *
+ * @param workspaces - An array of workspace objects, each containing a name, emoji, and an array of pages with their own names and emojis.
+ * @returns A JSX element representing the sidebar navigation for the provided workspaces.
+ */
 export function NavWorkspaces({
   workspaces,
 }: {

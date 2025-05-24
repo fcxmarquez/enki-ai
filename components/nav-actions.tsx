@@ -94,6 +94,11 @@ const data = [
   ],
 ];
 
+/**
+ * Renders a navigation action bar with interactive controls, including a popover menu of grouped actions.
+ *
+ * Displays a static label, a star icon button, and a menu button that opens a sidebar with multiple groups of menu items. The popover menu is initially open on mount and can be toggled by the user.
+ */
 export function NavActions() {
   const [isOpen, setIsOpen] = React.useState(false);
 

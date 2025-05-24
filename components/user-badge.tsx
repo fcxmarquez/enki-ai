@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
+/**
+ * Renders a user badge with a dropdown menu for user actions.
+ *
+ * Displays the user's email and provides menu options such as "Settings", "Archive", and "Logout" within a sidebar menu interface.
+ *
+ * @param user - The user information, including email and avatar.
+ */
 export function UserBadge({
   user,
 }: {

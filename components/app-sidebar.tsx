@@ -228,6 +228,13 @@ const data = {
   ],
 };
 
+/**
+ * Renders the application sidebar with user information, navigation, favorites, and workspaces.
+ *
+ * Displays a structured sidebar UI including a user badge, main and secondary navigation, favorite items, and workspace groups, using static data.
+ *
+ * @param props - Additional properties forwarded to the root {@link Sidebar} component.
+ */
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="border-r-0" {...props}>
