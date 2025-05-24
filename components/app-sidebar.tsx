@@ -2,19 +2,13 @@
 
 import * as React from "react";
 import {
-  Blocks,
-  Calendar,
-  MessageCircleQuestion,
   SquarePen,
-  Settings2,
-  Trash2,
   Search,
 } from "lucide-react";
 
 import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavWorkspaces } from "@/components/nav-workspaces";
+import { NavChats } from "@/components/nav-chats";
 import { UserBadge } from "@/components/user-badge";
 import {
   Sidebar,
@@ -40,188 +34,61 @@ const data = {
       icon: Search,
     },
   ],
-  navSecondary: [
-    {
-      title: "Calendar",
-      url: "#",
-      icon: Calendar,
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-    },
-    {
-      title: "Templates",
-      url: "#",
-      icon: Blocks,
-    },
-    {
-      title: "Trash",
-      url: "#",
-      icon: Trash2,
-    },
-    {
-      title: "Help",
-      url: "#",
-      icon: MessageCircleQuestion,
-    },
-  ],
   favorites: [
     {
       name: "Project Management & Task Tracking",
       url: "#",
-      emoji: "📊",
     },
     {
       name: "Family Recipe Collection & Meal Planning",
       url: "#",
-      emoji: "🍳",
     },
     {
       name: "Fitness Tracker & Workout Routines",
       url: "#",
-      emoji: "💪",
-    },
-    {
-      name: "Book Notes & Reading List",
-      url: "#",
-      emoji: "📚",
-    },
-    {
-      name: "Sustainable Gardening Tips & Plant Care",
-      url: "#",
-      emoji: "🌱",
-    },
-    {
-      name: "Language Learning Progress & Resources",
-      url: "#",
-      emoji: "🗣️",
-    },
-    {
-      name: "Home Renovation Ideas & Budget Tracker",
-      url: "#",
-      emoji: "🏠",
-    },
-    {
-      name: "Personal Finance & Investment Portfolio",
-      url: "#",
-      emoji: "💰",
-    },
-    {
-      name: "Movie & TV Show Watchlist with Reviews",
-      url: "#",
-      emoji: "🎬",
-    },
-    {
-      name: "Daily Habit Tracker & Goal Setting",
-      url: "#",
-      emoji: "✅",
     },
   ],
-  workspaces: [
+  chats: [
     {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
+      period: "Today",
+      items: [
         {
-          name: "Daily Journal & Reflection",
+          name: "How to implement authentication in Next.js",
           url: "#",
-          emoji: "📔",
         },
         {
-          name: "Health & Wellness Tracker",
+          name: "React state management best practices",
           url: "#",
-          emoji: "🍏",
         },
         {
-          name: "Personal Growth & Learning Goals",
+          name: "TypeScript generic types explained",
           url: "#",
-          emoji: "🌟",
         },
       ],
     },
     {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
+      period: "Yesterday",
+      items: [
         {
-          name: "Career Objectives & Milestones",
+          name: "CSS Grid vs Flexbox comparison",
           url: "#",
-          emoji: "🎯",
         },
         {
-          name: "Skill Acquisition & Training Log",
+          name: "Database optimization techniques",
           url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
         },
       ],
     },
     {
-      name: "Creative Projects",
-      emoji: "🎨",
-      pages: [
+      period: "Previous 7 days",
+      items: [
         {
-          name: "Writing Ideas & Story Outlines",
+          name: "API design principles and patterns",
           url: "#",
-          emoji: "✍️",
         },
         {
-          name: "Art & Design Portfolio",
+          name: "Docker containerization guide",
           url: "#",
-          emoji: "🖼️",
-        },
-        {
-          name: "Music Composition & Practice Log",
-          url: "#",
-          emoji: "🎵",
-        },
-      ],
-    },
-    {
-      name: "Home Management",
-      emoji: "🏡",
-      pages: [
-        {
-          name: "Household Budget & Expense Tracking",
-          url: "#",
-          emoji: "💰",
-        },
-        {
-          name: "Home Maintenance Schedule & Tasks",
-          url: "#",
-          emoji: "🔧",
-        },
-        {
-          name: "Family Calendar & Event Planning",
-          url: "#",
-          emoji: "📅",
-        },
-      ],
-    },
-    {
-      name: "Travel & Adventure",
-      emoji: "🧳",
-      pages: [
-        {
-          name: "Trip Planning & Itineraries",
-          url: "#",
-          emoji: "🗺️",
-        },
-        {
-          name: "Travel Bucket List & Inspiration",
-          url: "#",
-          emoji: "🌎",
-        },
-        {
-          name: "Travel Journal & Photo Gallery",
-          url: "#",
-          emoji: "📸",
         },
       ],
     },
@@ -229,9 +96,9 @@ const data = {
 };
 
 /**
- * Renders the application sidebar with user information, navigation, favorites, and workspaces.
+ * Renders the application sidebar with user information, navigation, favorites, and chat history.
  *
- * Displays a structured sidebar UI including a user badge, main and secondary navigation, favorite items, and workspace groups, using static data.
+ * Displays a structured sidebar UI including a user badge, main navigation, favorite items, and chat history grouped by time periods, using static data.
  *
  * @param props - Additional properties forwarded to the root {@link Sidebar} component.
  */
@@ -244,8 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavChats chats={data.chats} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

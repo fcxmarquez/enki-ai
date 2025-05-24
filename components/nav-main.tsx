@@ -24,7 +24,7 @@ export function NavMain({
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={false} onClick={item.onClick}>
             <div>
-              <item.icon />
+              <item.icon className="text-muted-foreground" />
               <span>{item.title}</span>
             </div>
           </SidebarMenuButton>

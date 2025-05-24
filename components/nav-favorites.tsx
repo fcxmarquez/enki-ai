@@ -1,12 +1,11 @@
 "use client";
 
-import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2 } from "lucide-react";
+import { Folder, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -22,9 +21,9 @@ import {
 /**
  * Renders a sidebar group labeled "Favorites" with a list of favorite items and associated actions.
  *
- * Each favorite item displays an emoji and name as a clickable link, along with a dropdown menu for actions such as removing from favorites, copying the link, opening in a new tab, and deleting. The dropdown menu's position and alignment adapt based on whether the sidebar is in mobile mode. A "More" menu item is displayed at the end of the list.
+ * Each favorite item displays a folder icon and name as a clickable link, along with a dropdown menu for deleting the item. The dropdown menu's position and alignment adapt based on whether the sidebar is in mobile mode.
  *
- * @param favorites - Array of favorite items, each containing a name, URL, and emoji to display.
+ * @param favorites - Array of favorite items, each containing a name and URL to display.
  */
 export function NavFavorites({
   favorites,
@@ -32,7 +31,6 @@ export function NavFavorites({
   favorites: {
     name: string;
     url: string;
-    emoji: string;
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -45,7 +43,7 @@ export function NavFavorites({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url} title={item.name}>
-                <span>{item.emoji}</span>
+                <Folder className="text-muted-foreground" />
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
@@ -62,20 +60,6 @@ export function NavFavorites({
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
-                  <StarOff className="text-muted-foreground" />
-                  <span>Remove from Favorites</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link className="text-muted-foreground" />
-                  <span>Copy Link</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <ArrowUpRight className="text-muted-foreground" />
-                  <span>Open in New Tab</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
                   <Trash2 className="text-muted-foreground" />
                   <span>Delete</span>
                 </DropdownMenuItem>
@@ -83,12 +67,6 @@ export function NavFavorites({
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );
