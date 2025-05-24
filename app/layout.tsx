@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
-import { NavBar } from "@/components/Layout/NavBar";
 import "./globals.css";
 import { ModalRender } from "@/components/Modals/ModalRender";
 
@@ -19,11 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${inter.className} bg-background-default`}>
+      <body className={`${inter.className} `}>
         <Providers>
           <ModalRender />
-          <NavBar />
-          <main className="flex h-screen flex-col pt-12 desktop:pl-72">{children}</main>
+          {children}
         </Providers>
       </body>
     </html>
