@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Link, MoreHorizontal, StarOff, Trash2 } from "lucide-react";
+import { Folder, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -45,7 +45,9 @@ export function NavFavorites({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url} title={item.name}>
-                <span>{item.emoji}</span>
+                <div className="flex size-6 items-center justify-center">
+                  <Folder className="size-4 shrink-0" />
+                </div>
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
@@ -62,21 +64,9 @@ export function NavFavorites({
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuItem>
-                  <StarOff className="text-muted-foreground" />
-                  <span>Remove from Favorites</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Link className="text-muted-foreground" />
-                  <span>Copy Link</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <ArrowUpRight className="text-muted-foreground" />
-                  <span>Open in New Tab</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
+                  <div className="flex size-6 items-center justify-center">
+                    <Trash2 className="size-4 shrink-0 text-muted-foreground" />
+                  </div>
                   <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

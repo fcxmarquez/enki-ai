@@ -13,8 +13,7 @@ import {
 
 import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavWorkspaces } from "@/components/nav-workspaces";
+import { NavChatHistory } from "@/components/nav-chat-history";
 import { UserBadge } from "@/components/user-badge";
 import {
   Sidebar,
@@ -83,145 +82,48 @@ const data = {
       url: "#",
       emoji: "💪",
     },
-    {
-      name: "Book Notes & Reading List",
-      url: "#",
-      emoji: "📚",
-    },
-    {
-      name: "Sustainable Gardening Tips & Plant Care",
-      url: "#",
-      emoji: "🌱",
-    },
-    {
-      name: "Language Learning Progress & Resources",
-      url: "#",
-      emoji: "🗣️",
-    },
-    {
-      name: "Home Renovation Ideas & Budget Tracker",
-      url: "#",
-      emoji: "🏠",
-    },
-    {
-      name: "Personal Finance & Investment Portfolio",
-      url: "#",
-      emoji: "💰",
-    },
-    {
-      name: "Movie & TV Show Watchlist with Reviews",
-      url: "#",
-      emoji: "🎬",
-    },
-    {
-      name: "Daily Habit Tracker & Goal Setting",
-      url: "#",
-      emoji: "✅",
-    },
   ],
-  workspaces: [
+  chatHistory: [
     {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
+      period: "Today",
+      chats: [
         {
-          name: "Daily Journal & Reflection",
+          title: "AI Model Comparison Research",
           url: "#",
-          emoji: "📔",
         },
         {
-          name: "Health & Wellness Tracker",
+          title: "Project Timeline Planning",
           url: "#",
-          emoji: "🍏",
         },
         {
-          name: "Personal Growth & Learning Goals",
+          title: "Code Review Discussion",
           url: "#",
-          emoji: "🌟",
         },
       ],
     },
     {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
+      period: "Yesterday",
+      chats: [
         {
-          name: "Career Objectives & Milestones",
+          title: "Marketing Strategy Brainstorm",
           url: "#",
-          emoji: "🎯",
         },
         {
-          name: "Skill Acquisition & Training Log",
+          title: "Bug Fixing Session",
           url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
         },
       ],
     },
     {
-      name: "Creative Projects",
-      emoji: "🎨",
-      pages: [
+      period: "Previous 7 days",
+      chats: [
         {
-          name: "Writing Ideas & Story Outlines",
+          title: "Product Feature Analysis",
           url: "#",
-          emoji: "✍️",
         },
         {
-          name: "Art & Design Portfolio",
+          title: "Team Collaboration Notes",
           url: "#",
-          emoji: "🖼️",
-        },
-        {
-          name: "Music Composition & Practice Log",
-          url: "#",
-          emoji: "🎵",
-        },
-      ],
-    },
-    {
-      name: "Home Management",
-      emoji: "🏡",
-      pages: [
-        {
-          name: "Household Budget & Expense Tracking",
-          url: "#",
-          emoji: "💰",
-        },
-        {
-          name: "Home Maintenance Schedule & Tasks",
-          url: "#",
-          emoji: "🔧",
-        },
-        {
-          name: "Family Calendar & Event Planning",
-          url: "#",
-          emoji: "📅",
-        },
-      ],
-    },
-    {
-      name: "Travel & Adventure",
-      emoji: "🧳",
-      pages: [
-        {
-          name: "Trip Planning & Itineraries",
-          url: "#",
-          emoji: "🗺️",
-        },
-        {
-          name: "Travel Bucket List & Inspiration",
-          url: "#",
-          emoji: "🌎",
-        },
-        {
-          name: "Travel Journal & Photo Gallery",
-          url: "#",
-          emoji: "📸",
         },
       ],
     },
@@ -244,8 +146,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavChatHistory chatHistory={data.chatHistory} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
