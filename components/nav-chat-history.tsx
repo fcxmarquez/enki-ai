@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
@@ -32,17 +33,17 @@ export function NavChatHistory({
           <SidebarGroupLabel>{dateLabel}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {chatsInGroup.map((chat) => (
-                <SidebarMenuItem key={chat.title}>
-                  <SidebarMenuSubItem>
+              <SidebarMenuSub>
+                {chatsInGroup.map((chat) => (
+                  <SidebarMenuSubItem key={chat.title}>
                     <SidebarMenuSubButton asChild>
                       <button>
                         <span>{chat.title}</span>
                       </button>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
-                </SidebarMenuItem>
-              ))}
+                ))}
+              </SidebarMenuSub>
             </SidebarMenu>
           </SidebarGroupContent>
         </div>
