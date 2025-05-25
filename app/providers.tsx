@@ -2,10 +2,13 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+// TEMP: Disabled for rebuild - FCX-30
+// import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { hasActiveSession, getUser } from "@/utils/supabase/session";
-import { useUserActions } from "@/store";
+// TEMP: Disabled for rebuild - FCX-30
+// import { hasActiveSession, getUser } from "@/utils/supabase/session";
+// import { useUserActions } from "@/store";
 
 /**
  * Wraps child components with global providers for error handling and React Query state management.
@@ -15,7 +18,8 @@ import { useUserActions } from "@/store";
  * @param children - The React nodes to be rendered within the provider context.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
-  const { setIsSignedIn, setUserEmail } = useUserActions();
+  // TEMP: Disabled for rebuild - FCX-30
+  // const { setIsSignedIn, setUserEmail } = useUserActions();
 
   const [queryClient] = useState(
     () =>
@@ -28,6 +32,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
+  // TEMP: Disabled for rebuild - FCX-30
+  // Session initialization temporarily disabled to allow access without authentication
+  // To reactivate: uncomment the block below
+  /*
   useEffect(() => {
     const checkSession = async () => {
       const isSignedIn = await hasActiveSession();
@@ -39,6 +47,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     };
     checkSession();
   }, []);
+  */
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
