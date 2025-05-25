@@ -1,0 +1,130 @@
+---
+description: When the user invoke the command /agent-mode [linear-task]
+globs: 
+alwaysApply: false
+---
+# Agent Mode Guidelines
+This is the agent mode guideline. It has to be used only when is provided with a task to complete. The workflow will consist in 4 phases:
+1. Gathering Context Phase
+2. Planning Phase
+3. Execution Phase
+4. Review Phase
+You will always specify the phase you are in at the beginning of the response.
+
+## I. Gathering Context Phase
+
+This is the first phase of the workflow. Your objective is to navigate through the codebase to understand the context of the task and the ojective files and sections of the codebase. You will follow these steps: 
+
+1.  **Identify Ticket Information:**
+    *   If a Linear ticket ID is provided (e.g., "/agent-mode FIN-212"), use it for naming and connect to Linear MCP to get the ticket information.
+    *   If no Linear ticket is specified, use a descriptive name for the task.
+
+2.  **Determine File Path:**
+    *   Contexts should be stored in the `ai/tickets/[ticket-name-or-description]-context-[current-date-in-MM-DD-YY]/context.md` directory.
+        *   Example (Linear ticket): `tickets/FIN-212-07-26-24/context.md`
+        *   Example (No Linear ticket): `tickets/update-user-profile-page-07-26-24/context.md`
+
+3. **Navigate through the codebase:**
+    * I strongly recommend to check the project-guidelines.mdc to understand the project if exists.
+    * You will navigate and research through the codebase to understand the context of the task and the ojective files and sections of the codebase.
+
+4. **Write the context into the context.md file:**
+    * You will write the following three sections. With their related level of confidence:
+        * **The task**: A concise description of the task and identification of the requeriments [The level of confidence].
+          * Point 1
+          * Point 2
+          * ...
+        * **Existing code**: A list of the files and sections of the codebase you will focus in order to complete the task [The level of confidence].
+        * **Proposed solution**: A list of steps to complete the task [The level of confidence].
+            * Step 1
+            * Step 2
+            * ...
+    * **Level of confidence**: The level of confidence of the task and the existing code and the proposed solution.
+            * 🔴: Low confidence
+            * 🟡: Medium confidence
+            * 🟢: High confidence
+    * If you consider you have low confidence in some of the 3 sections, you can ask the user to provide you more context, then go back to the gathering context phase and rewrite the context.md file.
+
+5. **Ask the user to start the planning phase:**
+
+
+## II. Planning Phase
+
+When a planning request is started, read the context.md file and follow these steps:
+
+1.  **Identify Ticket Information:**
+    *   If a Linear ticket ID is provided (e.g., "FIN-212"), use it for naming.
+    *   If no Linear ticket is specified, use a descriptive name for the task.
+
+2.  **Determine File Path:**
+    *   Plans should be stored in the `ai/tickets/[ticket-name-or-description]-plan-[current-date-in-MM-DD-YY]/plan.md` directory.
+        *   Example (Linear ticket): `tickets/FIN-212-07-26-24/plan.md`
+        *   Example (No Linear ticket): `tickets/update-user-profile-page-07-26-24/plan.md`
+
+3.  **Create the Plan Document:**
+    *   Use the following Markdown structure for the plan. The plan should be comprehensive and clear and should take account the context file.
+
+    ```markdown
+    # [Linear-Ticket-ID (if any)]: [Brief Task Description]
+
+    ## Task Summary
+    *A concise overview of what needs to be achieved.*
+
+    ## Reasoning
+    * A detailed reasoning and reflecting of the task, what is the purpose of the task, what is the context, what is the impact of the task, etc.
+
+    ## Requirements
+    *A numbered list of specific requirements or goals for the task.*
+    1.  Requirement 1
+    2.  Requirement 2
+    3.  ...
+
+    ## Implementation Plan
+    *Detailed steps to achieve the task. Break down into logical sections.*
+
+    ### 1. [Phase 1 Name or First Major Step]
+    -   [ ] Detailed task 1.1
+    -   [ ] Detailed task 1.2
+        -   [ ] Sub-task 1.2.1 (if necessary)
+    -   [ ] ...
+
+    ### 2. [Phase 2 Name or Second Major Step]
+    -   [ ] Detailed task 2.1
+    -   [ ] ...
+
+    *(Add more phases/steps as needed)*
+
+    ## Acceptance Criteria
+    *A list of acceptance criteria for the task.*
+    1.  Acceptance criterion 1
+    2.  Acceptance criterion 2
+    3.  ...
+
+4.  **Await User Review and Corrections:**
+    *   After presenting the plan, The user may provide corrections or feedback.
+    *   Corrections might be inline, using a format like `[CORRECTION: Your suggested change here]`.
+
+5.  **Apply Corrections and Finalize Plan (only if needed) :**
+    *   Carefully review all corrections.
+    *   Update the plan document to incorporate these changes.
+    *   **Crucially, remove the correction labels (e.g., `[CORRECTION: ...]`) from the plan once the correction has been applied.** The final plan should be clean.
+
+## III. Execution Phase
+
+Once the plan is approved and finalized, read the plan.md file and follow these steps:
+
+1.  **Follow the Plan:**
+    *   Execute the tasks as detailed in the "Implementation Plan" section of the relevant `.md` file in `ai/tickets/[ticket-name-or-description]-plan-[current-date-in-MM-DD-YY]/plan.md`. Execute one first major step at a time, and stop before the end of the step.
+
+2.  **Update Progress:**
+    *   As each task from the "Implementation Checklist" (and correspondingly, the detailed tasks in the "Implementation Plan") is completed, **update the plan document by marking the checkbox:**
+        *   Change `[ ]` to `[x]` for completed tasks.
+        *   Example: `- [x] Detailed task 1.1`
+
+3.  **Communicate Changes:**
+    *   If any deviations from the plan are necessary, or if new issues arise, communicate these clearly. The plan document can be updated if significant changes occur, following a similar review/correction process if needed.
+
+## General Principles
+*   **Clarity:** Ensure all plans and communications are clear, concise, and unambiguous.
+*   **Proactivity:** If information is missing or ambiguous in the plan, ask for clarification.
+*   **Accuracy:** Strive for accuracy in implementing the plan and updating progress.
