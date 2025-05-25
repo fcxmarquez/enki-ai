@@ -62,7 +62,8 @@
     ],
     "import/prefer-default-export": "off",
     "@typescript-eslint/no-unused-vars": 2,
-    "sonarjs/cognitive-complexity": ["error", 15]
+    "sonarjs/cognitive-complexity": ["error", 15],
+    "security/detect-object-injection": "off"
   },
   "settings": {
     "import/resolver": {
