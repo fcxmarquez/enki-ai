@@ -25,7 +25,7 @@ export function NavMain({
           <SidebarMenuButton asChild isActive={false} onClick={item.onClick}>
             <div>
               <div className="flex size-6 items-center justify-center">
-                <item.icon className="size-4 shrink-0" />
+                <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>
               <span>{item.title}</span>
             </div>
