@@ -11,7 +11,7 @@ import {
   Search,
 } from "lucide-react";
 
-import { NavFavorites } from "@/components/nav-favorites";
+import { NavProjects } from "@/components/nav-projects";
 import { NavMain } from "@/components/nav-main";
 import { NavChatHistory } from "@/components/nav-chat-history";
 import { UserBadge } from "@/components/user-badge";
@@ -66,66 +66,68 @@ const data = {
       icon: MessageCircleQuestion,
     },
   ],
-  favorites: [
+  projects: [
     {
-      name: "Project Management & Task Tracking",
+      name: "Company Website",
       url: "#",
-      emoji: "📊",
     },
     {
-      name: "Family Recipe Collection & Meal Planning",
+      name: "Company Blog",
       url: "#",
-      emoji: "🍳",
     },
     {
-      name: "Fitness Tracker & Workout Routines",
+      name: "Travel to Spain",
       url: "#",
-      emoji: "💪",
     },
   ],
   chatHistory: [
     {
-      period: "Today",
-      chats: [
-        {
-          title: "AI Model Comparison Research",
-          url: "#",
-        },
-        {
-          title: "Project Timeline Planning",
-          url: "#",
-        },
-        {
-          title: "Code Review Discussion",
-          url: "#",
-        },
-      ],
+      title: "AI Model Comparison Research",
+      url: "#",
+      id: "1",
+      date: "2025-05-24T15:30:00Z",
     },
     {
-      period: "Yesterday",
-      chats: [
-        {
-          title: "Marketing Strategy Brainstorm",
-          url: "#",
-        },
-        {
-          title: "Bug Fixing Session",
-          url: "#",
-        },
-      ],
+      title: "Project Timeline Planning",
+      url: "#",
+      id: "2",
+      date: "2025-05-23T15:30:00Z",
     },
     {
-      period: "Previous 7 days",
-      chats: [
-        {
-          title: "Product Feature Analysis",
-          url: "#",
-        },
-        {
-          title: "Team Collaboration Notes",
-          url: "#",
-        },
-      ],
+      title: "Code Review Discussion",
+      url: "#",
+      id: "3",
+      date: "2025-05-22T14:45:00Z",
+    },
+    {
+      title: "Database Schema Design",
+      url: "#",
+      id: "4",
+      date: "2024-03-15T11:20:00Z",
+    },
+    {
+      title: "User Interface Mockups",
+      url: "#",
+      id: "5",
+      date: "2024-03-12T16:30:00Z",
+    },
+    {
+      title: "API Documentation Review",
+      url: "#",
+      id: "6",
+      date: "2024-03-08T10:45:00Z",
+    },
+    {
+      title: "Performance Optimization",
+      url: "#",
+      id: "7",
+      date: "2024-02-28T13:15:00Z",
+    },
+    {
+      title: "Security Audit Discussion",
+      url: "#",
+      id: "8",
+      date: "2024-02-22T08:30:00Z",
     },
   ],
 };
@@ -145,8 +147,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.favorites} />
-        <NavChatHistory chatHistory={data.chatHistory} />
+        <NavProjects projects={data.projects} />
+        <NavChatHistory chats={data.chatHistory} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
