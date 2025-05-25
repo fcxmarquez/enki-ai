@@ -40,4 +40,5 @@ ai/
 
 # environment
 .env
+.envrc
 *storybook.log
