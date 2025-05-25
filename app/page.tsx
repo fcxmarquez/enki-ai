@@ -15,9 +15,10 @@ import {
 } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { ModalConfig } from "@/components/Modals/ChakraModals/Config";
-import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
+// TEMP: Disabled for rebuild - FCX-30
+// import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
-import { hasActiveSession } from "@/utils/supabase/session";
+// import { hasActiveSession } from "@/utils/supabase/session";
 
 export default function Home() {
   const { messages, isTyping } = useChat();
@@ -25,8 +26,13 @@ export default function Home() {
   const { showModal } = useUIActions();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [hasSession, setHasSession] = useState<boolean | null>(null);
+  // TEMP: Disabled for rebuild - FCX-30
+  // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
+  // TEMP: Disabled for rebuild - FCX-30
+  // Session checking temporarily disabled to allow access without authentication
+  // To reactivate: uncomment the block below
+  /*
   // Check for active session
   useEffect(() => {
     const checkSession = async () => {
@@ -43,6 +49,7 @@ export default function Home() {
       checkSession();
     }
   }, [isMounted, showModal]);
+  */
 
   useEffect(() => {
     setIsMounted(true);
@@ -57,6 +64,9 @@ export default function Home() {
     return null;
   }
 
+  // TEMP: Disabled for rebuild - FCX-30
+  // Authentication loading check temporarily disabled
+  /*
   if (hasSession === null) {
     return (
       <div className="flex h-full items-center justify-center p-4">
@@ -81,6 +91,7 @@ export default function Home() {
       </div>
     );
   }
+  */
 
   if (!hasValidApiKey()) {
     return (

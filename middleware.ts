@@ -31,10 +31,16 @@ export async function middleware(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
   // IMPORTANT: DO NOT REMOVE auth.getUser()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // TEMP: Disabled
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+  await supabase.auth.getUser();
 
+  // TEMP: Disabled for rebuild
+  // Authentication redirect temporarily disabled to allow access to all routes during rebuild
+  // To reactivate: uncomment the block below
+  /*
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/login") &&
@@ -44,6 +50,7 @@ export async function middleware(request: NextRequest) {
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
+  */
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   return supabaseResponse;
