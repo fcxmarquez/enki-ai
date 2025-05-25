@@ -8,14 +8,14 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "cypress"],
+  "plugins": ["@typescript-eslint", "cypress", "sonarjs"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
-    "plugin:sonarjs/recommended",
+    "plugin:sonarjs/recommended-legacy",
     "plugin:security/recommended",
     "plugin:storybook/recommended"
   ],
@@ -61,9 +61,9 @@
       }
     ],
     "import/prefer-default-export": "off",
-    "sonarjs/no-duplicate-string": "off",
     "@typescript-eslint/no-unused-vars": 2,
-    "sonarjs/cognitive-complexity": ["error", 21]
+    "sonarjs/cognitive-complexity": ["error", 15],
+    "security/detect-object-injection": "off"
   },
   "settings": {
     "import/resolver": {

@@ -69,11 +69,13 @@ const SideNav: FC<SideNavProps> = forwardRef(({ isOpen, onClickOutside }, ref) =
   const mobileNavClass = "z-50 transition-transform duration-300 ease-in-out";
   const desktopNavClass = "self-start w-72";
 
-  const navClass = isMobile
-    ? `${baseNavClass} ${mobileNavClass} ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      }`
-    : `${baseNavClass} ${desktopNavClass}`;
+  let navClass: string;
+  if (isMobile) {
+    const transformClass = isOpen ? "translate-x-0" : "-translate-x-full";
+    navClass = `${baseNavClass} ${mobileNavClass} ${transformClass}`;
+  } else {
+    navClass = `${baseNavClass} ${desktopNavClass}`;
+  }
 
   return (
     <>

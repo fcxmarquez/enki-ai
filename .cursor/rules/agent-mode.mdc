@@ -1,8 +1,10 @@
 ---
-description: When the user invoke the command /agent-mode [linear-task]
+description: 
 globs: 
 alwaysApply: false
 ---
+[IGNORE THIS IF YOU'RE DEVIN AGENT]
+
 # Agent Mode Guidelines
 This is the agent mode guideline. It has to be used only when is provided with a task to complete. The workflow will consist in 4 phases:
 1. Gathering Context Phase
