@@ -81,10 +81,13 @@ function SheetContent({
 }) {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const animConfig = {
-    duration: 0.2,
-    easing: "ease-in-out",
-  };
+  const animConfig = React.useMemo(
+    () => ({
+      duration: 0.2,
+      easing: "ease-in-out",
+    }),
+    []
+  );
 
   const getClosedTransform = React.useCallback(() => {
     switch (side) {

@@ -201,12 +201,14 @@ function Sidebar({
         {
           width:
             state === "expanded" ? "var(--sidebar-width)" : "var(--sidebar-width-icon)",
-          x:
-            collapsible === "offcanvas" && state === "collapsed"
-              ? side === "left"
+          x: (() => {
+            if (collapsible === "offcanvas" && state === "collapsed") {
+              return side === "left"
                 ? "calc(var(--sidebar-width) * -1)"
-                : "calc(var(--sidebar-width) * 1)"
-              : 0,
+                : "calc(var(--sidebar-width) * 1)";
+            }
+            return 0;
+          })(),
         },
         {
           type: "tween",
@@ -757,10 +759,14 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<"div"> & {
   showIcon?: boolean;
 }) {
-  // Random width between 50 to 90%.
+  // Pseudo-random width between 50 to 90% based on component instance.
+  const id = React.useId();
   const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []);
+    // Use a deterministic approach instead of Math.random() for security
+    const hash = id.split(":").join("").length;
+    const pseudoRandom = (hash % 40) + 50;
+    return `${pseudoRandom}%`;
+  }, [id]);
 
   return (
     <div

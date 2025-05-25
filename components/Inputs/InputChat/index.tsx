@@ -40,11 +40,9 @@ export const InputChat = () => {
       return;
     }
 
-    let activeConversationId = currentConversationId;
-
     // Create new conversation if none exists
-    if (!activeConversationId) {
-      activeConversationId = createNewConversation(message);
+    if (!currentConversationId) {
+      createNewConversation(message);
     }
 
     // Add user message to chat immediately
