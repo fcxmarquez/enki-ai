@@ -25,9 +25,14 @@ export function ModelSelector() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {modelsMock.map((element) => (
-          <DropdownMenuItem key={element}>{element}</DropdownMenuItem>
-        ))}
+{modelsMock.map((element) => (
+  <DropdownMenuItem 
+    key={element} 
+    onClick={() => setSelectedModel(element)}
+  >
+    {element}
+  </DropdownMenuItem>
+))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
