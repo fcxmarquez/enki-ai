@@ -127,60 +127,62 @@ export default function Home() {
   }
 
   return (
-    <Box
-      className="relative flex grow flex-col overflow-hidden"
-      style={{ backgroundColor: colors.background.default }}
-    >
+    <div className="flex flex-1 flex-col gap-4 px-4 py-4">
       <Box
-        className="flex grow flex-col overflow-y-auto"
-        sx={{
-          "&::-webkit-scrollbar": {
-            width: "6px",
-            borderRadius: "8px",
-            backgroundColor: `rgba(0, 0, 0, 0.05)`,
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: `rgba(0, 0, 0, 0.1)`,
-            borderRadius: "8px",
-          },
-        }}
+        className="relative flex grow flex-col overflow-hidden rounded-xl"
+        style={{ backgroundColor: colors.background.default }}
       >
-        {messages.length === 0 ? (
-          <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-4 text-center">
-            <h3 className="text-lg font-semibold text-text-default">
-              Welcome to EnkiAI!
-            </h3>
-            <p style={{ color: colors.text.paragraph }} className="max-w-md">
-              Start a conversation by typing a message below. The AI supports markdown
-              formatting, code highlighting, and more.
-            </p>
+        <Box
+          className="flex grow flex-col overflow-y-auto p-4"
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "6px",
+              borderRadius: "8px",
+              backgroundColor: `rgba(0, 0, 0, 0.05)`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `rgba(0, 0, 0, 0.1)`,
+              borderRadius: "8px",
+            },
+          }}
+        >
+          {messages.length === 0 ? (
+            <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-4 text-center">
+              <h3 className="text-lg font-semibold text-text-default">
+                Welcome to EnkiAI!
+              </h3>
+              <p style={{ color: colors.text.paragraph }} className="max-w-md">
+                Start a conversation by typing a message below. The AI supports markdown
+                formatting, code highlighting, and more.
+              </p>
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <BubbleChat
+                key={msg.id}
+                message={msg.content}
+                name={msg.role === "assistant" ? "EnkiAI" : "You"}
+                role={msg.role}
+              />
+            ))
+          )}
+          {isTyping && (
+            <BubbleChat message="..." name="EnkiAI" isTyping={true} role="assistant" />
+          )}
+          <div ref={messagesEndRef} />
+        </Box>
+        <Box
+          className="border-t backdrop-blur-xs"
+          style={{
+            backgroundColor: colors.background.conversation.dark,
+            borderColor: colors.background.conversation.dark,
+          }}
+        >
+          <div className="mx-auto max-w-3xl p-4">
+            <InputChat />
           </div>
-        ) : (
-          messages.map((msg) => (
-            <BubbleChat
-              key={msg.id}
-              message={msg.content}
-              name={msg.role === "assistant" ? "EnkiAI" : "You"}
-              role={msg.role}
-            />
-          ))
-        )}
-        {isTyping && (
-          <BubbleChat message="..." name="EnkiAI" isTyping={true} role="assistant" />
-        )}
-        <div ref={messagesEndRef} />
+        </Box>
       </Box>
-      <Box
-        className="border-t backdrop-blur-xs"
-        style={{
-          backgroundColor: colors.background.conversation.dark,
-          borderColor: colors.background.conversation.dark,
-        }}
-      >
-        <div className="mx-auto max-w-3xl p-4">
-          <InputChat />
-        </div>
-      </Box>
-    </Box>
+    </div>
   );
 }
