@@ -12,7 +12,7 @@ import { useState } from "react";
 
 export function ModelSelector() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("GPT 4o");
+  const [selectedModel, setSelectedModel] = useState("gpt-4o");
   const modelsMock = ["gpt-4o", "Claude 4 Sonnet", "Gemini 2.5 Pro", "Grok 3"];
 
   return (
