@@ -207,15 +207,22 @@ const Components = () => {
           </h4>
           <ul style={{ paddingLeft: "20px", lineHeight: "1.6" }}>
             <li>
-              <strong>NavBar:</strong> Fixed header navigation with responsive hamburger
-              menu
+              <strong>AppSidebar:</strong> Modern sidebar navigation with collapsible
+              functionality
             </li>
             <li>
-              <strong>SideNav:</strong> Collapsible sidebar navigation for desktop and
-              mobile
+              <strong>SidebarProvider:</strong> Context provider for sidebar state
+              management
             </li>
             <li>
-              <strong>Footer:</strong> Application footer with links and information
+              <strong>SidebarInset:</strong> Main content area that adapts to sidebar
+              state
+            </li>
+            <li>
+              <strong>NavActions:</strong> Header navigation actions and controls
+            </li>
+            <li>
+              <strong>ModelSelector:</strong> AI model selection component
             </li>
             <li>
               <strong>Modal:</strong> Overlay dialogs for focused interactions
