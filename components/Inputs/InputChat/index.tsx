@@ -1,22 +1,21 @@
 "use client";
 
-import { Input, InputGroup, InputRightElement, Button, useToast } from "@chakra-ui/react";
+import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { IoMdSend } from "react-icons/io";
 import styles from "./styles.module.css";
 import { useState, useEffect } from "react";
 import { useUIActions, useChatActions, useChat, useConfig } from "@/store";
 import { useSendMessage } from "@/fetch/chat/mutations";
-import { ModalConfig } from "@/components/Modals/ChakraModals/Config";
 import { colors } from "@/constants/systemDesign/colors";
+import { toast } from "sonner";
 
 export const InputChat = () => {
   const [message, setMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
-  const { setStatus, showModal } = useUIActions();
+  const { setStatus, setSettingsModalOpen } = useUIActions();
   const { addMessage, setTyping, createNewConversation } = useChatActions();
   const { currentConversationId } = useChat();
   const { hasValidApiKey } = useConfig();
-  const toast = useToast();
 
   const sendMessage = useSendMessage();
 
@@ -28,15 +27,8 @@ export const InputChat = () => {
     if (!message.trim()) return;
 
     if (!hasValidApiKey()) {
-      toast({
-        title: "API Key Required",
-        description: "Please configure your API key in settings to continue.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      showModal(<ModalConfig />);
+      toast.warning("Please configure your API key in settings to continue.");
+      setSettingsModalOpen(true);
       return;
     }
 
@@ -72,17 +64,10 @@ export const InputChat = () => {
             ? "Invalid API key. Please check your settings."
             : "Failed to send message. Please try again.";
 
-          toast({
-            title: "Error",
-            description: errorMessage,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "top",
-          });
+          toast.error(errorMessage);
 
           if (error.message.includes("API key")) {
-            showModal(<ModalConfig />);
+            setSettingsModalOpen(true);
           }
 
           setStatus("error", errorMessage);
