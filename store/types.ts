@@ -18,6 +18,9 @@ export interface UIState {
     isOpen: boolean;
     children: React.JSX.Element | null;
   };
+  modals: {
+    settings: boolean;
+  };
 }
 
 export type StoreState = UISlice & ChatSlice & ConfigSlice & UserSlice;
