@@ -1,0 +1,7 @@
+---
+description: When you will code with storybook
+globs: 
+alwaysApply: false
+---
+## Storybook guidelines
+* When you're making a storybook component of a component inside of dir components, the title has to be the storybook path. For example `components/[ui]/[component]`
