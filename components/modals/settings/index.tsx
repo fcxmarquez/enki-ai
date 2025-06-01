@@ -97,7 +97,8 @@ const settingsFormSchema = z.object({
         "gpt-4o-mini",
       ])
     )
-    .min(1, "Please enable at least one model"),
+    .min(1, "Please enable at least one model")
+    .max(10, "You can select a maximum of 10 models"),
 });
 
 export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
@@ -224,6 +225,11 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
                         options={modelOptions}
                         value={field.value}
                         onValueChange={(newValue) => {
+                          if (newValue.length > 10) {
+                            toast.error("You can select a maximum of 10 models");
+                            return;
+                          }
+
                           field.onChange(newValue);
 
                           // Auto-select first model if enabling and none selected
