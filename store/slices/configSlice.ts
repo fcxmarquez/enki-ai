@@ -13,6 +13,7 @@ const initialConfig: Config = {
   openAIKey: "",
   anthropicKey: "",
   selectedModel: "claude-3-5-sonnet-20241022",
+  enabledModels: ["claude-3-5-sonnet-20241022", "gpt-4o-mini"],
 };
 
 export const createConfigSlice: StateCreator<
@@ -24,9 +25,17 @@ export const createConfigSlice: StateCreator<
   config: initialConfig,
 
   setConfig: (newConfig) =>
-    set((state) => ({
-      config: { ...state.config, ...newConfig },
-    })),
+    set((state) => {
+      const updatedConfig = { ...state.config, ...newConfig };
+
+      if (!updatedConfig.enabledModels) {
+        updatedConfig.enabledModels = ["claude-3-5-sonnet-20241022", "gpt-4o-mini"];
+      }
+
+      return {
+        config: updatedConfig,
+      };
+    }),
 
   clearConfig: () =>
     set(() => ({
@@ -38,9 +47,16 @@ export const createConfigSlice: StateCreator<
     const hasKey = Boolean(config.openAIKey || config.anthropicKey);
     if (!hasKey) return false;
 
-    return !(
-      (config.selectedModel === "claude-3-5-sonnet-20241022" && !config.anthropicKey) ||
-      (config.selectedModel === "gpt-4o-mini" && !config.openAIKey)
-    );
+    const modelRequirements = {
+      "claude-3-5-sonnet-20241022": "anthropicKey",
+      "claude-3-haiku-20240307": "anthropicKey",
+      "gpt-4o": "openAIKey",
+      "gpt-4o-mini": "openAIKey",
+    } as const;
+
+    return config.enabledModels.every((model) => {
+      const requiredKey = modelRequirements[model];
+      return requiredKey && Boolean(config[requiredKey]);
+    });
   },
 });
