@@ -24,6 +24,10 @@ export const useStore = create<StoreState>()(
           },
           config: state.config,
         }),
+        migrate: (persistedState: unknown) => {
+          return persistedState;
+        },
+        version: 1,
       }
     )
   )
