@@ -110,11 +110,24 @@ function SheetContent({
 
     const handleStateChange = (state: string | null) => {
       if (state === "open") {
-        animate(content, { transform: "translate(0, 0)" }, animConfig);
+        animate(
+          content,
+          { transform: "translate(0, 0)", opacity: 1 },
+          animConfig
+        );
       } else if (state === "closed") {
-        animate(content, { transform: getClosedTransform() }, animConfig);
+        animate(
+          content,
+          { transform: getClosedTransform(), opacity: 0 },
+          animConfig
+        );
       }
     };
+
+    // Set initial state for entry animation
+    content.style.transform = getClosedTransform();
+    content.style.opacity = "0";
+    handleStateChange(content.getAttribute("data-state"));
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
