@@ -126,8 +126,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   // Watch form values to get current state
   const watchedValues = form.watch();
 
-  const handleClose = () => {
-    onOpenChange(false);
+  const handleClose = (next: boolean) => {
+    onOpenChange(next);
   };
 
   const handleLogout = async () => {
@@ -139,11 +139,15 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     }
 
     setLogout();
-    handleClose();
+    handleClose(false);
     toast.success("Logged out successfully");
   };
 
   const onSubmit = (data: z.infer<typeof settingsFormSchema>) => {
+    if (!data.enabledModels.includes(data.selectedModel)) {
+      return toast.error("Default model must be one of the enabled models.");
+    }
+
     const missingKeys = data.enabledModels.filter((modelValue) => {
       const modelConfig = MODEL_OPTIONS.find((option) => option.value === modelValue);
       return modelConfig && !data[modelConfig.requiresKey as keyof typeof data];
@@ -166,7 +170,7 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
       selectedModel: data.selectedModel,
       enabledModels: data.enabledModels,
     });
-    handleClose();
+    handleClose(false);
     toast.success("Settings saved successfully");
   };
 
