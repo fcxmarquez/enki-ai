@@ -110,17 +110,9 @@ function SheetContent({
 
     const handleStateChange = (state: string | null) => {
       if (state === "open") {
-        animate(
-          content,
-          { transform: "translate(0, 0)", opacity: 1 },
-          animConfig
-        );
+        animate(content, { transform: "translate(0, 0)", opacity: 1 }, animConfig);
       } else if (state === "closed") {
-        animate(
-          content,
-          { transform: getClosedTransform(), opacity: 0 },
-          animConfig
-        );
+        animate(content, { transform: getClosedTransform(), opacity: 0 }, animConfig);
       }
     };
 
