@@ -1,0 +1,6 @@
+---
+description: When linear MCP is used
+globs: 
+alwaysApply: false
+---
+* Never move a task to completed

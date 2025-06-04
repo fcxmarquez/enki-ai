@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useUIActions } from "@/store";
 
 /**
  * Renders a user badge with a dropdown menu for user actions.
@@ -28,14 +29,22 @@ export function UserBadge({
     avatar: string;
   };
 }) {
+  const { setSettingsModalOpen } = useUIActions();
+
+  const handleSettingsClick = () => {
+    setSettingsModalOpen(true);
+  };
+
   const optionsMock = [
     {
       name: "Settings",
       icon: Settings2,
+      onClick: handleSettingsClick,
     },
     {
       name: "Archive",
       icon: Archive,
+      onClick: () => {},
     },
   ];
 
@@ -63,7 +72,7 @@ export function UserBadge({
             {optionsMock.map((option, index) => (
               <DropdownMenuItem
                 key={option.name}
-                onClick={() => {}}
+                onClick={option.onClick}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center">

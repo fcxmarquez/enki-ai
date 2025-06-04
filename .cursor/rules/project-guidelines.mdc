@@ -1,5 +1,15 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
+**General**
+* This project uses pnpm
+
+**Libraries**
+* motion for animation when is needed
+* react hook forms for form handling
+* zustand for state management
+* shadcn for UI components
+* nextjs for routing
+* tailwindcss for styling

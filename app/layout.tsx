@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
-import { ModalRender } from "@/components/Modals/ModalRender";
+import { ModalRender } from "@/components/modals/ModalRender";
+import { ShadcnModalRender } from "@/components/modals/shadcn-modal-render";
 import { AppSidebar } from "@/components/app-sidebar";
 import { NavActions } from "@/components/nav-actions";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ModelSelector } from "@/components/model-selector";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} `}>
         <Providers>
           <ModalRender />
+          <ShadcnModalRender />
+          <Toaster />
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>

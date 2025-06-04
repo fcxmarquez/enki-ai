@@ -7,6 +7,7 @@ export interface UISlice {
   setStatus: (status: UIState["status"], message: string) => void;
   showModal: (children: React.JSX.Element) => void;
   hideModal: () => void;
+  setSettingsModalOpen: (open: boolean) => void;
 }
 
 export const createUISlice: StateCreator<
@@ -22,6 +23,9 @@ export const createUISlice: StateCreator<
       isOpen: false,
       children: null,
     },
+    modals: {
+      settings: false,
+    },
   },
 
   setStatus: (status, message) =>
@@ -32,4 +36,15 @@ export const createUISlice: StateCreator<
 
   hideModal: () =>
     set((state) => ({ ui: { ...state.ui, modal: { isOpen: false, children: null } } })),
+
+  setSettingsModalOpen: (open) =>
+    set((state) => ({
+      ui: {
+        ...state.ui,
+        modals: {
+          ...state.ui.modals,
+          settings: open,
+        },
+      },
+    })),
 });
