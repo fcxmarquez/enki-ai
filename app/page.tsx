@@ -14,7 +14,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
-import { ModalConfig } from "@/components/Modals/ChakraModals/Config";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
@@ -23,7 +22,7 @@ import { colors } from "@/constants/systemDesign/colors";
 export default function Home() {
   const { messages, isTyping } = useChat();
   const { hasValidApiKey } = useConfig();
-  const { showModal } = useUIActions();
+  const { setSettingsModalOpen } = useUIActions();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   // TEMP: Disabled for rebuild - FCX-30
@@ -117,7 +116,7 @@ export default function Home() {
           <Button
             leftIcon={<FiSettings />}
             colorScheme="purple"
-            onClick={() => showModal(<ModalConfig />)}
+            onClick={() => setSettingsModalOpen(true)}
           >
             Open Settings
           </Button>

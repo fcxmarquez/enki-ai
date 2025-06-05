@@ -24,23 +24,32 @@ export const useStore = create<StoreState>()(
           },
           config: state.config,
         }),
+        migrate: (persistedState: unknown) => {
+          return persistedState;
+        },
+        version: 1,
       }
     )
   )
 );
 
 // Selector hooks
-export const useUI = () => useStore((state) => state.ui);
+export const useUI = () => {
+  const ui = useStore((state) => state.ui);
+  return ui;
+};
 
 export const useUIActions = () => {
   const setStatus = useStore((state) => state.setStatus);
   const showModal = useStore((state) => state.showModal);
   const hideModal = useStore((state) => state.hideModal);
+  const setSettingsModalOpen = useStore((state) => state.setSettingsModalOpen);
 
   return {
     setStatus,
     showModal,
     hideModal,
+    setSettingsModalOpen,
   };
 };
 

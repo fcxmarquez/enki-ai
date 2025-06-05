@@ -7,30 +7,82 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useConfig } from "@/store";
+import { ModelType } from "@/store/types";
+
+const MODEL_LABELS: Record<ModelType, { label: string; provider: string }> = {
+  "claude-3-5-sonnet-20241022": { label: "Claude 3.5 Sonnet", provider: "Anthropic" },
+  "claude-3-haiku-20240307": { label: "Claude 3 Haiku", provider: "Anthropic" },
+  "gpt-4o": { label: "GPT-4o", provider: "OpenAI" },
+  "gpt-4o-mini": { label: "GPT-4o Mini", provider: "OpenAI" },
+};
 
 export function ModelSelector() {
+  const { config, setConfig } = useConfig();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gpt-4o");
-  const modelsMock = ["gpt-4o", "Claude 4 Sonnet", "Gemini 2.5 Pro", "Grok 3"];
+  const [currentModel, setCurrentModel] = useState<ModelType>(config.selectedModel);
+
+  useEffect(() => {
+    setCurrentModel(config.selectedModel);
+  }, [config.selectedModel]);
+
+  const handleModelSelect = (model: ModelType) => {
+    setCurrentModel(model);
+    setConfig({ selectedModel: model });
+  };
+
+  const availableModels = (config.enabledModels || []).filter(
+    (model) => MODEL_LABELS[model]
+  );
+
+  if (availableModels.length === 0) {
+    return (
+      <Button variant="ghost" className="text-muted-foreground cursor-not-allowed">
+        No models configured
+      </Button>
+    );
+  }
+
+  const displayModel = availableModels.includes(currentModel)
+    ? currentModel
+    : availableModels[0];
+  const currentModelInfo = MODEL_LABELS[displayModel];
 
   return (
     <DropdownMenu onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger className="focus-visible:ring-transparent" asChild>
         <Button variant="ghost" className="text-foreground">
-          {selectedModel}
+          <div className="flex items-center gap-2">
+            <span>{currentModelInfo?.label || "Select Model"}</span>
+            <Badge variant="secondary" className="text-xs">
+              {currentModelInfo?.provider}
+            </Badge>
+          </div>
           <ChevronDown
             className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : "rotate-0"}`}
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {modelsMock.map((element) => (
-          <DropdownMenuItem key={element} onClick={() => setSelectedModel(element)}>
-            {element}
-          </DropdownMenuItem>
-        ))}
+      <DropdownMenuContent align="start" className="min-w-[200px]">
+        {availableModels.map((model) => {
+          const modelInfo = MODEL_LABELS[model];
+          const isSelected = model === displayModel;
+          return (
+            <DropdownMenuItem
+              key={model}
+              onClick={() => handleModelSelect(model)}
+              className={`flex items-center justify-between ${isSelected ? "bg-accent" : ""}`}
+            >
+              <span>{modelInfo.label}</span>
+              <Badge variant="outline" className="text-xs">
+                {modelInfo.provider}
+              </Badge>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
