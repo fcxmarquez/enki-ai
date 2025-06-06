@@ -24,8 +24,8 @@ export class ChatService {
         throw new Error("Anthropic API key is required for Claude model.");
       }
       this.llm = new ChatAnthropic({
-        anthropicApiKey: config.anthropicKey,
-        modelName: config.selectedModel,
+        apiKey: config.anthropicKey,
+        model: config.selectedModel,
         temperature: 0.7,
       });
     } else if (config.selectedModel === "gpt-4o-mini") {
@@ -33,8 +33,8 @@ export class ChatService {
         throw new Error("OpenAI API key is required for GPT-4o-mini model.");
       }
       this.llm = new ChatOpenAI({
-        openAIApiKey: config.openAIKey,
-        modelName: config.selectedModel,
+        apiKey: config.openAIKey,
+        model: config.selectedModel,
         temperature: 0.7,
       });
     } else {
