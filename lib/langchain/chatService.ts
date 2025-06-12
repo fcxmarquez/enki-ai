@@ -50,7 +50,7 @@ export class ChatService {
     selectedModel: ModelType;
   }) {
     const configHash = JSON.stringify(config);
-    if (configHash !== this.lastConfig && !this.instance) {
+    if (configHash !== this.lastConfig || !this.instance) {
       this.instance = new ChatService(config);
       this.lastConfig = configHash;
     }
