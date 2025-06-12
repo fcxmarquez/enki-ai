@@ -47,8 +47,9 @@ export const BubbleChat = ({
               padding: "1rem",
             }}
             PreTag="div"
-            children={String(children).replace(/\n$/, "")} // eslint-disable-line react/no-children-prop
-          />
+          >
+            {String(children).replace(/\n$/, "")}
+          </SyntaxHighlighter>
         </div>
       ) : (
         <code
@@ -105,7 +106,7 @@ export const BubbleChat = ({
   };
 
   return (
-    <div className={`group w-full}`}>
+    <div className="group w-full">
       <div className="md:max-w-2xl lg:max-w-3xl xl:max-w-4xl m-auto flex gap-4 p-4 text-base">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center">
           {role === "assistant" ? (
