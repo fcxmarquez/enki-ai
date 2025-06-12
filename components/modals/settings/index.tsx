@@ -118,6 +118,18 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     },
   });
 
+  React.useEffect(() => {
+    form.reset({
+      openAIKey: config.openAIKey || "",
+      anthropicKey: config.anthropicKey || "",
+      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      enabledModels: (config.enabledModels || [
+        "claude-3-5-sonnet-20241022",
+        "gpt-4o-mini",
+      ]) as ModelType[],
+    });
+  }, [config, form]);
+
   const [showPasswords, setShowPasswords] = useState({
     openAI: false,
     anthropic: false,
