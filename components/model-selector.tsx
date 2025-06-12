@@ -21,7 +21,7 @@ const MODEL_LABELS: Record<ModelType, { label: string; provider: string }> = {
 };
 
 export function ModelSelector() {
-  const { config, setConfig } = useConfig();
+  const { config, setConfig, hasValidApiKey } = useConfig();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentModel, setCurrentModel] = useState<ModelType>(config.selectedModel);
 
@@ -34,14 +34,38 @@ export function ModelSelector() {
     setConfig({ selectedModel: model });
   };
 
-  const availableModels = (config.enabledModels || []).filter(
-    (model) => MODEL_LABELS[model]
-  );
+  const hasValidKeys = hasValidApiKey();
 
-  if (availableModels.length === 0) {
+  const getValidModels = () => {
+    if (!hasValidKeys) return [];
+
+    return (config.enabledModels || []).filter((model) => {
+      const modelInfo = MODEL_LABELS[model];
+      if (!modelInfo) return false;
+
+      if (model.startsWith("claude-")) {
+        return Boolean(config.anthropicKey);
+      } else if (model.startsWith("gpt-")) {
+        return Boolean(config.openAIKey);
+      }
+      return false;
+    });
+  };
+
+  const availableModels = getValidModels();
+
+  if ((config.enabledModels || []).length === 0) {
     return (
       <Button variant="ghost" className="text-muted-foreground cursor-not-allowed">
         No models configured
+      </Button>
+    );
+  }
+
+  if (!hasValidKeys || availableModels.length === 0) {
+    return (
+      <Button variant="ghost" className="text-muted-foreground cursor-not-allowed">
+        No model selected
       </Button>
     );
   }
