@@ -6,8 +6,10 @@ import { ModelType } from "@/store/types";
 
 export class ChatService {
   private llm: BaseChatModel;
+  private static instance: ChatService;
+  private static lastConfig: string | null = null;
 
-  constructor(config: {
+  private constructor(config: {
     openAIKey?: string;
     anthropicKey?: string;
     selectedModel: ModelType;
@@ -42,7 +44,21 @@ export class ChatService {
     }
   }
 
-  async sendMessage(message: string) {
+  public static getInstance(config: {
+    openAIKey?: string;
+    anthropicKey?: string;
+    selectedModel: ModelType;
+  }) {
+    const configHash = JSON.stringify(config);
+    if (configHash !== this.lastConfig && !this.instance) {
+      this.instance = new ChatService(config);
+      this.lastConfig = configHash;
+    }
+
+    return this.instance;
+  }
+
+  public async sendMessage(message: string) {
     try {
       const response = await this.llm.invoke([
         new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
