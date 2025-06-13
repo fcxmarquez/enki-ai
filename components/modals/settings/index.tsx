@@ -53,6 +53,13 @@ const MODEL_OPTIONS = [
     description: "Most capable model for complex reasoning",
   },
   {
+    value: "claude-sonnet-4-20250514",
+    label: "Claude 4 Sonnet",
+    requiresKey: "anthropicKey",
+    provider: "Anthropic",
+    description: "Latest Claude model with enhanced capabilities",
+  },
+  {
     value: "claude-3-haiku-20240307",
     label: "Claude 3 Haiku",
     requiresKey: "anthropicKey",
@@ -65,6 +72,41 @@ const MODEL_OPTIONS = [
     requiresKey: "openAIKey",
     provider: "OpenAI",
     description: "Advanced reasoning with multimodal capabilities",
+  },
+  {
+    value: "gpt-4.1",
+    label: "GPT-4.1",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Flagship GPT model for complex tasks",
+  },
+  {
+    value: "gpt-4.1-mini",
+    label: "GPT-4.1 Mini",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Balanced for intelligence, speed, and cost",
+  },
+  {
+    value: "gpt-4.1-nano",
+    label: "GPT-4.1 Nano",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Fastest, most cost-effective GPT-4.1 model",
+  },
+  {
+    value: "o4-mini",
+    label: "o4-mini",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Faster, more affordable reasoning model",
+  },
+  {
+    value: "o3",
+    label: "o3",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Most powerful reasoning model",
   },
   {
     value: "gpt-4o-mini",
@@ -85,16 +127,28 @@ const settingsFormSchema = z.object({
   anthropicKey: z.string().optional(),
   selectedModel: z.enum([
     "claude-3-5-sonnet-20241022",
+    "claude-sonnet-4-20250514",
     "claude-3-haiku-20240307",
     "gpt-4o",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "o4-mini",
+    "o3",
     "gpt-4o-mini",
   ]),
   enabledModels: z
     .array(
       z.enum([
         "claude-3-5-sonnet-20241022",
+        "claude-sonnet-4-20250514",
         "claude-3-haiku-20240307",
         "gpt-4o",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "gpt-4.1-nano",
+        "o4-mini",
+        "o3",
         "gpt-4o-mini",
       ])
     )
@@ -112,9 +166,9 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     defaultValues: {
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
+        "claude-sonnet-4-20250514",
         "gpt-4o-mini",
       ]) as ModelType[],
     },
@@ -124,9 +178,9 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     form.reset({
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
+        "claude-sonnet-4-20250514",
         "gpt-4o-mini",
       ]) as ModelType[],
     });

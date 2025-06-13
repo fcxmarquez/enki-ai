@@ -4,6 +4,10 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { ModelType } from "@/store/types";
 
+function isReasonerModel(model: ModelType): boolean {
+  return model === "o3" || model === "o4-mini";
+}
+
 export class ChatService {
   private llm: BaseChatModel;
   private static instance: ChatService;
@@ -21,7 +25,7 @@ export class ChatService {
     }
 
     // Initialize based on selected model
-    if (config.selectedModel === "claude-3-5-sonnet-20241022") {
+    if (config.selectedModel.startsWith("claude-")) {
       if (!config.anthropicKey) {
         throw new Error("Anthropic API key is required for Claude model.");
       }
@@ -30,15 +34,27 @@ export class ChatService {
         model: config.selectedModel,
         temperature: 0.7,
       });
-    } else if (config.selectedModel === "gpt-4o-mini") {
+    } else if (
+      config.selectedModel.startsWith("gpt-") ||
+      config.selectedModel.startsWith("o")
+    ) {
       if (!config.openAIKey) {
-        throw new Error("OpenAI API key is required for GPT-4o-mini model.");
+        throw new Error("OpenAI API key is required for OpenAI model.");
       }
-      this.llm = new ChatOpenAI({
+      const options: {
+        apiKey: string;
+        model: string;
+        temperature?: number;
+      } = {
         apiKey: config.openAIKey,
         model: config.selectedModel,
-        temperature: 0.7,
-      });
+      };
+
+      if (!isReasonerModel(config.selectedModel)) {
+        options.temperature = 0.7;
+      }
+
+      this.llm = new ChatOpenAI(options);
     } else {
       throw new Error("Invalid model selected.");
     }
