@@ -25,5 +25,8 @@ export const useSendMessage = () => {
       // Call the success callback if provided
       variables.onSuccess?.(data);
     },
+    onError: (error, variables) => {
+      variables.onError?.(error);
+    },
   });
 };

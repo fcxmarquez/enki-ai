@@ -26,7 +26,6 @@ export const InputChat = () => {
   }, []);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     if (!message.trim()) return;
 
     if (!hasApiKey) {
@@ -34,6 +33,8 @@ export const InputChat = () => {
       setSettingsModalOpen(true);
       return;
     }
+
+    setIsLoading(true);
 
     // Create new conversation if none exists
     if (!currentConversationId) {
