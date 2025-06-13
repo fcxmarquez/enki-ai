@@ -22,13 +22,13 @@ export function NavMain({
     <SidebarMenu>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild isActive={false} onClick={item.onClick}>
-            <div>
+          <SidebarMenuButton asChild isActive={false}>
+            <button onClick={item.onClick}>
               <div className="flex size-6 items-center justify-center">
                 <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>
               <span>{item.title}</span>
-            </div>
+            </button>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}

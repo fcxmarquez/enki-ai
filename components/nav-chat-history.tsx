@@ -14,17 +14,25 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { groupAndSortChats } from "@/lib/utils";
+import { useChat, useChatActions } from "@/store";
 
 export function NavChatHistory({
   chats,
 }: {
   chats: {
+    id: string;
     title: string;
     url: string;
     date: string;
   }[];
 }) {
   const sortedGroupEntries = groupAndSortChats(chats);
+  const { currentConversationId } = useChat();
+  const { setCurrentConversation } = useChatActions();
+
+  const handleConversationClick = (conversationId: string) => {
+    setCurrentConversation(conversationId);
+  };
 
   return (
     <SidebarGroup>
@@ -35,9 +43,16 @@ export function NavChatHistory({
             <SidebarMenu>
               <SidebarMenuSub>
                 {chatsInGroup.map((chat) => (
-                  <SidebarMenuSubItem key={chat.title}>
-                    <SidebarMenuSubButton asChild>
-                      <button>
+                  <SidebarMenuSubItem key={chat.id}>
+                    <SidebarMenuSubButton
+                      asChild
+                      className={
+                        currentConversationId === chat.id
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : ""
+                      }
+                    >
+                      <button onClick={() => handleConversationClick(chat.id)}>
                         <span>{chat.title}</span>
                       </button>
                     </SidebarMenuSubButton>
