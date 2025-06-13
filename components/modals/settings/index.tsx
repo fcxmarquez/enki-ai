@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Eye, EyeOff, Settings2, LogOut, KeyRound, Cpu } from "lucide-react";
+import { Eye, EyeOff, Settings2, LogOut, KeyRound, Cpu, SunMoon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -104,6 +105,7 @@ const settingsFormSchema = z.object({
 export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   const { config, setConfig } = useConfig();
   const { setLogout } = useUserActions();
+  const { theme = "system", setTheme } = useTheme();
 
   const form = useForm<z.infer<typeof settingsFormSchema>>({
     resolver: zodResolver(settingsFormSchema),
@@ -231,6 +233,24 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
 
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+            {/* Theme Selection */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <SunMoon className="h-4 w-4" />
+                <h3 className="text-md font-medium">Theme</h3>
+              </div>
+              <Select value={theme} onValueChange={setTheme}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Separator />
             {/* Model Selection Section */}
             <div
               className={`space-y-4 ${!hasAnyApiKey ? "opacity-50 pointer-events-none" : ""}`}
