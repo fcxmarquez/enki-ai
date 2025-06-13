@@ -1,21 +1,23 @@
 "use client";
 
-import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { IoMdSend } from "react-icons/io";
-import styles from "./styles.module.css";
 import { useState, useEffect } from "react";
 import { useUIActions, useChatActions, useChat, useConfig } from "@/store";
 import { useSendMessage } from "@/fetch/chat/mutations";
-import { colors } from "@/constants/systemDesign/colors";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const InputChat = () => {
   const [message, setMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
   const { addMessage, setTyping, createNewConversation } = useChatActions();
   const { currentConversationId } = useChat();
   const { hasValidApiKey } = useConfig();
+  const hasApiKey = hasValidApiKey();
 
   const sendMessage = useSendMessage();
 
@@ -26,11 +28,13 @@ export const InputChat = () => {
   const handleSubmit = async () => {
     if (!message.trim()) return;
 
-    if (!hasValidApiKey()) {
+    if (!hasApiKey) {
       toast.warning("Please configure your API key in settings to continue.");
       setSettingsModalOpen(true);
       return;
     }
+
+    setIsLoading(true);
 
     // Create new conversation if none exists
     if (!currentConversationId) {
@@ -76,9 +80,17 @@ export const InputChat = () => {
       {
         onSettled: () => {
           setTyping(false);
+          setIsLoading(false);
         },
       }
     );
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   if (!isMounted) {
@@ -86,46 +98,35 @@ export const InputChat = () => {
   }
 
   return (
-    <div className="relative">
-      <InputGroup size="lg">
+    <div className="relative flex justify-center w-full">
+      <div className="relative flex items-center w-full max-w-[724px]">
         <Input
-          className="min-h-[56px] rounded-xl border-0 pl-4 pr-14 shadow-xs"
-          style={{
-            backgroundColor: colors.background.input.dark,
-            color: colors.text.default,
-          }}
+          className={cn(
+            "min-h-[56px] w-full rounded-xl py-8 pl-4 pr-14 text-base backdrop-blur-lg bg-background/50"
+          )}
           placeholder={
-            hasValidApiKey()
+            hasApiKey
               ? "Message EnkiAI..."
-              : "Please configure API key in settings"
+              : "Please configure API key in settings to continue"
           }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
-          isDisabled={sendMessage.isPending}
-          _focus={{
-            boxShadow: "none",
-            border: "2px solid",
-            borderColor: colors.button.default,
-          }}
+          onKeyDown={handleKeyPress}
+          disabled={isLoading || !hasApiKey}
         />
-        <InputRightElement className="absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2">
-          <Button
-            aria-label="Send message"
-            rightIcon={<IoMdSend />}
-            style={{
-              backgroundColor: colors.button.default,
-              color: colors.text.default,
-            }}
-            className={`${styles.button} aspect-square h-10 w-10 rounded-lg hover:bg-button-hover`}
-            isLoading={sendMessage.isPending}
-            onClick={handleSubmit}
-            _hover={{
-              backgroundColor: colors.button.hover,
-            }}
-          />
-        </InputRightElement>
-      </InputGroup>
+        <Button
+          size="icon"
+          className={cn(
+            "absolute right-2 h-10 w-10 rounded-lg",
+            "hover:opacity-90 transition-opacity"
+          )}
+          onClick={handleSubmit}
+          disabled={isLoading || !message.trim()}
+          aria-label="Send message"
+        >
+          <IoMdSend className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };

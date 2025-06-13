@@ -13,3 +13,6 @@ alwaysApply: true
 * shadcn for UI components
 * nextjs for routing
 * tailwindcss for styling
+
+**Git**
+* When committing to git, note that husky is installed with commitizen. Use use `git commit --no-verify` to bypass hooks and manually follow the conventional commit pattern.
