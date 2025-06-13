@@ -83,7 +83,7 @@ export default function Home() {
   */
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 py-4">
+    <div className="flex flex-1 flex-col gap-4 sm:p-4">
       <div className="relative flex grow flex-col overflow-hidden rounded-xl">
         <div className="flex grow flex-col overflow-y-auto p-4">
           {messages.length === 0 ? (
@@ -111,10 +111,10 @@ export default function Home() {
           )}
           <div ref={messagesEndRef} />
         </div>
-        <div className="backdrop-blur-xs">
-          <div className="mx-auto max-w-3xl p-4">
-            <InputChat />
-          </div>
+      </div>
+      <div className="sticky bottom-0 w-full">
+        <div className="p-8">
+          <InputChat />
         </div>
       </div>
     </div>

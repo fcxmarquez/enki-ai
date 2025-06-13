@@ -97,10 +97,12 @@ export const InputChat = () => {
   }
 
   return (
-    <div className="relative">
-      <div className="relative flex items-center">
+    <div className="relative flex justify-center w-full">
+      <div className="relative flex items-center w-full max-w-[724px]">
         <Input
-          className={cn("min-h-[56px] rounded-xl py-8 pl-4 pr-14 text-base")}
+          className={cn(
+            "min-h-[56px] w-full rounded-xl py-8 pl-4 pr-14 text-base backdrop-blur-lg bg-background/50"
+          )}
           placeholder={
             hasApiKey
               ? "Message EnkiAI..."
