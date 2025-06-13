@@ -14,6 +14,7 @@ export function NavActions() {
   const { setSettingsModalOpen } = useUIActions();
 
   const handleSettingsClick = () => {
+    console.log("Settings button clicked, opening modal...");
     setSettingsModalOpen(true);
   };
 
