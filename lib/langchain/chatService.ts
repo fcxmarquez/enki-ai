@@ -87,4 +87,24 @@ export class ChatService {
       throw error;
     }
   }
+
+  public async *sendMessageStream(
+    message: string
+  ): AsyncGenerator<string, void, unknown> {
+    try {
+      const stream = await this.llm.stream([
+        new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
+        new HumanMessage(message),
+      ]);
+
+      for await (const chunk of stream) {
+        if (chunk.content) {
+          yield chunk.content as string;
+        }
+      }
+    } catch (error) {
+      console.error("Error in streaming chat:", error);
+      throw error;
+    }
+  }
 }

@@ -30,3 +30,36 @@ export const useSendMessage = () => {
     },
   });
 };
+
+interface SendMessageStreamVariables {
+  message: string;
+  onChunk?: (chunk: string) => void;
+  onComplete?: (fullResponse: string) => void;
+  onError?: (error: Error) => void;
+}
+
+export const useSendMessageStream = () => {
+  const queryClient = useQueryClient();
+  const { config } = useConfig();
+
+  return useMutation({
+    mutationFn: async ({ message, onChunk, onComplete }: SendMessageStreamVariables) => {
+      const chatService = ChatService.getInstance(config);
+      let fullResponse = "";
+
+      for await (const chunk of chatService.sendMessageStream(message)) {
+        fullResponse += chunk;
+        onChunk?.(chunk);
+      }
+
+      onComplete?.(fullResponse);
+      return fullResponse;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messages"] });
+    },
+    onError: (error, variables) => {
+      variables.onError?.(error);
+    },
+  });
+};

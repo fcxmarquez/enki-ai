@@ -3,7 +3,7 @@
 import { IoMdSend } from "react-icons/io";
 import { useState, useEffect } from "react";
 import { useUIActions, useChatActions, useChat, useConfig } from "@/store";
-import { useSendMessage } from "@/fetch/chat/mutations";
+import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,12 @@ export const InputChat = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
-  const { addMessage, setTyping, createNewConversation } = useChatActions();
+  const { addMessage, setTyping, createNewConversation, updateMessageContent } =
+    useChatActions();
+  const sendMessageStream = useSendMessageStream();
   const { currentConversationId } = useChat();
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-
-  const sendMessage = useSendMessage();
 
   useEffect(() => {
     setIsMounted(true);
@@ -50,40 +50,39 @@ export const InputChat = () => {
     setStatus("loading", "Sending message...");
     setTyping(true);
 
-    sendMessage.mutate(
-      {
-        message,
-        onSuccess: (response) => {
-          // Add assistant response to chat
-          addMessage({
-            content: response,
-            role: "assistant",
-          });
-          setStatus("success", "Message sent!");
-          setMessage("");
-        },
-        onError: (error) => {
-          console.error("Error sending message:", error);
-          const errorMessage = error.message.includes("API key")
-            ? "Invalid API key. Please check your settings."
-            : "Failed to send message. Please try again.";
+    const assistantMessage = addMessage({
+      content: "",
+      role: "assistant",
+    });
 
-          toast.error(errorMessage);
-
-          if (error.message.includes("API key")) {
-            setSettingsModalOpen(true);
-          }
-
-          setStatus("error", errorMessage);
-        },
+    sendMessageStream.mutate({
+      message,
+      onChunk: (chunk: string) => {
+        updateMessageContent(assistantMessage.id, chunk);
       },
-      {
-        onSettled: () => {
-          setTyping(false);
-          setIsLoading(false);
-        },
-      }
-    );
+      onComplete: () => {
+        setStatus("success", "Message sent!");
+        setMessage("");
+        setTyping(false);
+        setIsLoading(false);
+      },
+      onError: (error: Error) => {
+        console.error("Streaming error:", error);
+        const errorMessage = error.message.includes("API key")
+          ? "Invalid API key. Please check your settings."
+          : "Failed to send message. Please try again.";
+
+        toast.error(errorMessage);
+
+        if (error.message.includes("API key")) {
+          setSettingsModalOpen(true);
+        }
+
+        setStatus("error", errorMessage);
+        setTyping(false);
+        setIsLoading(false);
+      },
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
