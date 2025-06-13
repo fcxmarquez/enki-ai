@@ -12,8 +12,8 @@ export interface ConfigSlice {
 const initialConfig: Config = {
   openAIKey: "",
   anthropicKey: "",
-  selectedModel: "claude-3-5-sonnet-20241022",
-  enabledModels: ["claude-3-5-sonnet-20241022", "gpt-4o-mini"],
+  selectedModel: "claude-sonnet-4-20250514",
+  enabledModels: ["claude-sonnet-4-20250514", "gpt-4.1-mini"],
 };
 
 export const createConfigSlice: StateCreator<
@@ -29,7 +29,7 @@ export const createConfigSlice: StateCreator<
       const updatedConfig = { ...state.config, ...newConfig };
 
       if (!updatedConfig.enabledModels) {
-        updatedConfig.enabledModels = ["claude-3-5-sonnet-20241022", "gpt-4o-mini"];
+        updatedConfig.enabledModels = ["claude-sonnet-4-20250514", "gpt-4.1-mini"];
       }
 
       return {
@@ -48,10 +48,12 @@ export const createConfigSlice: StateCreator<
     if (!hasKey) return false;
 
     const modelRequirements = {
-      "claude-3-5-sonnet-20241022": "anthropicKey",
-      "claude-3-haiku-20240307": "anthropicKey",
-      "gpt-4o": "openAIKey",
-      "gpt-4o-mini": "openAIKey",
+      "claude-sonnet-4-20250514": "anthropicKey",
+      "gpt-4.1": "openAIKey",
+      "gpt-4.1-mini": "openAIKey",
+      "gpt-4.1-nano": "openAIKey",
+      "o4-mini": "openAIKey",
+      o3: "openAIKey",
     } as const;
 
     return config.enabledModels.every((model) => {

@@ -22,7 +22,7 @@ export interface ChatSlice {
     isTyping: boolean;
     error: string | null;
   };
-  addMessage: (message: Omit<Message, "id" | "timestamp">) => void;
+  addMessage: (message: Omit<Message, "id" | "timestamp">) => Message;
   setTyping: (isTyping: boolean) => void;
   setChatError: (error: string | null) => void;
   clearChat: () => void;
@@ -30,6 +30,7 @@ export interface ChatSlice {
   setCurrentConversation: (conversationId: string) => void;
   updateConversationTitle: (conversationId: string, title: string) => void;
   deleteConversation: (conversationId: string) => void;
+  updateMessageContent: (messageId: string, additionalContent: string) => void;
 }
 
 export const createChatSlice: StateCreator<
@@ -100,7 +101,8 @@ export const createChatSlice: StateCreator<
       };
     }),
 
-  addMessage: (message) =>
+  addMessage: (message) => {
+    const messageId = crypto.randomUUID();
     set((state) => {
       const conversations = [...state.chat.conversations];
       const conversationIndex = conversations.findIndex(
@@ -115,7 +117,7 @@ export const createChatSlice: StateCreator<
           ...conversations[conversationIndex].messages,
           {
             ...message,
-            id: crypto.randomUUID(),
+            id: messageId,
             timestamp: Date.now(),
           },
         ],
@@ -130,7 +132,9 @@ export const createChatSlice: StateCreator<
           conversations,
         },
       };
-    }),
+    });
+    return { id: messageId, ...message, timestamp: Date.now() };
+  },
 
   setTyping: (isTyping) => set((state) => ({ chat: { ...state.chat, isTyping } })),
 
@@ -173,6 +177,39 @@ export const createChatSlice: StateCreator<
             state.chat.currentConversationId === conversationId
               ? null
               : state.chat.currentConversationId,
+        },
+      };
+    }),
+
+  updateMessageContent: (messageId, additionalContent) =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = conversations.findIndex(
+        (conv) => conv.id === state.chat.currentConversationId
+      );
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const messageIndex = messages.findIndex((msg) => msg.id === messageId);
+
+      if (messageIndex === -1) return state;
+
+      messages[messageIndex] = {
+        ...messages[messageIndex],
+        content: messages[messageIndex].content + additionalContent,
+      };
+
+      conversations[conversationIndex] = {
+        ...conversations[conversationIndex],
+        messages,
+        lastModified: Date.now(),
+      };
+
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
         },
       };
     }),

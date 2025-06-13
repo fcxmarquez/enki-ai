@@ -46,32 +46,46 @@ import { createClient } from "@/utils/supabase/client";
 
 const MODEL_OPTIONS = [
   {
-    value: "claude-3-5-sonnet-20241022",
-    label: "Claude 3.5 Sonnet",
+    value: "claude-sonnet-4-20250514",
+    label: "Claude 4 Sonnet",
     requiresKey: "anthropicKey",
     provider: "Anthropic",
-    description: "Most capable model for complex reasoning",
+    description: "Latest Claude model with enhanced capabilities",
   },
   {
-    value: "claude-3-haiku-20240307",
-    label: "Claude 3 Haiku",
-    requiresKey: "anthropicKey",
-    provider: "Anthropic",
-    description: "Fast and cost-effective for simple tasks",
-  },
-  {
-    value: "gpt-4o",
-    label: "GPT-4o",
+    value: "gpt-4.1",
+    label: "GPT-4.1",
     requiresKey: "openAIKey",
     provider: "OpenAI",
-    description: "Advanced reasoning with multimodal capabilities",
+    description: "Flagship GPT model for complex tasks",
   },
   {
-    value: "gpt-4o-mini",
-    label: "GPT-4o Mini",
+    value: "gpt-4.1-mini",
+    label: "GPT-4.1 Mini",
     requiresKey: "openAIKey",
     provider: "OpenAI",
-    description: "Fast and efficient for most tasks",
+    description: "Balanced for intelligence, speed, and cost",
+  },
+  {
+    value: "gpt-4.1-nano",
+    label: "GPT-4.1 Nano",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Fastest, most cost-effective GPT-4.1 model",
+  },
+  {
+    value: "o4-mini",
+    label: "o4-mini",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Faster, more affordable reasoning model",
+  },
+  {
+    value: "o3",
+    label: "o3",
+    requiresKey: "openAIKey",
+    provider: "OpenAI",
+    description: "Most powerful reasoning model",
   },
 ] as const;
 
@@ -84,18 +98,22 @@ const settingsFormSchema = z.object({
   openAIKey: z.string().optional(),
   anthropicKey: z.string().optional(),
   selectedModel: z.enum([
-    "claude-3-5-sonnet-20241022",
-    "claude-3-haiku-20240307",
-    "gpt-4o",
-    "gpt-4o-mini",
+    "claude-sonnet-4-20250514",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "o4-mini",
+    "o3",
   ]),
   enabledModels: z
     .array(
       z.enum([
-        "claude-3-5-sonnet-20241022",
-        "claude-3-haiku-20240307",
-        "gpt-4o",
-        "gpt-4o-mini",
+        "claude-sonnet-4-20250514",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "gpt-4.1-nano",
+        "o4-mini",
+        "o3",
       ])
     )
     .min(1, "Please enable at least one model")
@@ -112,10 +130,10 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     defaultValues: {
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
-        "gpt-4o-mini",
+        "claude-sonnet-4-20250514",
+        "gpt-4.1-mini",
       ]) as ModelType[],
     },
   });
@@ -124,10 +142,10 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     form.reset({
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
-        "gpt-4o-mini",
+        "claude-sonnet-4-20250514",
+        "gpt-4.1-mini",
       ]) as ModelType[],
     });
   }, [config, form]);
