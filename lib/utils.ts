@@ -32,6 +32,7 @@ export function formatChatDate(dateString: string): string {
 
 export function groupAndSortChats(
   chats: {
+    id: string;
     title: string;
     url: string;
     date: string;
