@@ -14,16 +14,12 @@ import { useConfig } from "@/store";
 import { ModelType } from "@/store/types";
 
 const MODEL_LABELS: Record<ModelType, { label: string; provider: string }> = {
-  "claude-3-5-sonnet-20241022": { label: "Claude 3.5 Sonnet", provider: "Anthropic" },
   "claude-sonnet-4-20250514": { label: "Claude 4 Sonnet", provider: "Anthropic" },
-  "claude-3-haiku-20240307": { label: "Claude 3 Haiku", provider: "Anthropic" },
-  "gpt-4o": { label: "GPT-4o", provider: "OpenAI" },
   "gpt-4.1": { label: "GPT-4.1", provider: "OpenAI" },
   "gpt-4.1-mini": { label: "GPT-4.1 Mini", provider: "OpenAI" },
   "gpt-4.1-nano": { label: "GPT-4.1 Nano", provider: "OpenAI" },
   "o4-mini": { label: "o4-mini", provider: "OpenAI" },
   o3: { label: "o3", provider: "OpenAI" },
-  "gpt-4o-mini": { label: "GPT-4o Mini", provider: "OpenAI" },
 };
 
 export function ModelSelector() {
@@ -51,7 +47,7 @@ export function ModelSelector() {
 
       if (model.startsWith("claude-")) {
         return Boolean(config.anthropicKey);
-      } else if (model.startsWith("gpt-")) {
+      } else if (model.startsWith("gpt-") || model.startsWith("o")) {
         return Boolean(config.openAIKey);
       }
       return false;
