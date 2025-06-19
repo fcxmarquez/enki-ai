@@ -43,51 +43,9 @@ import {
 import { useConfig, useUserActions } from "@/store";
 import { ModelType } from "@/store/types";
 import { createClient } from "@/utils/supabase/client";
+import { MODEL_OPTIONS, MODEL_VALUES } from "@/constants/models";
 
-const MODEL_OPTIONS = [
-  {
-    value: "claude-sonnet-4-20250514",
-    label: "Claude 4 Sonnet",
-    requiresKey: "anthropicKey",
-    provider: "Anthropic",
-    description: "Latest Claude model with enhanced capabilities",
-  },
-  {
-    value: "gpt-4.1",
-    label: "GPT-4.1",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Flagship GPT model for complex tasks",
-  },
-  {
-    value: "gpt-4.1-mini",
-    label: "GPT-4.1 Mini",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Balanced for intelligence, speed, and cost",
-  },
-  {
-    value: "gpt-4.1-nano",
-    label: "GPT-4.1 Nano",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Fastest, most cost-effective GPT-4.1 model",
-  },
-  {
-    value: "o4-mini",
-    label: "o4-mini",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Faster, more affordable reasoning model",
-  },
-  {
-    value: "o3",
-    label: "o3",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Most powerful reasoning model",
-  },
-] as const;
+console.log("MODEL_VALUES", MODEL_VALUES);
 
 interface SettingsModalProps {
   open: boolean;
@@ -97,25 +55,9 @@ interface SettingsModalProps {
 const settingsFormSchema = z.object({
   openAIKey: z.string().optional(),
   anthropicKey: z.string().optional(),
-  selectedModel: z.enum([
-    "claude-sonnet-4-20250514",
-    "gpt-4.1",
-    "gpt-4.1-mini",
-    "gpt-4.1-nano",
-    "o4-mini",
-    "o3",
-  ]),
+  selectedModel: z.enum(MODEL_VALUES),
   enabledModels: z
-    .array(
-      z.enum([
-        "claude-sonnet-4-20250514",
-        "gpt-4.1",
-        "gpt-4.1-mini",
-        "gpt-4.1-nano",
-        "o4-mini",
-        "o3",
-      ])
-    )
+    .array(z.enum(MODEL_VALUES))
     .min(1, "Please enable at least one model")
     .max(10, "You can select a maximum of 10 models"),
 });
@@ -155,7 +97,6 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     anthropic: false,
   });
 
-  // Watch form values to get current state
   const watchedValues = form.watch();
 
   const hasAnyApiKey = Boolean(watchedValues.openAIKey || watchedValues.anthropicKey);
@@ -211,8 +152,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     setConfig({
       openAIKey: data.openAIKey || "",
       anthropicKey: data.anthropicKey || "",
-      selectedModel: data.selectedModel,
-      enabledModels: data.enabledModels,
+      selectedModel: data.selectedModel as ModelType,
+      enabledModels: data.enabledModels as ModelType[],
     });
     handleClose(false);
     toast.success("Settings saved successfully");
@@ -235,6 +176,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
   const availableDefaultModels = MODEL_OPTIONS.filter((option) =>
     watchedValues.enabledModels.includes(option.value)
   );
+
+  console.log("availableDefaultModels", availableDefaultModels);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

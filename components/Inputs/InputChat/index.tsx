@@ -36,12 +36,10 @@ export const InputChat = () => {
 
     setIsLoading(true);
 
-    // Create new conversation if none exists
     if (!currentConversationId) {
       createNewConversation(message);
     }
 
-    // Add user message to chat immediately
     addMessage({
       content: message,
       role: "user",

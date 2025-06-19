@@ -1,6 +1,7 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
 import { Config } from "../types";
+import { MODEL_OPTIONS } from "@/constants/models";
 
 export interface ConfigSlice {
   config: Config;
@@ -47,18 +48,17 @@ export const createConfigSlice: StateCreator<
     const hasKey = Boolean(config.openAIKey || config.anthropicKey);
     if (!hasKey) return false;
 
-    const modelRequirements = {
-      "claude-sonnet-4-20250514": "anthropicKey",
-      "gpt-4.1": "openAIKey",
-      "gpt-4.1-mini": "openAIKey",
-      "gpt-4.1-nano": "openAIKey",
-      "o4-mini": "openAIKey",
-      o3: "openAIKey",
-    } as const;
+    const modelRequirements = MODEL_OPTIONS.reduce(
+      (acc, option) => {
+        acc[option.value] = option.requiresKey;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
     return config.enabledModels.every((model) => {
       const requiredKey = modelRequirements[model];
-      return requiredKey && Boolean(config[requiredKey]);
+      return requiredKey && Boolean(config[requiredKey as keyof Config]);
     });
   },
 });
