@@ -24,10 +24,16 @@ export const useStore = create<StoreState>()(
           },
           config: state.config,
         }),
-        migrate: (persistedState: unknown) => {
+        migrate: (persistedState: unknown, version: number) => {
+          if (version !== 2) {
+            console.warn(
+              "Mismatch version detected, migrating to version 2 and resetting state"
+            );
+            return undefined;
+          }
           return persistedState;
         },
-        version: 1,
+        version: 2,
       }
     )
   )
