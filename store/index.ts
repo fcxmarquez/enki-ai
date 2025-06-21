@@ -81,6 +81,7 @@ export const useChatActions = () => {
   const updateConversationTitle = useStore((state) => state.updateConversationTitle);
   const deleteConversation = useStore((state) => state.deleteConversation);
   const updateMessageContent = useStore((state) => state.updateMessageContent);
+  const deleteLastMessage = useStore((state) => state.deleteLastMessage);
 
   return {
     addMessage,
@@ -92,6 +93,7 @@ export const useChatActions = () => {
     updateConversationTitle,
     deleteConversation,
     updateMessageContent,
+    deleteLastMessage,
   };
 };
 

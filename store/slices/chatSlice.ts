@@ -30,8 +30,15 @@ export interface ChatSlice {
   setCurrentConversation: (conversationId: string) => void;
   updateConversationTitle: (conversationId: string, title: string) => void;
   deleteConversation: (conversationId: string) => void;
+  deleteLastMessage: () => void;
   updateMessageContent: (messageId: string, additionalContent: string) => void;
 }
+
+const getCurrentConversationIndex = (state: StoreState) => {
+  return state.chat.conversations.findIndex(
+    (conv) => conv.id === state.chat.currentConversationId
+  );
+};
 
 export const createChatSlice: StateCreator<
   StoreState,
@@ -105,9 +112,7 @@ export const createChatSlice: StateCreator<
     const messageId = crypto.randomUUID();
     set((state) => {
       const conversations = [...state.chat.conversations];
-      const conversationIndex = conversations.findIndex(
-        (conv) => conv.id === state.chat.currentConversationId
-      );
+      const conversationIndex = getCurrentConversationIndex(state);
 
       if (conversationIndex === -1) return state;
 
@@ -136,6 +141,29 @@ export const createChatSlice: StateCreator<
     return { id: messageId, ...message, timestamp: Date.now() };
   },
 
+  deleteLastMessage: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const updatedConversation = {
+        ...conversations[conversationIndex],
+        messages: conversations[conversationIndex].messages.slice(0, -1),
+        lastModified: Date.now(),
+      };
+
+      conversations[conversationIndex] = updatedConversation;
+
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
+        },
+      };
+    }),
+
   setTyping: (isTyping) => set((state) => ({ chat: { ...state.chat, isTyping } })),
 
   setChatError: (error) => set((state) => ({ chat: { ...state.chat, error } })),
@@ -143,9 +171,7 @@ export const createChatSlice: StateCreator<
   clearChat: () =>
     set((state) => {
       const conversations = [...state.chat.conversations];
-      const conversationIndex = conversations.findIndex(
-        (conv) => conv.id === state.chat.currentConversationId
-      );
+      const conversationIndex = getCurrentConversationIndex(state);
 
       if (conversationIndex === -1) return state;
 
@@ -184,9 +210,7 @@ export const createChatSlice: StateCreator<
   updateMessageContent: (messageId, additionalContent) =>
     set((state) => {
       const conversations = [...state.chat.conversations];
-      const conversationIndex = conversations.findIndex(
-        (conv) => conv.id === state.chat.currentConversationId
-      );
+      const conversationIndex = getCurrentConversationIndex(state);
 
       if (conversationIndex === -1) return state;
 
