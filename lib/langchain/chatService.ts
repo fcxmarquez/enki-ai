@@ -24,29 +24,22 @@ export class ChatService {
       );
     }
 
-    // Initialize based on selected model
     if (config.selectedModel.startsWith("claude-")) {
-      if (!config.anthropicKey) {
-        throw new Error("Anthropic API key is required for Claude model.");
-      }
       this.llm = new ChatAnthropic({
-        apiKey: config.anthropicKey,
+        apiKey: config.anthropicKey || "",
         model: config.selectedModel,
         temperature: 0.7,
       });
-    } else if (
-      config.selectedModel.startsWith("gpt-") ||
-      config.selectedModel.startsWith("o")
-    ) {
-      if (!config.openAIKey) {
-        throw new Error("OpenAI API key is required for OpenAI model.");
-      }
+      return;
+    }
+
+    if (config.selectedModel.startsWith("gpt-") || config.selectedModel.startsWith("o")) {
       const options: {
         apiKey: string;
         model: string;
         temperature?: number;
       } = {
-        apiKey: config.openAIKey,
+        apiKey: config.openAIKey || "",
         model: config.selectedModel,
       };
 
@@ -55,9 +48,10 @@ export class ChatService {
       }
 
       this.llm = new ChatOpenAI(options);
-    } else {
-      throw new Error("Invalid model selected.");
+      return;
     }
+
+    throw new Error("Invalid model selected.");
   }
 
   public static getInstance(config: {
