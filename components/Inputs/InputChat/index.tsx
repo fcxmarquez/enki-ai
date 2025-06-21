@@ -14,8 +14,13 @@ export const InputChat = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
-  const { addMessage, setTyping, createNewConversation, updateMessageContent } =
-    useChatActions();
+  const {
+    addMessage,
+    setTyping,
+    createNewConversation,
+    updateMessageContent,
+    deleteLastMessage,
+  } = useChatActions();
   const sendMessageStream = useSendMessageStream();
   const { currentConversationId } = useChat();
   const { hasValidApiKey } = useConfig();
@@ -36,6 +41,9 @@ export const InputChat = () => {
 
     setIsLoading(true);
 
+    setStatus("loading", "Sending message...");
+    setTyping(true);
+
     if (!currentConversationId) {
       createNewConversation(message);
     }
@@ -44,9 +52,6 @@ export const InputChat = () => {
       content: message,
       role: "user",
     });
-
-    setStatus("loading", "Sending message...");
-    setTyping(true);
 
     const assistantMessage = addMessage({
       content: "",
@@ -75,6 +80,8 @@ export const InputChat = () => {
         if (error.message.includes("API key")) {
           setSettingsModalOpen(true);
         }
+
+        deleteLastMessage();
 
         setStatus("error", errorMessage);
         setTyping(false);
