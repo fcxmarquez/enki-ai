@@ -18,15 +18,12 @@ export class ChatService {
     anthropicKey?: string;
     selectedModel: ModelType;
   }) {
-    if (!config.openAIKey && !config.anthropicKey) {
-      throw new Error(
-        "No API key provided. Please provide either an OpenAI or Anthropic API key in the settings."
-      );
-    }
-
     if (config.selectedModel.startsWith("claude-")) {
+      if (!config.anthropicKey) {
+        throw new Error("Anthropic API key is required for Claude models.");
+      }
       this.llm = new ChatAnthropic({
-        apiKey: config.anthropicKey || "",
+        apiKey: config.anthropicKey,
         model: config.selectedModel,
         temperature: 0.7,
       });
@@ -34,12 +31,15 @@ export class ChatService {
     }
 
     if (config.selectedModel.startsWith("gpt-") || config.selectedModel.startsWith("o")) {
+      if (!config.openAIKey) {
+        throw new Error("OpenAI API key is required for GPT and O-series models.");
+      }
       const options: {
         apiKey: string;
         model: string;
         temperature?: number;
       } = {
-        apiKey: config.openAIKey || "",
+        apiKey: config.openAIKey,
         model: config.selectedModel,
       };
 
