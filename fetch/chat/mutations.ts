@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChatService } from "@/lib/langchain/chatService";
 import { useConfig } from "@/store";
+import { MOCK_RESPONSE } from "@/constants/mock/mockResponse";
 
 interface SendMessageVariables {
   message: string;
@@ -49,6 +50,30 @@ export const useSendMessageStream = () => {
 
       for await (const chunk of chatService.sendMessageStream(message)) {
         fullResponse += chunk;
+        onChunk?.(chunk);
+      }
+
+      onComplete?.(fullResponse);
+      return fullResponse;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messages"] });
+    },
+    onError: (error, variables) => {
+      variables.onError?.(error);
+    },
+  });
+};
+
+export const useSendMessageStreamTest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ onChunk, onComplete }: SendMessageStreamVariables) => {
+      let fullResponse = "";
+
+      for (const chunk of MOCK_RESPONSE.split("")) {
+        fullResponse += chunk;
+        await new Promise((resolve) => setTimeout(resolve, 1));
         onChunk?.(chunk);
       }
 
