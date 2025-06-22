@@ -62,7 +62,7 @@ export const BubbleChat = ({
       );
     },
     p: ({ children, ...props }) => (
-      <p className="mb-2 last:mb-0" {...props}>
+      <p className="mb-2 last:mb- break-all" {...props}>
         {children}
       </p>
     ),
