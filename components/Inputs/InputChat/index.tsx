@@ -20,6 +20,7 @@ export const InputChat = () => {
     createNewConversation,
     updateMessageContent,
     deleteLastMessage,
+    lastMessageToSuccess,
   } = useChatActions();
   const sendMessageStream = useSendMessageStream();
   const { currentConversationId } = useChat();
@@ -42,7 +43,6 @@ export const InputChat = () => {
     setIsLoading(true);
 
     setStatus("loading", "Sending message...");
-    setTyping(true);
 
     if (!currentConversationId) {
       createNewConversation(message);
@@ -66,8 +66,9 @@ export const InputChat = () => {
       onComplete: () => {
         setStatus("success", "Message sent!");
         setMessage("");
-        setTyping(false);
         setIsLoading(false);
+
+        lastMessageToSuccess();
       },
       onError: (error: Error) => {
         console.error("Streaming error:", error);

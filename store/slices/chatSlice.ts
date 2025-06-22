@@ -1,11 +1,14 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
 
+type MessageStatus = "pending" | "success" | "error";
+
 export interface Message {
   id: string;
   content: string;
   role: "user" | "assistant";
   timestamp: number;
+  status: MessageStatus;
 }
 
 export interface Conversation {
@@ -22,7 +25,7 @@ export interface ChatSlice {
     isTyping: boolean;
     error: string | null;
   };
-  addMessage: (message: Omit<Message, "id" | "timestamp">) => Message;
+  addMessage: (message: Omit<Message, "id" | "timestamp" | "status">) => Message;
   setTyping: (isTyping: boolean) => void;
   setChatError: (error: string | null) => void;
   clearChat: () => void;
@@ -32,6 +35,8 @@ export interface ChatSlice {
   deleteConversation: (conversationId: string) => void;
   deleteLastMessage: () => void;
   updateMessageContent: (messageId: string, additionalContent: string) => void;
+  lastMessageToError: () => void;
+  lastMessageToSuccess: () => void;
 }
 
 const getCurrentConversationIndex = (state: StoreState) => {
@@ -110,6 +115,8 @@ export const createChatSlice: StateCreator<
 
   addMessage: (message) => {
     const messageId = crypto.randomUUID();
+    const status: MessageStatus = message.role === "user" ? "success" : "pending";
+
     set((state) => {
       const conversations = [...state.chat.conversations];
       const conversationIndex = getCurrentConversationIndex(state);
@@ -124,6 +131,7 @@ export const createChatSlice: StateCreator<
             ...message,
             id: messageId,
             timestamp: Date.now(),
+            status,
           },
         ],
         lastModified: Date.now(),
@@ -138,7 +146,12 @@ export const createChatSlice: StateCreator<
         },
       };
     });
-    return { id: messageId, ...message, timestamp: Date.now() };
+    return {
+      id: messageId,
+      ...message,
+      timestamp: Date.now(),
+      status,
+    };
   },
 
   deleteLastMessage: () =>
@@ -221,6 +234,7 @@ export const createChatSlice: StateCreator<
 
       messages[messageIndex] = {
         ...messages[messageIndex],
+        status: "success",
         content: messages[messageIndex].content + additionalContent,
       };
 
@@ -236,5 +250,73 @@ export const createChatSlice: StateCreator<
           conversations,
         },
       };
+    }),
+
+  lastMessageToSuccess: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const lastMessageIndex = messages.length - 1;
+      const lastMessage = messages[lastMessageIndex];
+
+      if (lastMessage.status !== "success") {
+        messages[lastMessageIndex] = {
+          ...lastMessage,
+          status: "success",
+        };
+
+        conversations[conversationIndex] = {
+          ...conversations[conversationIndex],
+          messages,
+          lastModified: Date.now(),
+        };
+
+        return {
+          chat: {
+            ...state.chat,
+            conversations,
+          },
+        };
+      }
+
+      return state;
+    }),
+
+  lastMessageToError: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const lastMessageIndex = messages.length - 1;
+      const lastMessage = messages[lastMessageIndex];
+
+      if (lastMessage.status !== "error") {
+        messages[lastMessageIndex] = {
+          ...lastMessage,
+          status: "error",
+        };
+
+        conversations[conversationIndex] = {
+          ...conversations[conversationIndex],
+          messages,
+          lastModified: Date.now(),
+        };
+
+        return {
+          chat: {
+            ...state.chat,
+            conversations,
+          },
+        };
+      }
+
+      return state;
     }),
 });
