@@ -45,8 +45,6 @@ import { ModelType } from "@/store/types";
 import { createClient } from "@/utils/supabase/client";
 import { MODEL_OPTIONS, MODEL_VALUES } from "@/constants/models";
 
-console.log("MODEL_VALUES", MODEL_VALUES);
-
 interface SettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

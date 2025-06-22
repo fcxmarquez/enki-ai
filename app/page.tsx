@@ -103,6 +103,7 @@ export default function Home() {
                 message={msg.content}
                 name={msg.role === "assistant" ? "EnkiAI" : "You"}
                 role={msg.role}
+                status={msg.status}
               />
             ))
           )}
