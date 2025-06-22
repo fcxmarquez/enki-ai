@@ -175,8 +175,6 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     watchedValues.enabledModels.includes(option.value)
   );
 
-  console.log("availableDefaultModels", availableDefaultModels);
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[80vh] overflow-y-auto">
