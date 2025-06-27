@@ -11,7 +11,7 @@ import { colors } from "@/constants/systemDesign/colors";
 // import { hasActiveSession } from "@/utils/supabase/session";
 
 export default function Home() {
-  const { messages, isTyping } = useChat();
+  const { messages } = useChat();
   // const { setSettingsModalOpen } = useUIActions();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -103,11 +103,9 @@ export default function Home() {
                 message={msg.content}
                 name={msg.role === "assistant" ? "EnkiAI" : "You"}
                 role={msg.role}
+                status={msg.status}
               />
             ))
-          )}
-          {isTyping && (
-            <BubbleChat message="..." name="EnkiAI" isTyping={true} role="assistant" />
           )}
           <div ref={messagesEndRef} />
         </div>

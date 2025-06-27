@@ -43,37 +43,7 @@ import {
 import { useConfig, useUserActions } from "@/store";
 import { ModelType } from "@/store/types";
 import { createClient } from "@/utils/supabase/client";
-
-const MODEL_OPTIONS = [
-  {
-    value: "claude-3-5-sonnet-20241022",
-    label: "Claude 3.5 Sonnet",
-    requiresKey: "anthropicKey",
-    provider: "Anthropic",
-    description: "Most capable model for complex reasoning",
-  },
-  {
-    value: "claude-3-haiku-20240307",
-    label: "Claude 3 Haiku",
-    requiresKey: "anthropicKey",
-    provider: "Anthropic",
-    description: "Fast and cost-effective for simple tasks",
-  },
-  {
-    value: "gpt-4o",
-    label: "GPT-4o",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Advanced reasoning with multimodal capabilities",
-  },
-  {
-    value: "gpt-4o-mini",
-    label: "GPT-4o Mini",
-    requiresKey: "openAIKey",
-    provider: "OpenAI",
-    description: "Fast and efficient for most tasks",
-  },
-] as const;
+import { MODEL_OPTIONS, MODEL_VALUES } from "@/constants/models";
 
 interface SettingsModalProps {
   open: boolean;
@@ -83,21 +53,9 @@ interface SettingsModalProps {
 const settingsFormSchema = z.object({
   openAIKey: z.string().optional(),
   anthropicKey: z.string().optional(),
-  selectedModel: z.enum([
-    "claude-3-5-sonnet-20241022",
-    "claude-3-haiku-20240307",
-    "gpt-4o",
-    "gpt-4o-mini",
-  ]),
+  selectedModel: z.enum(MODEL_VALUES),
   enabledModels: z
-    .array(
-      z.enum([
-        "claude-3-5-sonnet-20241022",
-        "claude-3-haiku-20240307",
-        "gpt-4o",
-        "gpt-4o-mini",
-      ])
-    )
+    .array(z.enum(MODEL_VALUES))
     .min(1, "Please enable at least one model")
     .max(10, "You can select a maximum of 10 models"),
 });
@@ -112,10 +70,10 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     defaultValues: {
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
-        "gpt-4o-mini",
+        "claude-sonnet-4-20250514",
+        "gpt-4.1-mini",
       ]) as ModelType[],
     },
   });
@@ -124,10 +82,10 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     form.reset({
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-3-5-sonnet-20241022") as ModelType,
+      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
       enabledModels: (config.enabledModels || [
-        "claude-3-5-sonnet-20241022",
-        "gpt-4o-mini",
+        "claude-sonnet-4-20250514",
+        "gpt-4.1-mini",
       ]) as ModelType[],
     });
   }, [config, form]);
@@ -137,7 +95,6 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     anthropic: false,
   });
 
-  // Watch form values to get current state
   const watchedValues = form.watch();
 
   const hasAnyApiKey = Boolean(watchedValues.openAIKey || watchedValues.anthropicKey);
@@ -193,8 +150,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     setConfig({
       openAIKey: data.openAIKey || "",
       anthropicKey: data.anthropicKey || "",
-      selectedModel: data.selectedModel,
-      enabledModels: data.enabledModels,
+      selectedModel: data.selectedModel as ModelType,
+      enabledModels: data.enabledModels as ModelType[],
     });
     handleClose(false);
     toast.success("Settings saved successfully");

@@ -2,12 +2,9 @@ import { UISlice } from "./slices/uiSlice";
 import { ChatSlice } from "./slices/chatSlice";
 import { ConfigSlice } from "./slices/configSlice";
 import { UserSlice } from "./slices/userSlice";
+import { MODEL_VALUES } from "@/constants/models";
 
-export type ModelType =
-  | "claude-3-5-sonnet-20241022"
-  | "gpt-4o-mini"
-  | "gpt-4o"
-  | "claude-3-haiku-20240307";
+export type ModelType = (typeof MODEL_VALUES)[number];
 
 export interface Config {
   openAIKey: string;
