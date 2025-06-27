@@ -70,8 +70,15 @@ export const InputChat = () => {
 
         lastMessageToSuccess();
       },
-      onError: (error: Error) => {
+      onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
+
+        if (partialResponse && partialResponse.trim()) {
+          updateMessageContent(assistantMessage.id, partialResponse);
+        } else {
+          deleteLastMessage();
+        }
+
         const errorMessage = error.message.includes("API key")
           ? "Invalid API key. Please check your settings."
           : "Failed to send message. Please try again.";
@@ -81,8 +88,6 @@ export const InputChat = () => {
         if (error.message.includes("API key")) {
           setSettingsModalOpen(true);
         }
-
-        deleteLastMessage();
 
         setStatus("error", errorMessage);
         setTyping(false);
