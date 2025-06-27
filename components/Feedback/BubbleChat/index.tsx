@@ -9,8 +9,8 @@ import type { ComponentPropsWithoutRef } from "react";
 interface BubbleChatProps {
   message: string;
   name: string;
-  isTyping?: boolean;
   role?: "user" | "assistant";
+  status?: "pending" | "success" | "error" | undefined;
 }
 
 type CodeBlockProps = ComponentPropsWithoutRef<"code"> & {
@@ -21,8 +21,8 @@ type CodeBlockProps = ComponentPropsWithoutRef<"code"> & {
 export const BubbleChat = ({
   message,
   name,
-  isTyping,
   role = "user",
+  status = "pending",
 }: BubbleChatProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -61,7 +61,7 @@ export const BubbleChat = ({
       );
     },
     p: ({ children, ...props }) => (
-      <p className="mb-2 last:mb-0" {...props}>
+      <p className="mb-2 last:mb- break-all" {...props}>
         {children}
       </p>
     ),
@@ -123,7 +123,7 @@ export const BubbleChat = ({
             </div>
           ) : (
             <div className="prose prose-sm dark:prose-invert max-w-none text-foreground">
-              {isTyping ? (
+              {status === "pending" ? (
                 <div className="flex gap-1">
                   <span className="animate-bounce">.</span>
                   <span className="animate-bounce delay-100">.</span>

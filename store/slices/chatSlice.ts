@@ -1,11 +1,14 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
 
+type MessageStatus = "pending" | "success" | "error";
+
 export interface Message {
   id: string;
   content: string;
   role: "user" | "assistant";
   timestamp: number;
+  status: MessageStatus;
 }
 
 export interface Conversation {
@@ -19,18 +22,26 @@ export interface ChatSlice {
   chat: {
     conversations: Conversation[];
     currentConversationId: string | null;
-    isTyping: boolean;
     error: string | null;
   };
-  addMessage: (message: Omit<Message, "id" | "timestamp">) => void;
-  setTyping: (isTyping: boolean) => void;
+  addMessage: (message: Omit<Message, "id" | "timestamp" | "status">) => Message;
   setChatError: (error: string | null) => void;
   clearChat: () => void;
   createNewConversation: (initialMessage: string) => string;
   setCurrentConversation: (conversationId: string) => void;
   updateConversationTitle: (conversationId: string, title: string) => void;
   deleteConversation: (conversationId: string) => void;
+  deleteLastMessage: () => void;
+  updateMessageContent: (messageId: string, additionalContent: string) => void;
+  lastMessageToError: () => void;
+  lastMessageToSuccess: () => void;
 }
+
+const getCurrentConversationIndex = (state: StoreState) => {
+  return state.chat.conversations.findIndex(
+    (conv) => conv.id === state.chat.currentConversationId
+  );
+};
 
 export const createChatSlice: StateCreator<
   StoreState,
@@ -41,7 +52,6 @@ export const createChatSlice: StateCreator<
   chat: {
     conversations: [],
     currentConversationId: null,
-    isTyping: false,
     error: null,
   },
 
@@ -100,12 +110,13 @@ export const createChatSlice: StateCreator<
       };
     }),
 
-  addMessage: (message) =>
+  addMessage: (message) => {
+    const messageId = crypto.randomUUID();
+    const status: MessageStatus = message.role === "user" ? "success" : "pending";
+
     set((state) => {
       const conversations = [...state.chat.conversations];
-      const conversationIndex = conversations.findIndex(
-        (conv) => conv.id === state.chat.currentConversationId
-      );
+      const conversationIndex = getCurrentConversationIndex(state);
 
       if (conversationIndex === -1) return state;
 
@@ -115,8 +126,9 @@ export const createChatSlice: StateCreator<
           ...conversations[conversationIndex].messages,
           {
             ...message,
-            id: crypto.randomUUID(),
+            id: messageId,
             timestamp: Date.now(),
+            status,
           },
         ],
         lastModified: Date.now(),
@@ -130,18 +142,44 @@ export const createChatSlice: StateCreator<
           conversations,
         },
       };
-    }),
+    });
+    return {
+      id: messageId,
+      ...message,
+      timestamp: Date.now(),
+      status,
+    };
+  },
 
-  setTyping: (isTyping) => set((state) => ({ chat: { ...state.chat, isTyping } })),
+  deleteLastMessage: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const updatedConversation = {
+        ...conversations[conversationIndex],
+        messages: conversations[conversationIndex].messages.slice(0, -1),
+        lastModified: Date.now(),
+      };
+
+      conversations[conversationIndex] = updatedConversation;
+
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
+        },
+      };
+    }),
 
   setChatError: (error) => set((state) => ({ chat: { ...state.chat, error } })),
 
   clearChat: () =>
     set((state) => {
       const conversations = [...state.chat.conversations];
-      const conversationIndex = conversations.findIndex(
-        (conv) => conv.id === state.chat.currentConversationId
-      );
+      const conversationIndex = getCurrentConversationIndex(state);
 
       if (conversationIndex === -1) return state;
 
@@ -175,5 +213,105 @@ export const createChatSlice: StateCreator<
               : state.chat.currentConversationId,
         },
       };
+    }),
+
+  updateMessageContent: (messageId, additionalContent) =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const messageIndex = messages.findIndex((msg) => msg.id === messageId);
+
+      if (messageIndex === -1) return state;
+
+      messages[messageIndex] = {
+        ...messages[messageIndex],
+        status: "success",
+        content: messages[messageIndex].content + additionalContent,
+      };
+
+      conversations[conversationIndex] = {
+        ...conversations[conversationIndex],
+        messages,
+        lastModified: Date.now(),
+      };
+
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
+        },
+      };
+    }),
+
+  lastMessageToSuccess: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const lastMessageIndex = messages.length - 1;
+      const lastMessage = messages[lastMessageIndex];
+
+      if (lastMessage.status !== "success") {
+        messages[lastMessageIndex] = {
+          ...lastMessage,
+          status: "success",
+        };
+
+        conversations[conversationIndex] = {
+          ...conversations[conversationIndex],
+          messages,
+          lastModified: Date.now(),
+        };
+
+        return {
+          chat: {
+            ...state.chat,
+            conversations,
+          },
+        };
+      }
+
+      return state;
+    }),
+
+  lastMessageToError: () =>
+    set((state) => {
+      const conversations = [...state.chat.conversations];
+      const conversationIndex = getCurrentConversationIndex(state);
+
+      if (conversationIndex === -1) return state;
+
+      const messages = [...conversations[conversationIndex].messages];
+      const lastMessageIndex = messages.length - 1;
+      const lastMessage = messages[lastMessageIndex];
+
+      if (lastMessage.status !== "error") {
+        messages[lastMessageIndex] = {
+          ...lastMessage,
+          status: "error",
+        };
+
+        conversations[conversationIndex] = {
+          ...conversations[conversationIndex],
+          messages,
+          lastModified: Date.now(),
+        };
+
+        return {
+          chat: {
+            ...state.chat,
+            conversations,
+          },
+        };
+      }
+
+      return state;
     }),
 });

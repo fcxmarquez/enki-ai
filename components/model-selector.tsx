@@ -12,13 +12,7 @@ import { ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useConfig } from "@/store";
 import { ModelType } from "@/store/types";
-
-const MODEL_LABELS: Record<ModelType, { label: string; provider: string }> = {
-  "claude-3-5-sonnet-20241022": { label: "Claude 3.5 Sonnet", provider: "Anthropic" },
-  "claude-3-haiku-20240307": { label: "Claude 3 Haiku", provider: "Anthropic" },
-  "gpt-4o": { label: "GPT-4o", provider: "OpenAI" },
-  "gpt-4o-mini": { label: "GPT-4o Mini", provider: "OpenAI" },
-};
+import { MODEL_LABELS } from "@/constants/models";
 
 export function ModelSelector() {
   const { config, setConfig, hasValidApiKey } = useConfig();
@@ -45,7 +39,7 @@ export function ModelSelector() {
 
       if (model.startsWith("claude-")) {
         return Boolean(config.anthropicKey);
-      } else if (model.startsWith("gpt-")) {
+      } else if (model.startsWith("gpt-") || model.startsWith("o")) {
         return Boolean(config.openAIKey);
       }
       return false;

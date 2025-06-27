@@ -16,3 +16,6 @@ alwaysApply: true
 
 **Git**
 * When committing to git, note that husky is installed with commitizen. Use use `git commit --no-verify` to bypass hooks and manually follow the conventional commit pattern.
+
+**Testing**
+* When finish a task. Run `npx tsx --noEmit && pnpm lint && pnpm build` to check if the code is working as expected.

@@ -24,10 +24,16 @@ export const useStore = create<StoreState>()(
           },
           config: state.config,
         }),
-        migrate: (persistedState: unknown) => {
+        migrate: (persistedState: unknown, version: number) => {
+          if (version !== 2) {
+            console.warn(
+              "Mismatch version detected, migrating to version 2 and resetting state"
+            );
+            return undefined;
+          }
           return persistedState;
         },
-        version: 1,
+        version: 2,
       }
     )
   )
@@ -67,23 +73,29 @@ export const useChat = () => {
 
 export const useChatActions = () => {
   const addMessage = useStore((state) => state.addMessage);
-  const setTyping = useStore((state) => state.setTyping);
   const setChatError = useStore((state) => state.setChatError);
   const clearChat = useStore((state) => state.clearChat);
   const createNewConversation = useStore((state) => state.createNewConversation);
   const setCurrentConversation = useStore((state) => state.setCurrentConversation);
   const updateConversationTitle = useStore((state) => state.updateConversationTitle);
   const deleteConversation = useStore((state) => state.deleteConversation);
+  const updateMessageContent = useStore((state) => state.updateMessageContent);
+  const deleteLastMessage = useStore((state) => state.deleteLastMessage);
+  const lastMessageToError = useStore((state) => state.lastMessageToError);
+  const lastMessageToSuccess = useStore((state) => state.lastMessageToSuccess);
 
   return {
     addMessage,
-    setTyping,
     setChatError,
     clearChat,
     createNewConversation,
     setCurrentConversation,
     updateConversationTitle,
     deleteConversation,
+    updateMessageContent,
+    deleteLastMessage,
+    lastMessageToError,
+    lastMessageToSuccess,
   };
 };
 
