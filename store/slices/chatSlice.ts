@@ -22,11 +22,9 @@ export interface ChatSlice {
   chat: {
     conversations: Conversation[];
     currentConversationId: string | null;
-    isTyping: boolean;
     error: string | null;
   };
   addMessage: (message: Omit<Message, "id" | "timestamp" | "status">) => Message;
-  setTyping: (isTyping: boolean) => void;
   setChatError: (error: string | null) => void;
   clearChat: () => void;
   createNewConversation: (initialMessage: string) => string;
@@ -54,7 +52,6 @@ export const createChatSlice: StateCreator<
   chat: {
     conversations: [],
     currentConversationId: null,
-    isTyping: false,
     error: null,
   },
 
@@ -176,8 +173,6 @@ export const createChatSlice: StateCreator<
         },
       };
     }),
-
-  setTyping: (isTyping) => set((state) => ({ chat: { ...state.chat, isTyping } })),
 
   setChatError: (error) => set((state) => ({ chat: { ...state.chat, error } })),
 

@@ -73,7 +73,6 @@ export const useChat = () => {
 
 export const useChatActions = () => {
   const addMessage = useStore((state) => state.addMessage);
-  const setTyping = useStore((state) => state.setTyping);
   const setChatError = useStore((state) => state.setChatError);
   const clearChat = useStore((state) => state.clearChat);
   const createNewConversation = useStore((state) => state.createNewConversation);
@@ -87,7 +86,6 @@ export const useChatActions = () => {
 
   return {
     addMessage,
-    setTyping,
     setChatError,
     clearChat,
     createNewConversation,

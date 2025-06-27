@@ -16,7 +16,6 @@ export const InputChat = () => {
   const { setStatus, setSettingsModalOpen } = useUIActions();
   const {
     addMessage,
-    setTyping,
     createNewConversation,
     updateMessageContent,
     deleteLastMessage,
@@ -90,7 +89,6 @@ export const InputChat = () => {
         }
 
         setStatus("error", errorMessage);
-        setTyping(false);
         setIsLoading(false);
       },
     });

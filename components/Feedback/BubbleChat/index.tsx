@@ -9,7 +9,6 @@ import type { ComponentPropsWithoutRef } from "react";
 interface BubbleChatProps {
   message: string;
   name: string;
-  isTyping?: boolean;
   role?: "user" | "assistant";
   status?: "pending" | "success" | "error" | undefined;
 }
