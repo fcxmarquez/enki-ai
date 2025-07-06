@@ -1,6 +1,5 @@
 ---
-description: When linear MCP is used
-globs: 
+description: When work with Linear MCP or Linear Tasks
 alwaysApply: false
 ---
 * Never move a task to completed
