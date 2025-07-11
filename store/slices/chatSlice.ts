@@ -217,32 +217,35 @@ export const createChatSlice: StateCreator<
 
   updateMessageContent: (messageId, additionalContent) =>
     set((state) => {
-      const conversations = [...state.chat.conversations];
       const conversationIndex = getCurrentConversationIndex(state);
-
       if (conversationIndex === -1) return state;
 
-      const messages = [...conversations[conversationIndex].messages];
-      const messageIndex = messages.findIndex((msg) => msg.id === messageId);
-
+      const conversation = state.chat.conversations[conversationIndex];
+      const messageIndex = conversation.messages.findIndex((msg) => msg.id === messageId);
       if (messageIndex === -1) return state;
 
-      messages[messageIndex] = {
-        ...messages[messageIndex],
-        status: "success",
-        content: messages[messageIndex].content + additionalContent,
+      const updatedMessage = {
+        ...conversation.messages[messageIndex],
+        status: "success" as const,
+        content: conversation.messages[messageIndex].content + additionalContent,
       };
 
-      conversations[conversationIndex] = {
-        ...conversations[conversationIndex],
-        messages,
+      const updatedMessages = [...conversation.messages];
+      updatedMessages[messageIndex] = updatedMessage;
+
+      const updatedConversation = {
+        ...conversation,
+        messages: updatedMessages,
         lastModified: Date.now(),
       };
+
+      const updatedConversations = [...state.chat.conversations];
+      updatedConversations[conversationIndex] = updatedConversation;
 
       return {
         chat: {
           ...state.chat,
-          conversations,
+          conversations: updatedConversations,
         },
       };
     }),
