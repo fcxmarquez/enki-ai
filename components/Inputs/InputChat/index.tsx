@@ -1,17 +1,17 @@
 "use client";
 
 import { IoMdSend } from "react-icons/io";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUIActions, useChatActions, useChat, useConfig } from "@/store";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useManageChunks } from "@/hooks/useManageChunks";
 
 export const InputChat = () => {
   const [message, setMessage] = useState("");
-  const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
   const {
@@ -26,9 +26,7 @@ export const InputChat = () => {
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
 
   const handleSubmit = async () => {
     if (!message.trim()) return;
@@ -60,9 +58,15 @@ export const InputChat = () => {
     sendMessageStream.mutate({
       message,
       onChunk: (chunk: string) => {
-        updateMessageContent(assistantMessage.id, chunk);
+        accumulateChunk(assistantMessage.id, chunk);
       },
       onComplete: () => {
+        if (flushIntervalRef.current) {
+          clearInterval(flushIntervalRef.current);
+          flushIntervalRef.current = null;
+        }
+        flushChunks();
+
         setStatus("success", "Message sent!");
         setMessage("");
         setIsLoading(false);
@@ -71,6 +75,12 @@ export const InputChat = () => {
       },
       onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
+
+        if (flushIntervalRef.current) {
+          clearInterval(flushIntervalRef.current);
+          flushIntervalRef.current = null;
+        }
+        flushChunks();
 
         if (partialResponse && partialResponse.trim()) {
           updateMessageContent(assistantMessage.id, partialResponse);
@@ -100,10 +110,6 @@ export const InputChat = () => {
       handleSubmit();
     }
   };
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div className="relative flex justify-center w-full">
