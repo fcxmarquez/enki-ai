@@ -113,7 +113,7 @@ export const InputChat = () => {
 
   return (
     <div className="relative flex justify-center w-full">
-      <div className="relative flex items-center w-full max-w-[724px]">
+      <div className="relative flex items-center w-full max-w-[800px]">
         <Input
           className={cn(
             "min-h-[56px] w-full rounded-xl py-8 pl-4 pr-14 text-base backdrop-blur-lg bg-background/50"
