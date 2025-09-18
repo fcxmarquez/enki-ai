@@ -5,12 +5,14 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { useEffect, useState } from "react";
 import { Bot, User } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface BubbleChatProps {
   message: string;
   name: string;
   role?: "user" | "assistant";
   status?: "pending" | "success" | "error" | undefined;
+  isLastMessage?: boolean;
 }
 
 type CodeBlockProps = ComponentPropsWithoutRef<"code"> & {
@@ -23,6 +25,7 @@ export const BubbleChat = ({
   name,
   role = "user",
   status = "pending",
+  isLastMessage = false,
 }: BubbleChatProps) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -115,14 +118,20 @@ export const BubbleChat = ({
             <User className="h-6 w-6 text-foreground" />
           )}
         </div>
-        <div className="flex w-[calc(100%-50px)] flex-col">
+        <div className="flex w-full flex-col">
           <span className="mb-1 text-sm font-medium text-foreground">{name}</span>
           {role === "user" ? (
             <div className="self-end rounded-xl px-4 py-2 text-primary-foreground bg-primary">
               {message}
             </div>
           ) : (
-            <div className="prose prose-sm dark:prose-invert max-w-none text-foreground">
+            <div
+              className={cn(
+                "prose prose-sm dark:prose-invert max-w-none text-foreground",
+                role === "assistant" && "self-start",
+                isLastMessage && "min-h-[calc(100vh-152px)]"
+              )}
+            >
               {status === "pending" ? (
                 <div className="flex gap-1">
                   <span className="animate-bounce">.</span>
