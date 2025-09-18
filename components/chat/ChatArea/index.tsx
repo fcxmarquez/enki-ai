@@ -3,11 +3,11 @@
 
 import { BubbleChat } from "@/components/Feedback/BubbleChat";
 import { InputChat } from "@/components/Inputs/InputChat";
-import { ScrollToBottomButton } from "@/components/ScrollToBottomButton";
-import { GradientOverlay } from "@/components/GradientOverlay";
-import { useChat } from "@/store";
-import { useScrollManager } from "@/hooks/useScrollManager";
+import { useChat, useConfig, useChatActions, useUIActions } from "@/store";
 import { useEffect, useRef, useState } from "react";
+import { useManageChunks } from "@/hooks/useManageChunks";
+import { useSendMessageStream } from "@/fetch/chat/mutations";
+import { toast } from "sonner";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
@@ -19,21 +19,23 @@ export const ChatArea = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { setStatus, setSettingsModalOpen } = useUIActions();
+  const {
+    addMessage,
+    createNewConversation,
+    updateMessageContent,
+    deleteLastMessage,
+    lastMessageToSuccess,
+  } = useChatActions();
+  const sendMessageStream = useSendMessageStream();
+  const { currentConversationId } = useChat();
+  const { hasValidApiKey } = useConfig();
+  const hasApiKey = hasValidApiKey();
+
+  const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
-
-  // Check if there's currently a streaming response
-  const isStreamingResponse = messages.some(
-    (msg) => msg.role === "assistant" && msg.status === "pending"
-  );
-
-  // Initialize scroll manager
-  const { showScrollButton, scrollToBottom } = useScrollManager({
-    scrollContainerRef,
-    messagesLength: messages.length,
-    isStreamingResponse,
-    messages,
-  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -44,13 +46,95 @@ export const ChatArea = () => {
     return null;
   }
 
+  const handleSubmit = async (message: string) => {
+    if (!message.trim()) return;
+
+    if (!hasApiKey) {
+      toast.warning("Please configure your API key in settings to continue.");
+      setSettingsModalOpen(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    setStatus("loading", "Sending message...");
+
+    if (!currentConversationId) {
+      createNewConversation(message);
+    }
+
+    addMessage({
+      content: message,
+      role: "user",
+    });
+
+    requestAnimationFrame(() => {
+      scrollContainerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+
+    const assistantMessage = addMessage({
+      content: "",
+      role: "assistant",
+    });
+
+    sendMessageStream.mutate({
+      message,
+      onChunk: (chunk: string) => {
+        accumulateChunk(assistantMessage.id, chunk);
+      },
+      onComplete: () => {
+        if (flushIntervalRef.current) {
+          clearInterval(flushIntervalRef.current);
+          flushIntervalRef.current = null;
+        }
+        flushChunks();
+
+        setStatus("success", "Message sent!");
+        setIsLoading(false);
+
+        lastMessageToSuccess();
+      },
+      onError: (error: Error, partialResponse: string) => {
+        console.error("Streaming error:", error);
+
+        if (flushIntervalRef.current) {
+          clearInterval(flushIntervalRef.current);
+          flushIntervalRef.current = null;
+        }
+        flushChunks();
+
+        if (partialResponse && partialResponse.trim()) {
+          updateMessageContent(assistantMessage.id, partialResponse);
+        } else {
+          deleteLastMessage();
+        }
+
+        const errorMessage = error.message.includes("API key")
+          ? "Invalid API key. Please check your settings."
+          : "Failed to send message. Please try again.";
+
+        toast.error(errorMessage);
+
+        if (error.message.includes("API key")) {
+          setSettingsModalOpen(true);
+        }
+
+        setStatus("error", errorMessage);
+        setIsLoading(false);
+      },
+    });
+  };
+
   return (
-    <div className="absolute top-0 left-0 right-0 bottom-0 pt-14 flex flex-1 flex-col gap-4 min-h-screen max-h-screen bg-red-500">
-      <div
-        ref={scrollContainerRef}
-        className="absolute top-0 left-0 right-0 bottom-0 pt-14 flex flex-col rounded-xl max p-4 max-h-screen bg-blue-500 overflow-y-scroll"
-      >
-        <div className="max-w-[800px] w-full mx-auto">
+    <div
+      ref={scrollContainerRef}
+      className="absolute top-0 left-0 right-0 bottom-0 pt-14 flex flex-1 flex-col gap-4 min-h-screen max-h-screen"
+    >
+      <div className="absolute top-0 left-0 right-0 bottom-0 pt-14 flex flex-col rounded-xl max p-4 min-h-screen h-full">
+        <div className="max-w-[800px] w-full mx-auto flex-1">
           {messages.length === 0 ? (
             <div className="text-muted-foreground flex h-full flex-1 flex-col items-center justify-center gap-4 text-center">
               <h3 className="text-lg font-semibold text-text-default">
@@ -62,32 +146,26 @@ export const ChatArea = () => {
               </p>
             </div>
           ) : (
-            <div className="flex flex-col flex-1">
-              {messages.map((msg) => (
-                <BubbleChat
-                  key={msg.id}
-                  message={msg.content}
-                  name={msg.role === "assistant" ? "EnkiAI" : "You"}
-                  role={msg.role}
-                  status={msg.status}
-                />
-              ))}
-            </div>
+            messages.map((msg) => (
+              <BubbleChat
+                key={msg.id}
+                message={msg.content}
+                name={msg.role === "assistant" ? "EnkiAI" : "You"}
+                role={msg.role}
+                status={msg.status}
+                isLastMessage={msg.id === messages[messages.length - 1].id}
+              />
+            ))
           )}
           <div ref={messagesEndRef} />
-          {/* Gradient overlay when content overflows */}
-          <GradientOverlay show={showScrollButton} />
         </div>
 
         <div className="sticky bottom-0 w-full">
           <div className="py-8">
-            <InputChat />
+            <InputChat isLoading={isLoading} onSubmit={handleSubmit} />
           </div>
         </div>
       </div>
-
-      {/* Scroll to bottom button */}
-      <ScrollToBottomButton show={showScrollButton} onClick={scrollToBottom} />
     </div>
   );
 };

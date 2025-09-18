@@ -1,113 +1,27 @@
 "use client";
 
 import { IoMdSend } from "react-icons/io";
-import { useState } from "react";
-import { useUIActions, useChatActions, useChat, useConfig } from "@/store";
-import { useSendMessageStream } from "@/fetch/chat/mutations";
-import { toast } from "sonner";
+import { FC, useState } from "react";
+import { useConfig } from "@/store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useManageChunks } from "@/hooks/useManageChunks";
 
-export const InputChat = () => {
+interface InputChatProps {
+  onSubmit: (message: string) => void;
+  isLoading: boolean;
+}
+
+export const InputChat: FC<InputChatProps> = ({ onSubmit, isLoading }) => {
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { setStatus, setSettingsModalOpen } = useUIActions();
-  const {
-    addMessage,
-    createNewConversation,
-    updateMessageContent,
-    deleteLastMessage,
-    lastMessageToSuccess,
-  } = useChatActions();
-  const sendMessageStream = useSendMessageStream();
-  const { currentConversationId } = useChat();
+
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-
-  const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
-
-  const handleSubmit = async () => {
-    if (!message.trim()) return;
-
-    if (!hasApiKey) {
-      toast.warning("Please configure your API key in settings to continue.");
-      setSettingsModalOpen(true);
-      return;
-    }
-
-    setIsLoading(true);
-
-    setStatus("loading", "Sending message...");
-
-    if (!currentConversationId) {
-      createNewConversation(message);
-    }
-
-    addMessage({
-      content: message,
-      role: "user",
-    });
-
-    const assistantMessage = addMessage({
-      content: "",
-      role: "assistant",
-    });
-
-    sendMessageStream.mutate({
-      message,
-      onChunk: (chunk: string) => {
-        accumulateChunk(assistantMessage.id, chunk);
-      },
-      onComplete: () => {
-        if (flushIntervalRef.current) {
-          clearInterval(flushIntervalRef.current);
-          flushIntervalRef.current = null;
-        }
-        flushChunks();
-
-        setStatus("success", "Message sent!");
-        setMessage("");
-        setIsLoading(false);
-
-        lastMessageToSuccess();
-      },
-      onError: (error: Error, partialResponse: string) => {
-        console.error("Streaming error:", error);
-
-        if (flushIntervalRef.current) {
-          clearInterval(flushIntervalRef.current);
-          flushIntervalRef.current = null;
-        }
-        flushChunks();
-
-        if (partialResponse && partialResponse.trim()) {
-          updateMessageContent(assistantMessage.id, partialResponse);
-        } else {
-          deleteLastMessage();
-        }
-
-        const errorMessage = error.message.includes("API key")
-          ? "Invalid API key. Please check your settings."
-          : "Failed to send message. Please try again.";
-
-        toast.error(errorMessage);
-
-        if (error.message.includes("API key")) {
-          setSettingsModalOpen(true);
-        }
-
-        setStatus("error", errorMessage);
-        setIsLoading(false);
-      },
-    });
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+      onSubmit(message);
     }
   };
 
@@ -134,7 +48,7 @@ export const InputChat = () => {
             "absolute right-2 h-10 w-10 rounded-lg",
             "hover:opacity-90 transition-opacity"
           )}
-          onClick={handleSubmit}
+          onClick={() => onSubmit(message)}
           disabled={isLoading || !message.trim()}
           aria-label="Send message"
         >
