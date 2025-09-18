@@ -24,7 +24,6 @@ export const useStore = create<StoreState>()(
           },
           config: state.config,
         }),
-        version: 2,
       }
     )
   )
