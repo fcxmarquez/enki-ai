@@ -129,18 +129,6 @@ export const ChatArea = () => {
 
   return (
     <div className="flex flex-col flex-1 max-h-[calc(100vh-56px)] h-full overflow-y-hidden">
-      <button
-        className="top-20 right-4 absolute"
-        onClick={() =>
-          scrollContainerRef.current?.scrollTo({
-            behavior: "smooth",
-            top: scrollContainerRef.current?.scrollHeight,
-          })
-        }
-      >
-        Test scroll to bottom
-      </button>
-
       <div
         ref={scrollContainerRef}
         className="flex flex-col w-full flex-1 overflow-y-scroll"
