@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toaster />
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset className="relative max-h-screen overflow-y-scroll">
+            <SidebarInset className="relative min-h-dvh max-h-dvh h-full overflow-y-hidden">
               <header className="flex h-14 sticky top-0 z-10 bg-background/50 backdrop-blur-lg shrink-0 items-center gap-2">
                 <div className="flex flex-1 items-center gap-2 px-3">
                   <SidebarTrigger />
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <NavActions />
                 </div>
               </header>
-              <div className="flex flex-1 flex-col">{children}</div>
+              {children}
             </SidebarInset>
           </SidebarProvider>
         </Providers>
