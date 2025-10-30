@@ -79,8 +79,6 @@ export const ChatArea = () => {
       });
     });
 
-    debugger;
-
     sendMessageStream.mutate({
       message,
       onChunk: (chunk: string) => {
