@@ -79,18 +79,12 @@ export const useSendMessageStreamTest = () => {
   return useMutation({
     mutationFn: async ({ onChunk, onComplete, onError }: SendMessageStreamVariables) => {
       let fullResponse = "";
-      let i = 0;
 
       try {
-        for (const chunk of MOCK_RESPONSE.split("")) {
-          i++;
-          fullResponse += chunk;
+        for (const chunk of MOCK_RESPONSE.split(" ")) {
+          fullResponse += ` ${chunk}`;
           await new Promise((resolve) => setTimeout(resolve, 1));
-          console.log("i", i);
-          if (i === 22) {
-            throw new Error("Test error");
-          }
-          onChunk?.(chunk);
+          onChunk?.(` ${chunk}`);
         }
 
         onComplete?.(fullResponse);

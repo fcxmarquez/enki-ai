@@ -1,20 +1,13 @@
-/* eslint-disable jsx-a11y/aria-role */
 "use client";
+/* eslint-disable jsx-a11y/aria-role */
 
-import { BubbleChat } from "@/components/Feedback/BubbleChat";
-import { InputChat } from "@/components/Inputs/InputChat";
-import { useChat } from "@/store";
-import { useEffect, useRef, useState } from "react";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
-import { colors } from "@/constants/systemDesign/colors";
 // import { hasActiveSession } from "@/utils/supabase/session";
+import { ChatArea } from "@/components/chat/ChatArea";
 
 export default function Home() {
-  const { messages } = useChat();
   // const { setSettingsModalOpen } = useUIActions();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
@@ -39,19 +32,6 @@ export default function Home() {
     }
   }, [isMounted, showModal]);
   */
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Prevent hydration issues by not rendering until client-side
-  if (!isMounted) {
-    return null;
-  }
 
   // TEMP: Disabled for rebuild - FCX-30
   // Authentication loading check temporarily disabled
@@ -82,39 +62,5 @@ export default function Home() {
   }
   */
 
-  return (
-    <div className="flex flex-1 flex-col gap-4 sm:p-4">
-      <div className="relative flex grow flex-col overflow-hidden rounded-xl">
-        <div className="flex grow flex-col overflow-y-auto p-4">
-          {messages.length === 0 ? (
-            <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-4 text-center">
-              <h3 className="text-lg font-semibold text-text-default">
-                Welcome to EnkiAI!
-              </h3>
-              <p style={{ color: colors.text.paragraph }} className="max-w-md">
-                Start a conversation by typing a message below. The AI supports markdown
-                formatting, code highlighting, and more.
-              </p>
-            </div>
-          ) : (
-            messages.map((msg) => (
-              <BubbleChat
-                key={msg.id}
-                message={msg.content}
-                name={msg.role === "assistant" ? "EnkiAI" : "You"}
-                role={msg.role}
-                status={msg.status}
-              />
-            ))
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-      <div className="sticky bottom-0 w-full">
-        <div className="p-8">
-          <InputChat />
-        </div>
-      </div>
-    </div>
-  );
+  return <ChatArea />;
 }
