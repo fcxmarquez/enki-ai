@@ -4,8 +4,6 @@ import { BubbleChat } from "@/components/Feedback/BubbleChat";
 export const Thread = () => {
   const { messages } = useChat();
 
-  console.log("messages", messages);
-
   return (
     <>
       {messages.map((message) => (
