@@ -4,10 +4,6 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { ModelType } from "@/store/types";
 
-function isReasonerModel(model: ModelType): boolean {
-  return model === "o3" || model === "o4-mini";
-}
-
 export class ChatService {
   private llm: BaseChatModel;
   private static instance: ChatService;
@@ -30,24 +26,15 @@ export class ChatService {
       return;
     }
 
-    if (config.selectedModel.startsWith("gpt-") || config.selectedModel.startsWith("o")) {
+    if (config.selectedModel.startsWith("gpt-")) {
       if (!config.openAIKey) {
-        throw new Error("OpenAI API key is required for GPT and O-series models.");
+        throw new Error("OpenAI API key is required for GPT models.");
       }
-      const options: {
-        apiKey: string;
-        model: string;
-        temperature?: number;
-      } = {
+      this.llm = new ChatOpenAI({
         apiKey: config.openAIKey,
         model: config.selectedModel,
-      };
-
-      if (!isReasonerModel(config.selectedModel)) {
-        options.temperature = 0.7;
-      }
-
-      this.llm = new ChatOpenAI(options);
+        temperature: 0.7,
+      });
       return;
     }
 

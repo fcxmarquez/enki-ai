@@ -13,8 +13,8 @@ export interface ConfigSlice {
 const initialConfig: Config = {
   openAIKey: "",
   anthropicKey: "",
-  selectedModel: "claude-sonnet-4-20250514",
-  enabledModels: ["claude-sonnet-4-20250514", "gpt-4.1-mini"],
+  selectedModel: "claude-sonnet-4-5-20250929",
+  enabledModels: ["claude-sonnet-4-5-20250929", "gpt-5-mini"],
 };
 
 export const createConfigSlice: StateCreator<
@@ -30,7 +30,7 @@ export const createConfigSlice: StateCreator<
       const updatedConfig = { ...state.config, ...newConfig };
 
       if (!updatedConfig.enabledModels) {
-        updatedConfig.enabledModels = ["claude-sonnet-4-20250514", "gpt-4.1-mini"];
+        updatedConfig.enabledModels = ["claude-sonnet-4-5-20250929", "gpt-5-mini"];
       }
 
       return {
