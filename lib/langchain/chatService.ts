@@ -5,7 +5,7 @@ import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { ModelType } from "@/store/types";
 
 function isReasonerModel(model: ModelType): boolean {
-  return model === "o3" || model === "o4-mini";
+  return model === "gpt-5.2";
 }
 
 export class ChatService {
