@@ -17,7 +17,6 @@ This project uses Supabase with Drizzle ORM for database management.
    After running the migrations, you need to manually set up a database trigger in the Supabase dashboard to automatically create user records when someone signs up.
 
    **Steps:**
-
    1. Go to your Supabase Dashboard
    2. Navigate to Database → Functions
    3. Create a new function named `handle_new_user` with this code:
@@ -43,7 +42,6 @@ This project uses Supabase with Drizzle ORM for database management.
 
    4. Navigate to Database → Triggers
    5. Create a new trigger:
-
       - **Name**: `on_auth_user_created`
       - **Table**: `auth.users`
       - **Events**: `INSERT`

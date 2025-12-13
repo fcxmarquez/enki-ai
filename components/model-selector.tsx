@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useConfig } from "@/store";
 import { ModelType } from "@/store/types";
 import { MODEL_LABELS } from "@/constants/models";
@@ -17,14 +17,8 @@ import { MODEL_LABELS } from "@/constants/models";
 export function ModelSelector() {
   const { config, setConfig, hasValidApiKey } = useConfig();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentModel, setCurrentModel] = useState<ModelType>(config.selectedModel);
-
-  useEffect(() => {
-    setCurrentModel(config.selectedModel);
-  }, [config.selectedModel]);
 
   const handleModelSelect = (model: ModelType) => {
-    setCurrentModel(model);
     setConfig({ selectedModel: model });
   };
 
@@ -64,8 +58,8 @@ export function ModelSelector() {
     );
   }
 
-  const displayModel = availableModels.includes(currentModel)
-    ? currentModel
+  const displayModel = availableModels.includes(config.selectedModel)
+    ? config.selectedModel
     : availableModels[0];
   const currentModelInfo = MODEL_LABELS[displayModel];
 

@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/aria-role */
 "use client";
 
 import { InputChat } from "@/components/Inputs/InputChat";
@@ -37,6 +36,7 @@ export const ChatArea = () => {
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
 

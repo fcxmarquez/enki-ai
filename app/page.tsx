@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable jsx-a11y/aria-role */
 
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
