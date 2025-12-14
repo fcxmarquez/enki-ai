@@ -43,7 +43,12 @@ import {
 import { useConfig, useUserActions } from "@/store";
 import { ModelType } from "@/store/types";
 import { createClient } from "@/utils/supabase/client";
-import { MODEL_OPTIONS, MODEL_VALUES } from "@/constants/models";
+import {
+  MODEL_OPTIONS,
+  MODEL_VALUES,
+  DEFAULT_MODEL,
+  DEFAULT_ENABLED_MODELS,
+} from "@/constants/models";
 
 interface SettingsModalProps {
   open: boolean;
@@ -70,11 +75,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     defaultValues: {
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
-      enabledModels: (config.enabledModels || [
-        "claude-sonnet-4-20250514",
-        "gpt-4.1-mini",
-      ]) as ModelType[],
+      selectedModel: (config.selectedModel || DEFAULT_MODEL) as ModelType,
+      enabledModels: (config.enabledModels || [...DEFAULT_ENABLED_MODELS]) as ModelType[],
     },
   });
 
@@ -82,11 +84,8 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     form.reset({
       openAIKey: config.openAIKey || "",
       anthropicKey: config.anthropicKey || "",
-      selectedModel: (config.selectedModel || "claude-sonnet-4-20250514") as ModelType,
-      enabledModels: (config.enabledModels || [
-        "claude-sonnet-4-20250514",
-        "gpt-4.1-mini",
-      ]) as ModelType[],
+      selectedModel: (config.selectedModel || DEFAULT_MODEL) as ModelType,
+      enabledModels: (config.enabledModels || [...DEFAULT_ENABLED_MODELS]) as ModelType[],
     });
   }, [config, form]);
 

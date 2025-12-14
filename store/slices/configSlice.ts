@@ -1,7 +1,11 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
 import { Config } from "../types";
-import { MODEL_OPTIONS } from "@/constants/models";
+import {
+  MODEL_OPTIONS,
+  DEFAULT_MODEL,
+  DEFAULT_ENABLED_MODELS,
+} from "@/constants/models";
 
 export interface ConfigSlice {
   config: Config;
@@ -13,8 +17,8 @@ export interface ConfigSlice {
 const initialConfig: Config = {
   openAIKey: "",
   anthropicKey: "",
-  selectedModel: "claude-sonnet-4-20250514",
-  enabledModels: ["claude-sonnet-4-20250514", "gpt-4.1-mini"],
+  selectedModel: DEFAULT_MODEL,
+  enabledModels: [...DEFAULT_ENABLED_MODELS],
 };
 
 export const createConfigSlice: StateCreator<
@@ -30,7 +34,7 @@ export const createConfigSlice: StateCreator<
       const updatedConfig = { ...state.config, ...newConfig };
 
       if (!updatedConfig.enabledModels) {
-        updatedConfig.enabledModels = ["claude-sonnet-4-20250514", "gpt-4.1-mini"];
+        updatedConfig.enabledModels = [...DEFAULT_ENABLED_MODELS];
       }
 
       return {
