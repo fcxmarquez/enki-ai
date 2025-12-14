@@ -1,37 +1,25 @@
 "use client";
 
 import { InputChat } from "@/components/Inputs/InputChat";
-import { useChat, useConfig, useChatActions, useUIActions } from "@/store";
+import { useChat, useConfig, useUIActions } from "@/store";
 import { useEffect, useRef, useState } from "react";
-import { useManageChunks } from "@/hooks/useManageChunks";
-import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
 // import { hasActiveSession } from "@/utils/supabase/session";
 import { Thread } from "@/components/chat/Thread";
+import { useCircleChat } from "@/hooks/useCircleChat";
 
 export const ChatArea = () => {
   const { messages } = useChat();
   // const { setSettingsModalOpen } = useUIActions();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { setStatus, setSettingsModalOpen } = useUIActions();
-  const {
-    addMessage,
-    createNewConversation,
-    updateMessageContent,
-    deleteLastMessage,
-    lastMessageToSuccess,
-  } = useChatActions();
-  const sendMessageStream = useSendMessageStream();
-  const { currentConversationId } = useChat();
+  const { setSettingsModalOpen } = useUIActions();
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-
-  const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
+  const { sendMessage, isLoading } = useCircleChat();
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
@@ -54,77 +42,7 @@ export const ChatArea = () => {
       return;
     }
 
-    setIsLoading(true);
-
-    setStatus("loading", "Sending message...");
-
-    if (!currentConversationId) {
-      createNewConversation(message);
-    }
-
-    addMessage({
-      content: message,
-      role: "user",
-    });
-
-    const assistantMessage = addMessage({
-      content: "",
-      role: "assistant",
-    });
-
-    requestAnimationFrame(() => {
-      scrollContainerRef.current?.scrollTo({
-        behavior: "smooth",
-        top: scrollContainerRef.current?.scrollHeight,
-      });
-    });
-
-    sendMessageStream.mutate({
-      message,
-      onChunk: (chunk: string) => {
-        accumulateChunk(assistantMessage.id, chunk);
-      },
-      onComplete: () => {
-        if (flushIntervalRef.current) {
-          clearInterval(flushIntervalRef.current);
-          flushIntervalRef.current = null;
-        }
-        flushChunks();
-
-        setStatus("success", "Message sent!");
-        setIsLoading(false);
-
-        lastMessageToSuccess();
-      },
-      onError: (error: Error, partialResponse: string) => {
-        console.error("Streaming error:", error);
-
-        if (flushIntervalRef.current) {
-          clearInterval(flushIntervalRef.current);
-          flushIntervalRef.current = null;
-        }
-        flushChunks();
-
-        if (partialResponse && partialResponse.trim()) {
-          updateMessageContent(assistantMessage.id, partialResponse);
-        } else {
-          deleteLastMessage();
-        }
-
-        const errorMessage = error.message.includes("API key")
-          ? "Invalid API key. Please check your settings."
-          : "Failed to send message. Please try again.";
-
-        toast.error(errorMessage);
-
-        if (error.message.includes("API key")) {
-          setSettingsModalOpen(true);
-        }
-
-        setStatus("error", errorMessage);
-        setIsLoading(false);
-      },
-    });
+    sendMessage(message);
   };
 
   return (
