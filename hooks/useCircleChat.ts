@@ -1,21 +1,34 @@
-import { useRef, useState } from "react";
+import { RefObject, useState } from "react";
 import { useChat, useChatActions, useUIActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
 
-export const useCircleChat = () => {
+interface UseCircleChatOptions {
+  scrollContainerRef?: RefObject<HTMLDivElement | null>;
+}
+
+export const useCircleChat = (options: UseCircleChatOptions = {}) => {
+  const { scrollContainerRef } = options;
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
   const { currentConversationId } = useChat();
-  const { createNewConversation, addMessage } = useChatActions();
+  const {
+    createNewConversation,
+    addMessage,
+    lastMessageToSuccess,
+    updateMessageContent,
+    deleteLastMessage,
+  } = useChatActions();
   const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const sendMessageStream = useSendMessageStream();
-  const { lastMessageToSuccess, updateMessageContent, deleteLastMessage } =
-    useChatActions();
 
   const sendMessage = (message: string) => {
+    // Guard against concurrent sends
+    if (isLoading) {
+      return;
+    }
+
     setIsLoading(true);
 
     setStatus("loading", "Sending message...");
@@ -34,12 +47,14 @@ export const useCircleChat = () => {
       role: "assistant",
     });
 
-    requestAnimationFrame(() => {
-      scrollContainerRef.current?.scrollTo({
-        behavior: "smooth",
-        top: scrollContainerRef.current?.scrollHeight,
+    if (scrollContainerRef?.current) {
+      requestAnimationFrame(() => {
+        scrollContainerRef.current?.scrollTo({
+          behavior: "smooth",
+          top: scrollContainerRef.current?.scrollHeight,
+        });
       });
-    });
+    }
 
     sendMessageStream.mutate({
       message,

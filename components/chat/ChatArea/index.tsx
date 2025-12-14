@@ -19,7 +19,7 @@ export const ChatArea = () => {
   const { setSettingsModalOpen } = useUIActions();
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-  const { sendMessage, isLoading } = useCircleChat();
+  const { sendMessage, isLoading } = useCircleChat({ scrollContainerRef });
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
