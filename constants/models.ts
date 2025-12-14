@@ -1,4 +1,3 @@
-// Reasoning levels unified across providers
 export type ReasoningLevel = "none" | "low" | "medium" | "high" | "max";
 
 export type ModelProvider = "OpenAI" | "Anthropic" | "Google";
@@ -6,10 +5,10 @@ export type ModelProvider = "OpenAI" | "Anthropic" | "Google";
 export type ApiKeyType = "openAIKey" | "anthropicKey" | "googleKey";
 
 export interface ModelReasoning {
-  configurable: boolean; // Can user adjust reasoning level?
-  supportsTemperature: boolean; // Can pass temperature param when reasoning is off?
-  defaultLevel: ReasoningLevel; // App default (lowest available)
-  levels: ReasoningLevel[]; // Available levels for this model
+  configurable: boolean;
+  supportsTemperature: boolean;
+  defaultLevel: ReasoningLevel;
+  levels: ReasoningLevel[];
 }
 
 export interface ModelDefinition {
@@ -30,7 +29,7 @@ export const MODEL_OPTIONS: ModelDefinition[] = [
     description: "Best coding model with enhanced capabilities",
     reasoning: {
       configurable: true,
-      supportsTemperature: true, // Only when reasoning is off
+      supportsTemperature: true,
       defaultLevel: "none",
       levels: ["none", "low", "medium", "high"],
     },
@@ -43,7 +42,7 @@ export const MODEL_OPTIONS: ModelDefinition[] = [
     description: "Most intelligent model for complex reasoning",
     reasoning: {
       configurable: true,
-      supportsTemperature: true, // Only when reasoning is off
+      supportsTemperature: true,
       defaultLevel: "none",
       levels: ["none", "low", "medium", "high", "max"],
     },
@@ -69,7 +68,7 @@ export const MODEL_OPTIONS: ModelDefinition[] = [
     description: "Flagship reasoning model for complex tasks",
     reasoning: {
       configurable: true,
-      supportsTemperature: false, // Never supports temperature
+      supportsTemperature: false,
       defaultLevel: "none",
       levels: ["none", "low", "medium", "high", "max"],
     },
@@ -102,16 +101,13 @@ export const MODEL_OPTIONS: ModelDefinition[] = [
   },
 ];
 
-// Default configuration
 export const DEFAULT_MODEL = "claude-sonnet-4-5-20250929";
 export const DEFAULT_ENABLED_MODELS = ["claude-sonnet-4-5-20250929", "gpt-5-mini"];
 
-// Helper to get model config by value
 export function getModelConfig(modelValue: string): ModelDefinition | undefined {
   return MODEL_OPTIONS.find((m) => m.value === modelValue);
 }
 
-// Derived exports for backward compatibility
 export const MODEL_LABELS = MODEL_OPTIONS.reduce(
   (acc, option) => {
     acc[option.value] = { label: option.label, provider: option.provider };
@@ -119,11 +115,6 @@ export const MODEL_LABELS = MODEL_OPTIONS.reduce(
   },
   {} as Record<string, { label: string; provider: string }>
 );
-
-export const MODEL_VALUES_TYPES = MODEL_OPTIONS.reduce((acc, option) => {
-  acc.push(option.value);
-  return acc;
-}, [] as string[]);
 
 export const MODEL_VALUES = MODEL_OPTIONS.map((option) => option.value) as [
   string,

@@ -21,7 +21,6 @@ export class ChatService {
       throw new Error(`Unknown model: ${config.selectedModel}`);
     }
 
-    // Initialize based on provider
     switch (modelConfig.provider) {
       case "Anthropic": {
         if (!config.anthropicKey) {
@@ -37,7 +36,6 @@ export class ChatService {
           model: config.selectedModel,
         };
 
-        // Only pass temperature when model supports it and reasoning is off (default)
         if (modelConfig.reasoning.supportsTemperature) {
           anthropicOptions.temperature = 0.7;
         }
@@ -60,7 +58,6 @@ export class ChatService {
           model: config.selectedModel,
         };
 
-        // Only pass temperature when model supports it
         if (modelConfig.reasoning.supportsTemperature) {
           openAIOptions.temperature = 0.7;
         }
@@ -70,7 +67,6 @@ export class ChatService {
       }
 
       case "Google": {
-        // Future: Add Google Gemini support
         throw new Error("Google Gemini support is not yet implemented.");
       }
 
