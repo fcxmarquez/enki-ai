@@ -15,7 +15,7 @@ export const useCircleChat = () => {
   const { lastMessageToSuccess, updateMessageContent, deleteLastMessage } =
     useChatActions();
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = (message: string) => {
     setIsLoading(true);
 
     setStatus("loading", "Sending message...");
