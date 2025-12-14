@@ -3,10 +3,7 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
 import { ModelType } from "@/store/types";
-
-function isReasonerModel(model: ModelType): boolean {
-  return model === "gpt-5.2";
-}
+import { getModelConfig } from "@/constants/models";
 
 export class ChatService {
   private llm: BaseChatModel;
@@ -18,40 +15,69 @@ export class ChatService {
     anthropicKey?: string;
     selectedModel: ModelType;
   }) {
-    if (config.selectedModel.startsWith("claude-")) {
-      if (!config.anthropicKey) {
-        throw new Error("Anthropic API key is required for Claude models.");
-      }
-      this.llm = new ChatAnthropic({
-        apiKey: config.anthropicKey,
-        model: config.selectedModel,
-        temperature: 0.7,
-      });
-      return;
+    const modelConfig = getModelConfig(config.selectedModel);
+
+    if (!modelConfig) {
+      throw new Error(`Unknown model: ${config.selectedModel}`);
     }
 
-    if (config.selectedModel.startsWith("gpt-") || config.selectedModel.startsWith("o")) {
-      if (!config.openAIKey) {
-        throw new Error("OpenAI API key is required for GPT and O-series models.");
-      }
-      const options: {
-        apiKey: string;
-        model: string;
-        temperature?: number;
-      } = {
-        apiKey: config.openAIKey,
-        model: config.selectedModel,
-      };
+    // Initialize based on provider
+    switch (modelConfig.provider) {
+      case "Anthropic": {
+        if (!config.anthropicKey) {
+          throw new Error("Anthropic API key is required for Claude models.");
+        }
 
-      if (!isReasonerModel(config.selectedModel)) {
-        options.temperature = 0.7;
+        const anthropicOptions: {
+          apiKey: string;
+          model: string;
+          temperature?: number;
+        } = {
+          apiKey: config.anthropicKey,
+          model: config.selectedModel,
+        };
+
+        // Only pass temperature when model supports it and reasoning is off (default)
+        if (modelConfig.reasoning.supportsTemperature) {
+          anthropicOptions.temperature = 0.7;
+        }
+
+        this.llm = new ChatAnthropic(anthropicOptions);
+        break;
       }
 
-      this.llm = new ChatOpenAI(options);
-      return;
+      case "OpenAI": {
+        if (!config.openAIKey) {
+          throw new Error("OpenAI API key is required for OpenAI models.");
+        }
+
+        const openAIOptions: {
+          apiKey: string;
+          model: string;
+          temperature?: number;
+        } = {
+          apiKey: config.openAIKey,
+          model: config.selectedModel,
+        };
+
+        // Only pass temperature when model supports it
+        if (modelConfig.reasoning.supportsTemperature) {
+          openAIOptions.temperature = 0.7;
+        }
+
+        this.llm = new ChatOpenAI(openAIOptions);
+        break;
+      }
+
+      case "Google": {
+        // Future: Add Google Gemini support
+        throw new Error("Google Gemini support is not yet implemented.");
+      }
+
+      default: {
+        throw new Error(`Unsupported provider: ${modelConfig.provider}`);
+      }
     }
-
-    throw new Error("Invalid model selected.");
   }
 
   public static getInstance(config: {
