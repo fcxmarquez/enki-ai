@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 import { ModalRender } from "@/components/modals/ModalRender";
@@ -10,12 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ModelSelector } from "@/components/model-selector";
 import { Toaster } from "@/components/ui/sonner";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-primary",
-});
 
 export const metadata: Metadata = {
   title: "EnkiAI",
@@ -32,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${inter.className} relative`}>
+      <body className="font-sans relative">
         <Providers>
           <ModalRender />
           <ShadcnModalRender />
