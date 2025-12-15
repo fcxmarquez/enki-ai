@@ -94,6 +94,7 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
     anthropic: false,
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const watchedValues = form.watch();
 
   const hasAnyApiKey = Boolean(watchedValues.openAIKey || watchedValues.anthropicKey);
