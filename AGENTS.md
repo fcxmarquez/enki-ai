@@ -2,15 +2,15 @@
 
 Executes:
 
-1. `pnpm install`
+1. `bun install`
 
 ## Collaboration
 
 When the task is completed, run the following command.
 
-1. `pnpm run format`
-2. `pnpm run lint`
-3. `pnpm run build`
+1. `bun run format`
+2. `bun run lint`
+3. `bun run build`
 
 ## Project guidelines
 

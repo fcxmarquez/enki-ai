@@ -6,24 +6,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Core Development
 
-- `pnpm dev` - Start development server with Turbopack
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
-- `pnpm format` - Format code with Prettier
-- **Do not execute `pnpm dev`, because the terminal won't stop and will interrupt your workflow. Instead request the user to run for you to continue**
+- `bun dev` - Start development server with Turbopack
+- `bun build` - Build for production
+- `bun start` - Start production server
+- `bun lint` - Run ESLint
+- `bun format` - Format code with Prettier
+- **Do not execute `bun dev`, because the terminal won't stop and will interrupt your workflow. Instead request the user to run for you to continue**
 
 ### Database Management
 
-- `pnpm migrate:generate` - Generate database migrations
-- `pnpm migrate:push` - Generate and push migrations to database
+- `bun migrate:generate` - Generate database migrations
+- `bun migrate:push` - Generate and push migrations to database
 - `npx drizzle-kit push` - Push schema changes to database
 
 ### Testing & Quality Assurance
 
-- `pnpm storybook` - Run Storybook development server
-- `pnpm build-storybook` - Build Storybook for production
-- `npx tsx --noEmit && pnpm lint && pnpm build` - Complete quality check (run this after finishing tasks)
+- `bun storybook` - Run Storybook development server
+- `bun build-storybook` - Build Storybook for production
+- `npx tsx --noEmit && bun lint && bun build` - Complete quality check (run this after finishing tasks)
 
 ### Git Workflow
 
@@ -37,7 +37,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
-- **Package Manager**: pnpm
+- **Package Manager**: bun
 - **State Management**: Zustand with persistence
 - **Database**: Supabase PostgreSQL with Drizzle ORM
 - **UI Components**: shadcn/ui + Tailwind CSS
@@ -129,7 +129,7 @@ Required environment variables:
 
 ### Code Quality
 
-- Always run `npx tsx --noEmit && pnpm lint && pnpm build` after completing tasks
+- Always run `npx tsx --noEmit && bun lint && bun build` after completing tasks
 - Use conventional commit messages
 - Follow existing component patterns and naming conventions
 

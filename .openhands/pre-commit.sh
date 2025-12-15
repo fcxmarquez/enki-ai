@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-pnpm run format && pnpm run lint && pnpm run build
+bun run format && bun run lint && bun run build
