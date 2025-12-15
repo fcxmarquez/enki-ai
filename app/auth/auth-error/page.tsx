@@ -26,6 +26,7 @@ export default function AuthErrorPage() {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setErrorDetails({
       error: params.get("error") || "Unknown error",
       errorCode: params.get("error_code") || "",

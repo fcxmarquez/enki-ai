@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { breakpoints } from "@/constants/systemDesign";
 
 export const useViewMobile = (toDesktop: boolean, viewport?: number) => {
   const [width, setWidth] = useState(0);
   const [mounted, setMounted] = useState(false);
 
+  const updateDimensions = useCallback(() => {
+    const windowWidth = window.innerWidth;
+    setWidth(windowWidth);
+  }, []);
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
-  const updateDimensions = () => {
-    const width = window.innerWidth;
-    setWidth(width);
-  };
+  }, [updateDimensions]);
 
   if (!mounted) {
     return false;

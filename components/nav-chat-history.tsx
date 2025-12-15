@@ -61,11 +61,18 @@ export function NavChatHistory({
                         "w-full h-full py-1 px-3"
                       )}
                     >
-                      <button
+                      <div
+                        role="button"
+                        tabIndex={0}
                         onClick={() => handleConversationClick(chat.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleConversationClick(chat.id);
+                          }
+                        }}
                         onMouseEnter={() => setHoveredChatId(chat.id)}
                         onMouseLeave={() => setHoveredChatId(null)}
-                        className="flex items-center justify-between w-full"
+                        className="flex items-center justify-between w-full cursor-pointer"
                       >
                         <span>{chat.title}</span>
 
@@ -74,14 +81,23 @@ export function NavChatHistory({
                             setOpenDropdownId(open ? chat.id : null)
                           }
                         >
-                          <DropdownMenuTrigger>
-                            <MoreHorizontal
-                              className={`${
-                                hoveredChatId === chat.id || openDropdownId === chat.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              } transition-opacity`}
-                            />
+                          <DropdownMenuTrigger
+                            asChild
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <span
+                              role="button"
+                              tabIndex={0}
+                              className="inline-flex items-center justify-center"
+                            >
+                              <MoreHorizontal
+                                className={`${
+                                  hoveredChatId === chat.id || openDropdownId === chat.id
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                } transition-opacity`}
+                              />
+                            </span>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuItem>
@@ -94,7 +110,7 @@ export function NavChatHistory({
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </button>
+                      </div>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
                 ))}
