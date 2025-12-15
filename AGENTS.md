@@ -1,6 +1,6 @@
-# CLAUDE.md
+# Repo rules
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI agent when working with code in this repository.
 
 ## Development Commands
 
@@ -28,7 +28,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Git Workflow
 
 - Use conventional commits with commitizen (husky installed)
-- Use `git commit --no-verify` to bypass hooks when needed
+- Use `git commit --no-verify` to bypass hooks when needed, this repo uses commitlint to enforce conventional commits. Take account this when you are committing code as an AI agent.
 - Follows @commitlint/config-conventional standards
 
 ## Architecture Overview
