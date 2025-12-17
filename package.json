@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "migrate:generate": "drizzle-kit generate",
-    "migrate:push": "pnpm run migrate:generate && drizzle-kit push",
+    "migrate:push": "bun run migrate:generate && drizzle-kit push",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -108,13 +108,6 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.7",
-      "@types/react-dom": "19.2.3"
     }
   }
 }

@@ -1,11 +1,7 @@
 import { StateCreator } from "zustand";
 import { StoreState } from "../types";
 import { Config } from "../types";
-import {
-  MODEL_OPTIONS,
-  DEFAULT_MODEL,
-  DEFAULT_ENABLED_MODELS,
-} from "@/constants/models";
+import { MODEL_OPTIONS, DEFAULT_MODEL, DEFAULT_ENABLED_MODELS } from "@/constants/models";
 
 export interface ConfigSlice {
   config: Config;
