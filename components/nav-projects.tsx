@@ -50,12 +50,12 @@ export function NavProjects({
           {projects.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <span title={item.name}>
+                <button title={item.name} disabled>
                   <div className="flex size-6 items-center justify-center">
                     <FolderClosed className="size-4 shrink-0" />
                   </div>
                   <span>{item.name}</span>
-                </span>
+                </button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
