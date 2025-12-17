@@ -1,3 +1,7 @@
+---
+alwaysApply: true
+---
+
 # Repo rules
 
 This file provides guidance to AI agent when working with code in this repository.
