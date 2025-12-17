@@ -60,9 +60,11 @@ export function NavProjects({
             </SidebarMenuItem>
           ))}
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
-              <MoreHorizontal />
-              <span>More</span>
+            <SidebarMenuButton asChild>
+              <button className="text-sidebar-foreground/70" disabled>
+                <MoreHorizontal />
+                <span>More</span>
+              </button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
