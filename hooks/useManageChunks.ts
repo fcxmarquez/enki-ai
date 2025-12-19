@@ -25,7 +25,7 @@ export const useManageChunks = () => {
       if (!flushIntervalRef.current) {
         flushIntervalRef.current = setInterval(() => {
           flushChunks();
-        }, 500);
+        }, 100);
       }
     },
     [flushChunks]
