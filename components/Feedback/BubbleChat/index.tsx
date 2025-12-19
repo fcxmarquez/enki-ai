@@ -41,7 +41,7 @@ export const BubbleChat = ({
             className={cn(
               "prose prose-sm dark:prose-invert max-w-none text-foreground",
               role === "assistant" && "self-start",
-              isLastMessage && "min-h-[calc(100dvh-300px)]"
+              isLastMessage && "min-h-[calc(100dvh-350px)]"
             )}
           >
             {status === "pending" ? (
