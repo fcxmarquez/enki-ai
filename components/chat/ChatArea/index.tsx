@@ -75,25 +75,27 @@ export const ChatArea = () => {
 
   return (
     <div className="flex flex-col flex-1 max-h-[calc(100vh-56px)] h-full overflow-y-hidden">
-      <div
-        ref={scrollContainerRef}
-        onScroll={checkScrollPosition}
-        className="flex relative flex-col w-full flex-1 overflow-y-auto"
-      >
-        <div className="max-w-[800px] w-full mx-auto h-full">
-          {messages.length === 0 ? (
-            <div className="text-muted-foreground flex h-full flex-1 flex-col items-center justify-center gap-4 text-center">
-              <h3 className="text-lg font-semibold text-text-default">
-                Welcome to EnkiAI!
-              </h3>
-              <p style={{ color: colors.text.paragraph }} className="max-w-md">
-                Start a conversation by typing a message below. The AI supports markdown
-                formatting, code highlighting, and more.
-              </p>
-            </div>
-          ) : (
-            <Thread />
-          )}
+      <div className="relative flex-1 min-h-0">
+        <div
+          ref={scrollContainerRef}
+          onScroll={checkScrollPosition}
+          className="absolute inset-0 flex flex-col w-full overflow-y-auto"
+        >
+          <div className="max-w-[800px] w-full mx-auto h-full">
+            {messages.length === 0 ? (
+              <div className="text-muted-foreground flex h-full flex-1 flex-col items-center justify-center gap-4 text-center">
+                <h3 className="text-lg font-semibold text-text-default">
+                  Welcome to EnkiAI!
+                </h3>
+                <p style={{ color: colors.text.paragraph }} className="max-w-md">
+                  Start a conversation by typing a message below. The AI supports markdown
+                  formatting, code highlighting, and more.
+                </p>
+              </div>
+            ) : (
+              <Thread />
+            )}
+          </div>
         </div>
 
         <AnimatePresence>
@@ -103,7 +105,7 @@ export const ChatArea = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.3 }}
-              className="sticky rounded-full p-2 bottom-4 self-center border-foreground bg-background border"
+              className="absolute left-1/2 -translate-x-1/2 bottom-4 rounded-full p-2 border-foreground bg-background border"
               onClick={() => {
                 if (scrollContainerRef.current) {
                   scrollContainerRef.current.scrollTo({
