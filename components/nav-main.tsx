@@ -1,7 +1,12 @@
 "use client";
 
 import { type LucideIcon } from "lucide-react";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
 /**
  * Renders a sidebar navigation menu with a list of items, each displaying an icon and title.
@@ -18,12 +23,21 @@ export function NavMain({
     onClick: () => void;
   }[];
 }) {
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleClick = (onClick: () => void) => {
+    onClick();
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <SidebarMenu>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={false}>
-            <button onClick={item.onClick}>
+            <button onClick={() => handleClick(item.onClick)}>
               <div className="flex size-6 items-center justify-center">
                 <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>
