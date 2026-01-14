@@ -1,10 +1,15 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatAnthropic } from "@langchain/anthropic";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { ModelType } from "@/store/types";
 import { getModelConfig } from "@/constants/models";
 
 type ChatModel = ChatOpenAI | ChatAnthropic;
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
 
 export class ChatService {
   private llm: ChatModel;
@@ -91,10 +96,18 @@ export class ChatService {
     return this.instance;
   }
 
-  public async sendMessage(message: string) {
+  private convertToLangChainMessages(history: ChatMessage[]) {
+    return history.map((msg) =>
+      msg.role === "user" ? new HumanMessage(msg.content) : new AIMessage(msg.content)
+    );
+  }
+
+  public async sendMessage(message: string, history: ChatMessage[] = []) {
     try {
+      const historyMessages = this.convertToLangChainMessages(history);
       const response = await this.llm.invoke([
         new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
+        ...historyMessages,
         new HumanMessage(message),
       ]);
 
@@ -106,11 +119,14 @@ export class ChatService {
   }
 
   public async *sendMessageStream(
-    message: string
+    message: string,
+    history: ChatMessage[] = []
   ): AsyncGenerator<string, void, unknown> {
     try {
+      const historyMessages = this.convertToLangChainMessages(history);
       const stream = await this.llm.stream([
         new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
+        ...historyMessages,
         new HumanMessage(message),
       ]);
 

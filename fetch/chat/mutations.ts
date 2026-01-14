@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ChatService } from "@/lib/langchain/chatService";
+import { ChatMessage, ChatService } from "@/lib/langchain/chatService";
 import { useConfig } from "@/store";
 import { MOCK_RESPONSE } from "@/constants/mock/mockResponse";
 
 interface SendMessageVariables {
   message: string;
+  history?: ChatMessage[];
   onSuccess?: (response: string) => void;
   onError?: (error: Error) => void;
 }
@@ -14,9 +15,9 @@ export const useSendMessage = () => {
   const { config } = useConfig();
 
   return useMutation({
-    mutationFn: async ({ message }: SendMessageVariables) => {
+    mutationFn: async ({ message, history = [] }: SendMessageVariables) => {
       const chatService = ChatService.getInstance(config);
-      const response = await chatService.sendMessage(message);
+      const response = await chatService.sendMessage(message, history);
       return response as string;
     },
     onSuccess: (data, variables) => {
@@ -34,6 +35,7 @@ export const useSendMessage = () => {
 
 interface SendMessageStreamVariables {
   message: string;
+  history?: ChatMessage[];
   onChunk?: (chunk: string) => void;
   onComplete?: (fullResponse: string) => void;
   onError?: (error: Error, partialResponse: string) => void;
@@ -46,6 +48,7 @@ export const useSendMessageStream = () => {
   return useMutation({
     mutationFn: async ({
       message,
+      history = [],
       onChunk,
       onComplete,
       onError,
@@ -54,7 +57,7 @@ export const useSendMessageStream = () => {
       let fullResponse = "";
 
       try {
-        for await (const chunk of chatService.sendMessageStream(message)) {
+        for await (const chunk of chatService.sendMessageStream(message, history)) {
           fullResponse += chunk;
           onChunk?.(chunk);
         }
