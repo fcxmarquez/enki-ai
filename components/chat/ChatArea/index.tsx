@@ -42,14 +42,26 @@ export const ChatArea = () => {
     const content = scrollContainerRef.current;
     if (!content) return;
 
+    const innerContent = content.firstElementChild;
+    if (!innerContent) return;
+
     const observer = new ResizeObserver(() => {
       checkScrollPosition();
     });
 
-    observer.observe(content);
+    observer.observe(innerContent);
 
     return () => observer.disconnect();
   }, [isMounted]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        checkScrollPosition();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -79,7 +91,7 @@ export const ChatArea = () => {
         <div
           ref={scrollContainerRef}
           onScroll={checkScrollPosition}
-          className="absolute inset-0 flex flex-col w-full overflow-y-auto"
+          className="absolute inset-0 flex flex-col w-full overflow-y-auto overflow-x-hidden"
         >
           <div className="max-w-[800px] w-full mx-auto h-full">
             {messages.length === 0 ? (
@@ -99,7 +111,7 @@ export const ChatArea = () => {
         </div>
 
         <AnimatePresence>
-          {showScrollButton ? (
+          {showScrollButton && !isLoading ? (
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
