@@ -29,6 +29,7 @@ export const MarkdownComponents: Components = {
             margin: 0,
           }}
           PreTag="div"
+          wrapLongLines={true}
         >
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>

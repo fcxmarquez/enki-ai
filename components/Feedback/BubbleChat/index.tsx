@@ -30,7 +30,7 @@ export const BubbleChat = ({
           <User className="h-6 w-6 text-foreground" />
         )}
       </div>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col min-w-0">
         <span className="mb-1 text-sm font-medium text-foreground">{name}</span>
         {role === "user" ? (
           <div className="self-end rounded-xl px-4 py-2 text-primary-foreground bg-primary">
