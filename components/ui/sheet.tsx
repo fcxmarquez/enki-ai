@@ -3,7 +3,6 @@
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
-import { animate } from "motion";
 
 import { cn } from "@/lib/utils";
 
@@ -79,67 +78,21 @@ function SheetContent({
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
 }) {
-  const contentRef = React.useRef<HTMLDivElement>(null);
-
-  const animConfig = React.useMemo(
-    () => ({
-      duration: 0.2,
-      easing: "ease-in-out",
-    }),
-    []
-  );
-
-  const getClosedTransform = React.useCallback(() => {
-    switch (side) {
-      case "right":
-        return "translateX(100%)";
-      case "left":
-        return "translateX(-100%)";
-      case "top":
-        return "translateY(-100%)";
-      case "bottom":
-        return "translateY(100%)";
-      default:
-        return "translate(0, 0)";
-    }
-  }, [side]);
-
-  React.useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    const handleStateChange = (state: string | null) => {
-      if (state === "open") {
-        animate(content, { transform: "translate(0, 0)" }, animConfig);
-      } else if (state === "closed") {
-        animate(content, { transform: getClosedTransform() }, animConfig);
-      }
-    };
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "data-state") {
-          handleStateChange(content.getAttribute("data-state"));
-        }
-      });
-    });
-
-    observer.observe(content, { attributes: true });
-    return () => observer.disconnect();
-  }, [getClosedTransform, animConfig]);
-
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
-        ref={contentRef}
         data-slot="sheet-content"
         className={cn(
-          "bg-background fixed z-50 flex flex-col gap-4 shadow-lg",
-          side === "right" && "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
-          side === "left" && "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
-          side === "top" && "inset-x-0 top-0 h-auto border-b",
-          side === "bottom" && "inset-x-0 bottom-0 h-auto border-t",
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+          side === "right" &&
+            "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+          side === "left" &&
+            "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          side === "top" &&
+            "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
+          side === "bottom" &&
+            "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
           className
         )}
         {...props}
