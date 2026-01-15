@@ -32,24 +32,24 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${inter.className} relative overflow-x-hidden`}>
+      <body className={`${inter.className} relative`}>
         <Providers>
           <ModalRender />
           <ShadcnModalRender />
           <Toaster />
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset className="relative min-h-dvh max-h-dvh h-full overflow-y-hidden">
-              <header className="flex h-14 sticky top-0 z-10 bg-background/50 backdrop-blur-lg shrink-0 items-center gap-2">
-                <div className="flex flex-1 items-center gap-2 px-3">
-                  <SidebarTrigger />
+            <SidebarInset className="relative min-h-dvh max-h-dvh h-full overflow-y-hidden overflow-x-hidden">
+              <header className="flex h-14 sticky top-0 z-10 bg-background/50 backdrop-blur-lg shrink-0 items-center gap-2 overflow-hidden max-w-full">
+                <div className="flex flex-1 items-center gap-2 px-3 min-w-0">
+                  <SidebarTrigger className="shrink-0" />
                   <Separator
                     orientation="vertical"
-                    className="mr-2 data-[orientation=vertical]:h-4"
+                    className="mr-2 data-[orientation=vertical]:h-4 shrink-0"
                   />
                   <ModelSelector />
                 </div>
-                <div className="ml-auto px-3">
+                <div className="ml-auto px-3 shrink-0">
                   <NavActions />
                 </div>
               </header>

@@ -34,8 +34,8 @@ export const InputChat: FC<InputChatProps> = ({ onSubmit, isLoading }) => {
   };
 
   return (
-    <div className="relative flex justify-center w-full">
-      <div className="relative flex items-center w-full max-w-[800px]">
+    <div className="relative flex justify-center w-full px-4">
+      <div className="relative flex items-center w-full max-w-[800px] min-w-0">
         <Input
           className={cn(
             "min-h-[56px] w-full rounded-xl py-8 pl-4 text-base backdrop-blur-lg bg-background/50",

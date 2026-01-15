@@ -86,7 +86,7 @@ export const ChatArea = () => {
   };
 
   return (
-    <div className="flex flex-col flex-1 max-h-[calc(100vh-56px)] h-full overflow-y-hidden">
+    <div className="flex flex-col flex-1 max-h-[calc(100vh-56px)] h-full overflow-hidden max-w-full">
       <div className="relative flex-1 min-h-0">
         <div
           ref={scrollContainerRef}

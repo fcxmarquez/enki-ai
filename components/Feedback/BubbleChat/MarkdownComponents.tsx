@@ -19,7 +19,7 @@ export const MarkdownComponents: Components = {
   code({ inline, className, children, ...props }: CodeBlockProps) {
     const match = /language-(\w+)/.exec(className || "");
     return !inline && match ? (
-      <motion.div className="rounded-md overflow-x-auto" {...fadeInAnimation}>
+      <motion.div className="rounded-md overflow-hidden max-w-full" {...fadeInAnimation}>
         <SyntaxHighlighter
           language={match[1]}
           style={vscDarkPlus}
@@ -27,9 +27,12 @@ export const MarkdownComponents: Components = {
             borderRadius: "0.5rem",
             padding: "1rem",
             margin: 0,
+            maxWidth: "100%",
+            overflow: "hidden",
           }}
           PreTag="div"
           wrapLongLines={true}
+          codeTagProps={{ style: { whiteSpace: "pre-wrap", wordBreak: "break-word" } }}
         >
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
