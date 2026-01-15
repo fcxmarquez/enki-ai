@@ -43,7 +43,7 @@ export const MarkdownComponents: Components = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   p: ({ children, node: _node, ...props }) => (
     <motion.p
-      className="mb-2 last:mb-0 break-all"
+      className="mb-2 last:mb-0 break-words"
       {...(props as Record<string, unknown>)}
       {...fadeInAnimation}
     >
