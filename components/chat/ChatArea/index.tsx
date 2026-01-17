@@ -113,6 +113,8 @@ export const ChatArea = () => {
         <AnimatePresence>
           {showScrollButton && !isLoading ? (
             <motion.button
+              type="button"
+              aria-label="Scroll to bottom"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
