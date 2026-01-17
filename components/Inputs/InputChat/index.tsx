@@ -19,13 +19,17 @@ export const InputChat: FC<InputChatProps> = ({ onSubmit, isLoading }) => {
   const { setSettingsModalOpen } = useUIActions();
   const hasApiKey = hasValidApiKey();
 
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      onSubmit(message);
+      setMessage("");
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (message.trim()) {
-        onSubmit(message);
-        setMessage("");
-      }
+      handleSendMessage();
     }
   };
 
@@ -58,12 +62,7 @@ export const InputChat: FC<InputChatProps> = ({ onSubmit, isLoading }) => {
               "absolute right-2 h-10 w-10 rounded-lg",
               "hover:opacity-90 transition-opacity"
             )}
-            onClick={() => {
-              if (message.trim()) {
-                onSubmit(message);
-                setMessage("");
-              }
-            }}
+            onClick={handleSendMessage}
             disabled={isLoading || !message.trim()}
             aria-label="Send message"
           >

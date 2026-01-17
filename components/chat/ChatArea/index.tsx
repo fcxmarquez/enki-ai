@@ -2,7 +2,7 @@
 
 import { InputChat } from "@/components/Inputs/InputChat";
 import { useChat, useConfig, useUIActions } from "@/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
@@ -26,7 +26,7 @@ export const ChatArea = () => {
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
-  const checkScrollPosition = () => {
+  const checkScrollPosition = useCallback(() => {
     if (scrollContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 100;
@@ -36,7 +36,7 @@ export const ChatArea = () => {
         return prev === newValue ? prev : newValue;
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
     const content = scrollContainerRef.current;
