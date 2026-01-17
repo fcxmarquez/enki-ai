@@ -66,15 +66,15 @@ export function ModelSelector() {
   return (
     <DropdownMenu onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger className="focus-visible:ring-transparent" asChild>
-        <Button variant="ghost" className="text-foreground">
-          <div className="flex items-center gap-2">
-            <span>{currentModelInfo?.label || "Select Model"}</span>
-            <Badge variant="secondary" className="text-xs">
+        <Button variant="ghost" className="text-foreground max-w-full min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="truncate">{currentModelInfo?.label || "Select Model"}</span>
+            <Badge variant="secondary" className="text-xs shrink-0">
               {currentModelInfo?.provider}
             </Badge>
           </div>
           <ChevronDown
-            className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : "rotate-0"}`}
+            className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : "rotate-0"}`}
           />
         </Button>
       </DropdownMenuTrigger>

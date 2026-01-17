@@ -11,6 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -35,11 +36,15 @@ export function NavChatHistory({
   const sortedGroupEntries = groupAndSortChats(chats);
   const { currentConversationId } = useChat();
   const { setCurrentConversation } = useChatActions();
+  const { isMobile, setOpenMobile } = useSidebar();
   const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const handleConversationClick = (conversationId: string) => {
     setCurrentConversation(conversationId);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   return (

@@ -3,6 +3,7 @@ import { useChat, useChatActions, useUIActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
+import { ChatMessage } from "@/lib/langchain/chatService";
 
 interface UseCircleChatOptions {
   scrollContainerRef?: RefObject<HTMLDivElement | null>;
@@ -12,7 +13,7 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   const { scrollContainerRef } = options;
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
-  const { currentConversationId } = useChat();
+  const { currentConversationId, messages } = useChat();
   const {
     createNewConversation,
     addMessage,
@@ -56,8 +57,14 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
       });
     }
 
+    const history: ChatMessage[] = messages.map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+
     sendMessageStream.mutate({
       message,
+      history,
       onChunk: (chunk: string) => {
         accumulateChunk(assistantMessage.id, chunk);
       },

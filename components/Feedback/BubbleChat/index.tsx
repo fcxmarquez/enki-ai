@@ -22,7 +22,7 @@ export const BubbleChat = ({
   isLastMessage = false,
 }: BubbleChatProps) => {
   return (
-    <div className="md:max-w-2xl lg:max-w-3xl xl:max-w-4xl m-auto flex gap-4 p-4 text-base">
+    <div className="w-full max-w-full md:max-w-2xl lg:max-w-3xl xl:max-w-4xl m-auto flex gap-4 p-4 text-base overflow-hidden">
       <div className="flex h-8 w-8 shrink-0 items-center justify-center">
         {role === "assistant" ? (
           <Bot className="h-6 w-6 text-foreground" />
@@ -30,7 +30,7 @@ export const BubbleChat = ({
           <User className="h-6 w-6 text-foreground" />
         )}
       </div>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col min-w-0">
         <span className="mb-1 text-sm font-medium text-foreground">{name}</span>
         {role === "user" ? (
           <div className="self-end rounded-xl px-4 py-2 text-primary-foreground bg-primary">
@@ -39,9 +39,9 @@ export const BubbleChat = ({
         ) : (
           <div
             className={cn(
-              "prose prose-sm dark:prose-invert max-w-none text-foreground",
+              "prose prose-sm dark:prose-invert max-w-none text-foreground overflow-hidden",
               role === "assistant" && "self-start",
-              isLastMessage && "min-h-[calc(100dvh-300px)]"
+              isLastMessage && "min-h-[calc(100dvh-350px)]"
             )}
           >
             {status === "pending" ? (
