@@ -15,7 +15,7 @@ This file provides guidance to AI agent when working with code in this repositor
 - `bun start` - Start production server
 - `bun lint` - Run ESLint
 - `bun format` - Format code with Prettier
-- **Do not execute `bun dev`, because the terminal won't stop and will interrupt your workflow. Instead request the user to run for you to continue**
+- `bun install` - Install dependencies
 
 ### Database Management
 
