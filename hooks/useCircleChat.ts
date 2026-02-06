@@ -14,13 +14,8 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   const [isLoading, setIsLoading] = useState(false);
   const { setStatus, setSettingsModalOpen } = useUIActions();
   const { currentConversationId, messages } = useChat();
-  const {
-    createNewConversation,
-    addMessage,
-    updateMessageContent,
-    setMessageStatus,
-    deleteMessage,
-  } = useChatActions();
+  const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
+    useChatActions();
   const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
   const sendMessageStream = useSendMessageStream();
 
@@ -89,9 +84,7 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
         }
         flushChunks();
 
-        if (partialResponse && partialResponse.trim()) {
-          updateMessageContent(assistantMessage.id, partialResponse);
-        } else {
+        if (!partialResponse || !partialResponse.trim()) {
           deleteMessage(assistantMessage.id);
         }
 
