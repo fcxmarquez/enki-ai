@@ -17,9 +17,9 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   const {
     createNewConversation,
     addMessage,
-    lastMessageToSuccess,
     updateMessageContent,
-    deleteLastMessage,
+    setMessageStatus,
+    deleteMessage,
   } = useChatActions();
   const { accumulateChunk, flushChunks, flushIntervalRef } = useManageChunks();
   const sendMessageStream = useSendMessageStream();
@@ -78,7 +78,7 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
         setStatus("success", "Message sent!");
         setIsLoading(false);
 
-        lastMessageToSuccess();
+        setMessageStatus(assistantMessage.id, "success");
       },
       onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
@@ -92,7 +92,7 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
         if (partialResponse && partialResponse.trim()) {
           updateMessageContent(assistantMessage.id, partialResponse);
         } else {
-          deleteLastMessage();
+          deleteMessage(assistantMessage.id);
         }
 
         const errorMessage = error.message.includes("API key")
@@ -112,6 +112,7 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   };
 
   return {
+    messages,
     sendMessage,
     isLoading,
   };
