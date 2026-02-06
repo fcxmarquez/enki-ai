@@ -1,7 +1,7 @@
 "use client";
 
 import { InputChat } from "@/components/Inputs/InputChat";
-import { useChat, useConfig, useUIActions } from "@/store";
+import { useConfig, useUIActions } from "@/store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 // TEMP: Disabled for rebuild - FCX-30
@@ -14,7 +14,6 @@ import { ArrowDownIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 export const ChatArea = () => {
-  const { messages } = useChat();
   // const { setSettingsModalOpen } = useUIActions();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -22,7 +21,7 @@ export const ChatArea = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-  const { sendMessage, isLoading } = useCircleChat({ scrollContainerRef });
+  const { sendMessage, isLoading, messages } = useCircleChat({ scrollContainerRef });
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
@@ -105,7 +104,7 @@ export const ChatArea = () => {
                 </p>
               </div>
             ) : (
-              <Thread />
+              <Thread messages={messages} />
             )}
           </div>
         </div>

@@ -1,9 +1,11 @@
-import { useChat } from "@/store";
 import { BubbleChat } from "@/components/Feedback/BubbleChat";
+import { Message } from "@/store/slices/chatSlice";
 
-export const Thread = () => {
-  const { messages } = useChat();
+interface ThreadProps {
+  messages: Message[];
+}
 
+export const Thread = ({ messages }: ThreadProps) => {
   return (
     <>
       {messages.map((message) => (
