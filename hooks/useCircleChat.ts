@@ -86,6 +86,8 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
 
         if (!partialResponse || !partialResponse.trim()) {
           deleteMessage(assistantMessage.id);
+        } else {
+          setMessageStatus(assistantMessage.id, "error");
         }
 
         const errorMessage = error.message.includes("API key")

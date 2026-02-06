@@ -73,7 +73,6 @@ export const useChatActions = () => {
   const updateMessageContent = useStore((state) => state.updateMessageContent);
   const deleteLastMessage = useStore((state) => state.deleteLastMessage);
   const lastMessageToError = useStore((state) => state.lastMessageToError);
-  const lastMessageToSuccess = useStore((state) => state.lastMessageToSuccess);
   const setMessageStatus = useStore((state) => state.setMessageStatus);
 
   return {
@@ -89,7 +88,6 @@ export const useChatActions = () => {
     deleteLastMessage,
     setMessageStatus,
     lastMessageToError,
-    lastMessageToSuccess,
   };
 };
 

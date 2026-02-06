@@ -36,7 +36,6 @@ export interface ChatSlice {
   updateMessageContent: (messageId: string, additionalContent: string) => void;
   setMessageStatus: (messageId: string, status: MessageStatus) => void;
   lastMessageToError: () => void;
-  lastMessageToSuccess: () => void;
 }
 
 const getCurrentConversationIndex = (state: StoreState) => {
@@ -346,40 +345,6 @@ export const createChatSlice: StateCreator<
           conversations,
         },
       };
-    }),
-
-  lastMessageToSuccess: () =>
-    set((state) => {
-      const conversations = [...state.chat.conversations];
-      const conversationIndex = getCurrentConversationIndex(state);
-
-      if (conversationIndex === -1) return state;
-
-      const messages = [...conversations[conversationIndex].messages];
-      const lastMessageIndex = messages.length - 1;
-      const lastMessage = messages[lastMessageIndex];
-
-      if (lastMessage.status !== "success") {
-        messages[lastMessageIndex] = {
-          ...lastMessage,
-          status: "success",
-        };
-
-        conversations[conversationIndex] = {
-          ...conversations[conversationIndex],
-          messages,
-          lastModified: Date.now(),
-        };
-
-        return {
-          chat: {
-            ...state.chat,
-            conversations,
-          },
-        };
-      }
-
-      return state;
     }),
 
   lastMessageToError: () =>
