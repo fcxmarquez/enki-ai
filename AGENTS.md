@@ -32,9 +32,7 @@ This file provides guidance to AI agent when working with code in this repositor
 ### Git Workflow
 
 - Ask for the confirmation of the user before committing code.
-- Use conventional commits with czg (`bun cz` for interactive prompt, husky installed)
 - The commit doesn't have to have a body. Has to be brief. Don't mention you as co-author in the commit message.
-- Use `git commit --no-verify` to bypass hooks when needed, this repo uses commitlint to enforce conventional commits. Take account this when you are committing code as an AI agent.
 - Follows @commitlint/config-conventional standards
 
 ## Architecture Overview
