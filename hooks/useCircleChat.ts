@@ -1,16 +1,11 @@
-import { RefObject, useState } from "react";
+import { useState } from "react";
 import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
 import { ChatMessage } from "@/lib/langchain/chatService";
 
-interface UseCircleChatOptions {
-  scrollContainerRef?: RefObject<HTMLDivElement | null>;
-}
-
-export const useCircleChat = (options: UseCircleChatOptions = {}) => {
-  const { scrollContainerRef } = options;
+export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const { currentConversationId, messages } = useChat();
@@ -40,15 +35,6 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
       content: "",
       role: "assistant",
     });
-
-    if (scrollContainerRef?.current) {
-      requestAnimationFrame(() => {
-        scrollContainerRef.current?.scrollTo({
-          behavior: "smooth",
-          top: scrollContainerRef.current?.scrollHeight,
-        });
-      });
-    }
 
     const history: ChatMessage[] = messages.map((msg) => ({
       role: msg.role,
