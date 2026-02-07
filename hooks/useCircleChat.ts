@@ -16,7 +16,6 @@ export const useCircleChat = () => {
   const sendMessageStream = useSendMessageStream();
 
   const sendMessage = (message: string) => {
-    // Prevent double-submit within the same tick (before React state updates propagate).
     if (isSendingRef.current || isLoading) {
       return;
     }
