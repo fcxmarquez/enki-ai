@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
@@ -8,6 +8,7 @@ import { ChatMessage } from "@/lib/langchain/chatService";
 export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const isSendingRef = useRef(false);
   const { currentConversationId, messages } = useChat();
   const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
     useChatActions();
@@ -15,15 +16,20 @@ export const useCircleChat = () => {
   const sendMessageStream = useSendMessageStream();
 
   const sendMessage = (message: string) => {
-    if (isLoading) {
+    // Prevent double-submit within the same tick (before React state updates propagate).
+    if (isSendingRef.current || isLoading) {
       return;
     }
 
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) return;
+
+    isSendingRef.current = true;
     setError(null);
     setIsLoading(true);
 
     if (!currentConversationId) {
-      createNewConversation(message);
+      createNewConversation(trimmedMessage);
     }
 
     addMessage({
@@ -54,6 +60,7 @@ export const useCircleChat = () => {
         }
         flushChunks();
 
+        isSendingRef.current = false;
         setError(null);
         setIsLoading(false);
 
@@ -80,6 +87,7 @@ export const useCircleChat = () => {
           : "Failed to send message. Please try again.";
 
         toast.error(errorMessage);
+        isSendingRef.current = false;
         setIsLoading(false);
       },
     });
