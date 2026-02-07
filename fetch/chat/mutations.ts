@@ -3,36 +3,6 @@ import { ChatMessage, ChatService } from "@/lib/langchain/chatService";
 import { useConfig } from "@/store";
 import { MOCK_RESPONSE } from "@/constants/mock/mockResponse";
 
-interface SendMessageVariables {
-  message: string;
-  history?: ChatMessage[];
-  onSuccess?: (response: string) => void;
-  onError?: (error: Error) => void;
-}
-
-export const useSendMessage = () => {
-  const queryClient = useQueryClient();
-  const { config } = useConfig();
-
-  return useMutation({
-    mutationFn: async ({ message, history = [] }: SendMessageVariables) => {
-      const chatService = ChatService.getInstance(config);
-      const response = await chatService.sendMessage(message, history);
-      return response as string;
-    },
-    onSuccess: (data, variables) => {
-      // Invalidate and refetch relevant queries if needed
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
-
-      // Call the success callback if provided
-      variables.onSuccess?.(data);
-    },
-    onError: (error, variables) => {
-      variables.onError?.(error);
-    },
-  });
-};
-
 interface SendMessageStreamVariables {
   message: string;
   history?: ChatMessage[];
@@ -42,7 +12,6 @@ interface SendMessageStreamVariables {
 }
 
 export const useSendMessageStream = () => {
-  const queryClient = useQueryClient();
   const { config } = useConfig();
 
   return useMutation({
@@ -54,25 +23,23 @@ export const useSendMessageStream = () => {
       onError,
     }: SendMessageStreamVariables) => {
       const chatService = ChatService.getInstance(config);
-      let fullResponse = "";
+      const responseChunks: string[] = [];
 
       try {
         for await (const chunk of chatService.sendMessageStream(message, history)) {
-          fullResponse += chunk;
+          responseChunks.push(chunk);
           onChunk?.(chunk);
         }
 
+        const fullResponse = responseChunks.join("");
         onComplete?.(fullResponse);
         return fullResponse;
       } catch (error) {
         if (error instanceof Error) {
-          onError?.(error, fullResponse);
+          onError?.(error, responseChunks.join(""));
         }
         throw error;
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
     },
   });
 };
@@ -81,20 +48,21 @@ export const useSendMessageStreamTest = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ onChunk, onComplete, onError }: SendMessageStreamVariables) => {
-      let fullResponse = "";
+      const responseChunks: string[] = [];
 
       try {
         for (const chunk of MOCK_RESPONSE.split(" ")) {
-          fullResponse += ` ${chunk}`;
+          responseChunks.push(` ${chunk}`);
           await new Promise((resolve) => setTimeout(resolve, 1));
           onChunk?.(` ${chunk}`);
         }
 
+        const fullResponse = responseChunks.join("");
         onComplete?.(fullResponse);
         return fullResponse;
       } catch (error) {
         if (error instanceof Error) {
-          onError?.(error, fullResponse);
+          onError?.(error, responseChunks.join(""));
         }
         throw error;
       }

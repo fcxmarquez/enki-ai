@@ -102,22 +102,6 @@ export class ChatService {
     );
   }
 
-  public async sendMessage(message: string, history: ChatMessage[] = []) {
-    try {
-      const historyMessages = this.convertToLangChainMessages(history);
-      const response = await this.llm.invoke([
-        new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
-        ...historyMessages,
-        new HumanMessage(message),
-      ]);
-
-      return response.content;
-    } catch (error) {
-      console.error("Error in chat service:", error);
-      throw error;
-    }
-  }
-
   public async *sendMessageStream(
     message: string,
     history: ChatMessage[] = []
