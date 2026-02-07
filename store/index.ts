@@ -36,13 +36,11 @@ export const useUI = () => {
 };
 
 export const useUIActions = () => {
-  const setStatus = useStore((state) => state.setStatus);
   const showModal = useStore((state) => state.showModal);
   const hideModal = useStore((state) => state.hideModal);
   const setSettingsModalOpen = useStore((state) => state.setSettingsModalOpen);
 
   return {
-    setStatus,
     showModal,
     hideModal,
     setSettingsModalOpen,

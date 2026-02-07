@@ -1,5 +1,5 @@
 import { RefObject, useState } from "react";
-import { useChat, useChatActions, useUIActions } from "@/store";
+import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
 import { toast } from "sonner";
@@ -12,7 +12,7 @@ interface UseCircleChatOptions {
 export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   const { scrollContainerRef } = options;
   const [isLoading, setIsLoading] = useState(false);
-  const { setStatus, setSettingsModalOpen } = useUIActions();
+  const [error, setError] = useState<Error | null>(null);
   const { currentConversationId, messages } = useChat();
   const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
     useChatActions();
@@ -20,14 +20,12 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
   const sendMessageStream = useSendMessageStream();
 
   const sendMessage = (message: string) => {
-    // Guard against concurrent sends
     if (isLoading) {
       return;
     }
 
+    setError(null);
     setIsLoading(true);
-
-    setStatus("loading", "Sending message...");
 
     if (!currentConversationId) {
       createNewConversation(message);
@@ -70,13 +68,14 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
         }
         flushChunks();
 
-        setStatus("success", "Message sent!");
+        setError(null);
         setIsLoading(false);
 
         setMessageStatus(assistantMessage.id, "success");
       },
       onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
+        setError(error);
 
         if (flushIntervalRef.current) {
           clearInterval(flushIntervalRef.current);
@@ -95,18 +94,14 @@ export const useCircleChat = (options: UseCircleChatOptions = {}) => {
           : "Failed to send message. Please try again.";
 
         toast.error(errorMessage);
-
-        if (error.message.includes("API key")) {
-          setSettingsModalOpen(true);
-        }
-
-        setStatus("error", errorMessage);
         setIsLoading(false);
       },
     });
   };
 
   return {
+    isError: Boolean(error),
+    error,
     messages,
     sendMessage,
     isLoading,

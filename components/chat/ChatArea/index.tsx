@@ -21,9 +21,17 @@ export const ChatArea = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-  const { sendMessage, isLoading, messages } = useCircleChat({ scrollContainerRef });
+  const { sendMessage, isLoading, messages, isError, error } = useCircleChat({
+    scrollContainerRef,
+  });
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (isError && error?.message.includes("API key")) {
+      setSettingsModalOpen(true);
+    }
+  }, [error, isError, setSettingsModalOpen]);
 
   const checkScrollPosition = useCallback(() => {
     if (scrollContainerRef.current) {
