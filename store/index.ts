@@ -36,13 +36,11 @@ export const useUI = () => {
 };
 
 export const useUIActions = () => {
-  const setStatus = useStore((state) => state.setStatus);
   const showModal = useStore((state) => state.showModal);
   const hideModal = useStore((state) => state.hideModal);
   const setSettingsModalOpen = useStore((state) => state.setSettingsModalOpen);
 
   return {
-    setStatus,
     showModal,
     hideModal,
     setSettingsModalOpen,
@@ -69,10 +67,11 @@ export const useChatActions = () => {
   const setCurrentConversation = useStore((state) => state.setCurrentConversation);
   const updateConversationTitle = useStore((state) => state.updateConversationTitle);
   const deleteConversation = useStore((state) => state.deleteConversation);
+  const deleteMessage = useStore((state) => state.deleteMessage);
   const updateMessageContent = useStore((state) => state.updateMessageContent);
   const deleteLastMessage = useStore((state) => state.deleteLastMessage);
   const lastMessageToError = useStore((state) => state.lastMessageToError);
-  const lastMessageToSuccess = useStore((state) => state.lastMessageToSuccess);
+  const setMessageStatus = useStore((state) => state.setMessageStatus);
 
   return {
     addMessage,
@@ -82,10 +81,11 @@ export const useChatActions = () => {
     setCurrentConversation,
     updateConversationTitle,
     deleteConversation,
+    deleteMessage,
     updateMessageContent,
     deleteLastMessage,
+    setMessageStatus,
     lastMessageToError,
-    lastMessageToSuccess,
   };
 };
 

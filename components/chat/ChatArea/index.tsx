@@ -1,8 +1,8 @@
 "use client";
 
 import { InputChat } from "@/components/Inputs/InputChat";
-import { useChat, useConfig, useUIActions } from "@/store";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useConfig, useUIActions } from "@/store";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
@@ -10,58 +10,42 @@ import { colors } from "@/constants/systemDesign/colors";
 // import { hasActiveSession } from "@/utils/supabase/session";
 import { Thread } from "@/components/chat/Thread";
 import { useCircleChat } from "@/hooks/useCircleChat";
+import { useChatScroll } from "@/hooks/useChatScroll";
 import { ArrowDownIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 export const ChatArea = () => {
-  const { messages } = useChat();
   // const { setSettingsModalOpen } = useUIActions();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const { setSettingsModalOpen } = useUIActions();
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const { hasValidApiKey } = useConfig();
   const hasApiKey = hasValidApiKey();
-  const { sendMessage, isLoading } = useCircleChat({ scrollContainerRef });
+  const { sendMessage, isLoading, messages, isError, error } = useCircleChat();
   // TEMP: Disabled for rebuild - FCX-30
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
-  const checkScrollPosition = useCallback(() => {
-    if (scrollContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 100;
-      const hasOverflow = scrollHeight > clientHeight;
-      setShowScrollButton((prev) => {
-        const newValue = hasOverflow && !isAtBottom;
-        return prev === newValue ? prev : newValue;
-      });
-    }
-  }, []);
+  const lastMessage = messages[messages.length - 1];
+  const followKey = lastMessage
+    ? `${lastMessage.id}:${lastMessage.content.length}`
+    : undefined;
+
+  const {
+    scrollContainerRef,
+    showScrollButton,
+    onScroll,
+    scrollToBottom,
+    scheduleScrollToBottom,
+  } = useChatScroll({
+    enabled: isMounted,
+    followKey,
+    isLoading,
+  });
 
   useEffect(() => {
-    const content = scrollContainerRef.current;
-    if (!content) return;
-
-    const innerContent = content.firstElementChild;
-    if (!innerContent) return;
-
-    const observer = new ResizeObserver(() => {
-      checkScrollPosition();
-    });
-
-    observer.observe(innerContent);
-
-    return () => observer.disconnect();
-  }, [isMounted]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      const timer = setTimeout(() => {
-        checkScrollPosition();
-      }, 100);
-      return () => clearTimeout(timer);
+    if (isError && error?.message?.includes("API key")) {
+      setSettingsModalOpen(true);
     }
-  }, [isLoading]);
+  }, [error, isError, setSettingsModalOpen]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -83,6 +67,7 @@ export const ChatArea = () => {
     }
 
     sendMessage(message);
+    scheduleScrollToBottom("smooth");
   };
 
   return (
@@ -90,7 +75,7 @@ export const ChatArea = () => {
       <div className="relative flex-1 min-h-0">
         <div
           ref={scrollContainerRef}
-          onScroll={checkScrollPosition}
+          onScroll={onScroll}
           className="absolute inset-0 flex flex-col w-full overflow-y-auto overflow-x-hidden"
         >
           <div className="max-w-[800px] w-full mx-auto h-full">
@@ -105,7 +90,7 @@ export const ChatArea = () => {
                 </p>
               </div>
             ) : (
-              <Thread />
+              <Thread messages={messages} />
             )}
           </div>
         </div>
@@ -121,12 +106,7 @@ export const ChatArea = () => {
               transition={{ duration: 0.3 }}
               className="absolute left-1/2 -translate-x-1/2 bottom-4 rounded-full p-2 border-foreground bg-background border"
               onClick={() => {
-                if (scrollContainerRef.current) {
-                  scrollContainerRef.current.scrollTo({
-                    top: scrollContainerRef.current.scrollHeight,
-                    behavior: "smooth",
-                  });
-                }
+                scrollToBottom("smooth");
               }}
             >
               <ArrowDownIcon className="w-4 h-4 text-foreground" />

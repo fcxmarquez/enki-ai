@@ -14,8 +14,6 @@ export interface Config {
 }
 
 export interface UIState {
-  status: "idle" | "loading" | "success" | "error";
-  message: string;
   modal: {
     isOpen: boolean;
     children: React.JSX.Element | null;

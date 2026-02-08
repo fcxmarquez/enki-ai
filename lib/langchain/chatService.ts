@@ -6,26 +6,51 @@ import { getModelConfig } from "@/constants/models";
 
 type ChatModel = ChatOpenAI | ChatAnthropic;
 
+export const DEFAULT_SYSTEM_PROMPT =
+  "You are EnkiAI, a helpful and knowledgeable AI assistant.";
+
+const DEFAULT_TIMEOUT_MS = 120_000;
+const DEFAULT_MAX_RETRIES = 2;
+const DEFAULT_TEMPERATURE = 0.7;
+
 export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
+export interface ChatServiceConfig {
+  openAIKey?: string;
+  anthropicKey?: string;
+  selectedModel: ModelType;
+  maxTokens?: number;
+  timeoutMs?: number;
+  maxRetries?: number;
+  temperature?: number;
+}
+
+export interface SendMessageStreamOptions {
+  systemPrompt?: string;
+  signal?: AbortSignal;
+  timeoutMs?: number;
+}
+
 export class ChatService {
   private llm: ChatModel;
+  private timeoutMs: number;
   private static instance: ChatService;
   private static lastConfig: string | null = null;
 
-  private constructor(config: {
-    openAIKey?: string;
-    anthropicKey?: string;
-    selectedModel: ModelType;
-  }) {
+  private constructor(config: ChatServiceConfig) {
     const modelConfig = getModelConfig(config.selectedModel);
 
     if (!modelConfig) {
       throw new Error(`Unknown model: ${config.selectedModel}`);
     }
+
+    const timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+    const maxRetries = config.maxRetries ?? DEFAULT_MAX_RETRIES;
+    const temperature = config.temperature ?? DEFAULT_TEMPERATURE;
+    this.timeoutMs = timeoutMs;
 
     switch (modelConfig.provider) {
       case "Anthropic": {
@@ -37,13 +62,19 @@ export class ChatService {
           apiKey: string;
           model: string;
           temperature?: number;
+          maxTokens?: number;
+          maxRetries?: number;
+          clientOptions?: { timeout?: number };
         } = {
           apiKey: config.anthropicKey,
           model: config.selectedModel,
+          maxTokens: config.maxTokens,
+          maxRetries,
+          clientOptions: { timeout: timeoutMs },
         };
 
         if (modelConfig.reasoning.supportsTemperature) {
-          anthropicOptions.temperature = 0.7;
+          anthropicOptions.temperature = temperature;
         }
 
         this.llm = new ChatAnthropic(anthropicOptions);
@@ -59,13 +90,19 @@ export class ChatService {
           apiKey: string;
           model: string;
           temperature?: number;
+          maxTokens?: number;
+          maxRetries?: number;
+          timeout?: number;
         } = {
           apiKey: config.openAIKey,
           model: config.selectedModel,
+          maxTokens: config.maxTokens,
+          maxRetries,
+          timeout: timeoutMs,
         };
 
         if (modelConfig.reasoning.supportsTemperature) {
-          openAIOptions.temperature = 0.7;
+          openAIOptions.temperature = temperature;
         }
 
         this.llm = new ChatOpenAI(openAIOptions);
@@ -82,12 +119,17 @@ export class ChatService {
     }
   }
 
-  public static getInstance(config: {
-    openAIKey?: string;
-    anthropicKey?: string;
-    selectedModel: ModelType;
-  }) {
-    const configHash = JSON.stringify(config);
+  public static getInstance(config: ChatServiceConfig) {
+    // Hash only fields that impact the underlying LLM instance.
+    const configHash = JSON.stringify({
+      openAIKey: config.openAIKey,
+      anthropicKey: config.anthropicKey,
+      selectedModel: config.selectedModel,
+      maxTokens: config.maxTokens,
+      timeoutMs: config.timeoutMs,
+      maxRetries: config.maxRetries,
+      temperature: config.temperature,
+    });
     if (configHash !== this.lastConfig || !this.instance) {
       this.instance = new ChatService(config);
       this.lastConfig = configHash;
@@ -102,38 +144,28 @@ export class ChatService {
     );
   }
 
-  public async sendMessage(message: string, history: ChatMessage[] = []) {
-    try {
-      const historyMessages = this.convertToLangChainMessages(history);
-      const response = await this.llm.invoke([
-        new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
-        ...historyMessages,
-        new HumanMessage(message),
-      ]);
-
-      return response.content;
-    } catch (error) {
-      console.error("Error in chat service:", error);
-      throw error;
-    }
-  }
-
   public async *sendMessageStream(
     message: string,
-    history: ChatMessage[] = []
+    history: ChatMessage[] = [],
+    options: SendMessageStreamOptions = {}
   ): AsyncGenerator<string, void, unknown> {
     try {
       const historyMessages = this.convertToLangChainMessages(history);
-      const stream = await this.llm.stream([
-        new SystemMessage("You are EnkiAI, a helpful and knowledgeable AI assistant."),
+      const systemPrompt = options.systemPrompt ?? DEFAULT_SYSTEM_PROMPT;
+      const messages = [
+        ...(systemPrompt.trim() ? [new SystemMessage(systemPrompt)] : []),
         ...historyMessages,
         new HumanMessage(message),
-      ]);
+      ];
+
+      const stream = await this.llm.stream(messages, {
+        timeout: options.timeoutMs ?? this.timeoutMs,
+        signal: options.signal,
+      });
 
       for await (const chunk of stream) {
-        if (chunk.content) {
-          yield chunk.content as string;
-        }
+        const chunkText = chunk.text;
+        if (chunkText) yield chunkText;
       }
     } catch (error) {
       console.error("Error in streaming chat:", error);

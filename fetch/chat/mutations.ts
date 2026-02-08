@@ -1,106 +1,69 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { ChatMessage, ChatService } from "@/lib/langchain/chatService";
 import { useConfig } from "@/store";
-import { MOCK_RESPONSE } from "@/constants/mock/mockResponse";
-
-interface SendMessageVariables {
-  message: string;
-  history?: ChatMessage[];
-  onSuccess?: (response: string) => void;
-  onError?: (error: Error) => void;
-}
-
-export const useSendMessage = () => {
-  const queryClient = useQueryClient();
-  const { config } = useConfig();
-
-  return useMutation({
-    mutationFn: async ({ message, history = [] }: SendMessageVariables) => {
-      const chatService = ChatService.getInstance(config);
-      const response = await chatService.sendMessage(message, history);
-      return response as string;
-    },
-    onSuccess: (data, variables) => {
-      // Invalidate and refetch relevant queries if needed
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
-
-      // Call the success callback if provided
-      variables.onSuccess?.(data);
-    },
-    onError: (error, variables) => {
-      variables.onError?.(error);
-    },
-  });
-};
 
 interface SendMessageStreamVariables {
   message: string;
   history?: ChatMessage[];
+  systemPrompt?: string;
+  maxTokens?: number;
+  timeoutMs?: number;
+  maxRetries?: number;
+  temperature?: number;
+  signal?: AbortSignal;
   onChunk?: (chunk: string) => void;
   onComplete?: (fullResponse: string) => void;
   onError?: (error: Error, partialResponse: string) => void;
 }
 
 export const useSendMessageStream = () => {
-  const queryClient = useQueryClient();
   const { config } = useConfig();
 
   return useMutation({
     mutationFn: async ({
       message,
       history = [],
+      systemPrompt,
+      maxTokens,
+      timeoutMs,
+      maxRetries,
+      temperature,
+      signal,
       onChunk,
       onComplete,
       onError,
     }: SendMessageStreamVariables) => {
-      const chatService = ChatService.getInstance(config);
-      let fullResponse = "";
+      const responseChunks: string[] = [];
 
       try {
-        for await (const chunk of chatService.sendMessageStream(message, history)) {
-          fullResponse += chunk;
+        const chatService = ChatService.getInstance({
+          openAIKey: config.openAIKey,
+          anthropicKey: config.anthropicKey,
+          selectedModel: config.selectedModel,
+          maxTokens,
+          timeoutMs,
+          maxRetries,
+          temperature,
+        });
+
+        for await (const chunk of chatService.sendMessageStream(message, history, {
+          systemPrompt,
+          timeoutMs,
+          signal,
+        })) {
+          responseChunks.push(chunk);
           onChunk?.(chunk);
         }
 
+        const fullResponse = responseChunks.join("");
         onComplete?.(fullResponse);
         return fullResponse;
       } catch (error) {
         if (error instanceof Error) {
-          onError?.(error, fullResponse);
+          onError?.(error, responseChunks.join(""));
         }
         throw error;
       }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
-    },
-  });
-};
-
-export const useSendMessageStreamTest = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ onChunk, onComplete, onError }: SendMessageStreamVariables) => {
-      let fullResponse = "";
-
-      try {
-        for (const chunk of MOCK_RESPONSE.split(" ")) {
-          fullResponse += ` ${chunk}`;
-          await new Promise((resolve) => setTimeout(resolve, 1));
-          onChunk?.(` ${chunk}`);
-        }
-
-        onComplete?.(fullResponse);
-        return fullResponse;
-      } catch (error) {
-        if (error instanceof Error) {
-          onError?.(error, fullResponse);
-        }
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
     },
   });
 };
