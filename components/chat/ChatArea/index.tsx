@@ -25,9 +25,7 @@ export const ChatArea = () => {
   // const [hasSession, setHasSession] = useState<boolean | null>(null);
 
   const lastMessage = messages[messages.length - 1];
-  const followKey = lastMessage
-    ? `${lastMessage.id}:${lastMessage.content.length}`
-    : undefined;
+  const followKey = lastMessage?.id;
 
   const {
     scrollContainerRef,
@@ -78,7 +76,7 @@ export const ChatArea = () => {
           onScroll={onScroll}
           className="absolute inset-0 flex flex-col w-full overflow-y-auto overflow-x-hidden"
         >
-          <div className="max-w-[800px] w-full mx-auto h-full">
+          <div className="max-w-[800px] w-full mx-auto min-h-full">
             {messages.length === 0 ? (
               <div className="text-muted-foreground flex h-full flex-1 flex-col items-center justify-center gap-4 text-center">
                 <h3 className="text-lg font-semibold text-text-default">
@@ -96,7 +94,7 @@ export const ChatArea = () => {
         </div>
 
         <AnimatePresence>
-          {showScrollButton && !isLoading ? (
+          {showScrollButton ? (
             <motion.button
               type="button"
               aria-label="Scroll to bottom"

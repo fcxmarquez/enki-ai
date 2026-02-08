@@ -5,6 +5,7 @@ interface UseChatScrollOptions {
   followKey?: string | number;
   isLoading: boolean;
   bottomThreshold?: number;
+  buttonThreshold?: number;
 }
 
 export const useChatScroll = ({
@@ -12,15 +13,17 @@ export const useChatScroll = ({
   followKey,
   isLoading,
   bottomThreshold = 100,
+  buttonThreshold = 2,
 }: UseChatScrollOptions) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
   const pendingScrollBehaviorRef = useRef<ScrollBehavior | null>(null);
+  const isProgrammaticScrollRef = useRef(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior) => {
-    // If we explicitly scroll to bottom, treat it as "follow mode".
     shouldAutoScrollRef.current = true;
+    isProgrammaticScrollRef.current = true;
 
     requestAnimationFrame(() => {
       const el = scrollContainerRef.current;
@@ -37,6 +40,7 @@ export const useChatScroll = ({
     // Defer the scroll until after the next render, when DOM height is accurate.
     pendingScrollBehaviorRef.current = behavior;
     shouldAutoScrollRef.current = true;
+    isProgrammaticScrollRef.current = true;
   }, []);
 
   const updateScrollButtonState = useCallback(
@@ -55,35 +59,63 @@ export const useChatScroll = ({
 
     const { scrollTop, scrollHeight, clientHeight } = el;
     const isAtBottom = scrollTop + clientHeight >= scrollHeight - bottomThreshold;
+    const isAtBottomForButton =
+      scrollTop + clientHeight >= scrollHeight - buttonThreshold;
     const hasOverflow = scrollHeight > clientHeight;
 
-    return { isAtBottom, hasOverflow };
-  }, [bottomThreshold]);
+    return { isAtBottom, isAtBottomForButton, hasOverflow };
+  }, [bottomThreshold, buttonThreshold]);
+
+  const handleProgrammaticScroll = useCallback(
+    (state: { isAtBottomForButton: boolean }) => {
+      if (!isProgrammaticScrollRef.current) return false;
+
+      if (state.isAtBottomForButton) {
+        isProgrammaticScrollRef.current = false;
+      }
+
+      updateScrollButtonState(false, true);
+      return true;
+    },
+    [updateScrollButtonState]
+  );
 
   const syncScrollButtonState = useCallback(() => {
     const state = computeScrollState();
     if (!state) return;
-    updateScrollButtonState(state.hasOverflow, state.isAtBottom);
-  }, [computeScrollState, updateScrollButtonState]);
+
+    if (handleProgrammaticScroll(state)) return;
+
+    updateScrollButtonState(state.hasOverflow, state.isAtBottomForButton);
+  }, [computeScrollState, handleProgrammaticScroll, updateScrollButtonState]);
 
   const onScroll = useCallback(() => {
     const state = computeScrollState();
     if (!state) return;
 
+    if (handleProgrammaticScroll(state)) return;
+
     shouldAutoScrollRef.current = state.isAtBottom;
-    updateScrollButtonState(state.hasOverflow, state.isAtBottom);
-  }, [computeScrollState, updateScrollButtonState]);
+    updateScrollButtonState(state.hasOverflow, state.isAtBottomForButton);
+  }, [computeScrollState, handleProgrammaticScroll, updateScrollButtonState]);
 
   useEffect(() => {
     if (!enabled) return;
     if (followKey == null) return;
-    if (!shouldAutoScrollRef.current) return;
 
-    // Keep following the bottom while the user hasn't scrolled away.
+    const raf = requestAnimationFrame(() => {
+      syncScrollButtonState();
+    });
+
+    if (!shouldAutoScrollRef.current) {
+      return () => cancelAnimationFrame(raf);
+    }
+
     const behavior = pendingScrollBehaviorRef.current ?? "auto";
     pendingScrollBehaviorRef.current = null;
     scrollToBottom(behavior);
-  }, [enabled, followKey, scrollToBottom]);
+    return () => cancelAnimationFrame(raf);
+  }, [enabled, followKey, scrollToBottom, syncScrollButtonState]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -117,12 +149,24 @@ export const useChatScroll = ({
   useEffect(() => {
     if (!enabled) return;
 
-    if (!isLoading) {
-      const timer = setTimeout(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
         syncScrollButtonState();
       }, 100);
-      return () => clearTimeout(timer);
+      const raf = requestAnimationFrame(() => {
+        syncScrollButtonState();
+      });
+
+      return () => {
+        cancelAnimationFrame(raf);
+        clearInterval(interval);
+      };
     }
+
+    const timer = setTimeout(() => {
+      syncScrollButtonState();
+    }, 100);
+    return () => clearTimeout(timer);
   }, [enabled, isLoading, syncScrollButtonState]);
 
   return {
