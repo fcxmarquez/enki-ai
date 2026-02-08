@@ -138,17 +138,6 @@ export const useChatScroll = ({
   useEffect(() => {
     if (!enabled) return;
 
-    // Ensure the button visibility is correct once enabled (DOM is now present).
-    const raf = requestAnimationFrame(() => {
-      syncScrollButtonState();
-    });
-
-    return () => cancelAnimationFrame(raf);
-  }, [enabled, syncScrollButtonState]);
-
-  useEffect(() => {
-    if (!enabled) return;
-
     if (isLoading) {
       const interval = setInterval(() => {
         syncScrollButtonState();
