@@ -146,6 +146,7 @@ export const createChatSlice: StateCreator<
   addMessage: (message) => {
     const messageId = crypto.randomUUID();
     const status: MessageStatus = message.role === "user" ? "success" : "pending";
+    const timestamp = Date.now();
 
     set((state) => {
       const conversations = [...state.chat.conversations];
@@ -160,11 +161,11 @@ export const createChatSlice: StateCreator<
           {
             ...message,
             id: messageId,
-            timestamp: Date.now(),
+            timestamp,
             status,
           },
         ],
-        lastModified: Date.now(),
+        lastModified: timestamp,
       };
 
       conversations[conversationIndex] = updatedConversation;
@@ -179,7 +180,7 @@ export const createChatSlice: StateCreator<
     return {
       id: messageId,
       ...message,
-      timestamp: Date.now(),
+      timestamp,
       status,
     };
   },

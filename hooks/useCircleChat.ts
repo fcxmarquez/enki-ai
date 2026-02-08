@@ -32,7 +32,7 @@ export const useCircleChat = () => {
     }
 
     addMessage({
-      content: message,
+      content: trimmedMessage,
       role: "user",
     });
 
@@ -47,7 +47,7 @@ export const useCircleChat = () => {
     }));
 
     sendMessageStream.mutate({
-      message,
+      message: trimmedMessage,
       history,
       onChunk: (chunk: string) => {
         accumulateChunk(assistantMessage.id, chunk);
