@@ -33,18 +33,19 @@ export const useSendMessageStream = () => {
       onComplete,
       onError,
     }: SendMessageStreamVariables) => {
-      const chatService = ChatService.getInstance({
-        openAIKey: config.openAIKey,
-        anthropicKey: config.anthropicKey,
-        selectedModel: config.selectedModel,
-        maxTokens,
-        timeoutMs,
-        maxRetries,
-        temperature,
-      });
       const responseChunks: string[] = [];
 
       try {
+        const chatService = ChatService.getInstance({
+          openAIKey: config.openAIKey,
+          anthropicKey: config.anthropicKey,
+          selectedModel: config.selectedModel,
+          maxTokens,
+          timeoutMs,
+          maxRetries,
+          temperature,
+        });
+
         for await (const chunk of chatService.sendMessageStream(message, history, {
           systemPrompt,
           timeoutMs,
