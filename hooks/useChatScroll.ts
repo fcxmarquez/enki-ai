@@ -84,7 +84,23 @@ export const useChatScroll = ({
   );
 
   const applyScrollState = useCallback(
-    (state: ScrollState, syncAutoScroll: boolean) => {
+    (
+      state: ScrollState,
+      options: {
+        syncAutoScroll: boolean;
+        allowProgrammaticUnlock?: boolean;
+      }
+    ) => {
+      const { syncAutoScroll, allowProgrammaticUnlock = false } = options;
+
+      if (
+        allowProgrammaticUnlock &&
+        isProgrammaticScrollRef.current &&
+        !state.isAtBottomForButton
+      ) {
+        isProgrammaticScrollRef.current = false;
+      }
+
       if (handleProgrammaticScroll(state)) return;
 
       if (syncAutoScroll) {
@@ -96,18 +112,21 @@ export const useChatScroll = ({
     [handleProgrammaticScroll, updateScrollButtonState]
   );
 
-  const syncScrollButtonState = useCallback(() => {
-    const state = computeScrollState();
-    if (!state) return;
+  const syncScrollButtonState = useCallback(
+    (allowProgrammaticUnlock = false) => {
+      const state = computeScrollState();
+      if (!state) return;
 
-    applyScrollState(state, false);
-  }, [applyScrollState, computeScrollState]);
+      applyScrollState(state, { syncAutoScroll: false, allowProgrammaticUnlock });
+    },
+    [applyScrollState, computeScrollState]
+  );
 
   const onScroll = useCallback(() => {
     const state = computeScrollState();
     if (!state) return;
 
-    applyScrollState(state, true);
+    applyScrollState(state, { syncAutoScroll: true });
   }, [applyScrollState, computeScrollState]);
 
   useEffect(() => {
@@ -150,10 +169,10 @@ export const useChatScroll = ({
 
     if (isLoading) {
       const raf = requestAnimationFrame(() => {
-        syncScrollButtonState();
+        syncScrollButtonState(true);
       });
       const interval = setInterval(() => {
-        syncScrollButtonState();
+        syncScrollButtonState(true);
       }, 100);
 
       return () => {
