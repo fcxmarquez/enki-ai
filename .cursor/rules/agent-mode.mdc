@@ -1,6 +1,5 @@
 ---
-description: 
-globs: 
+description: "Agent workflow for completing coding tasks end-to-end (gather context → plan → execute → review). Use when the user asks you to implement or change code."
 alwaysApply: false
 ---
 [IGNORE THIS IF YOU'RE DEVIN AGENT]

@@ -31,16 +31,49 @@ export interface ChatSlice {
   setCurrentConversation: (conversationId: string) => void;
   updateConversationTitle: (conversationId: string, title: string) => void;
   deleteConversation: (conversationId: string) => void;
+  deleteMessage: (messageId: string) => void;
   deleteLastMessage: () => void;
   updateMessageContent: (messageId: string, additionalContent: string) => void;
+  setMessageStatus: (messageId: string, status: MessageStatus) => void;
   lastMessageToError: () => void;
-  lastMessageToSuccess: () => void;
 }
 
 const getCurrentConversationIndex = (state: StoreState) => {
   return state.chat.conversations.findIndex(
     (conv) => conv.id === state.chat.currentConversationId
   );
+};
+
+const findMessageLocation = (state: StoreState, messageId: string) => {
+  const currentConversationIndex = getCurrentConversationIndex(state);
+
+  if (currentConversationIndex !== -1) {
+    const currentConversation = state.chat.conversations[currentConversationIndex];
+    const messageIndex = currentConversation.messages.findIndex(
+      (msg) => msg.id === messageId
+    );
+
+    if (messageIndex !== -1) {
+      return { conversationIndex: currentConversationIndex, messageIndex };
+    }
+  }
+
+  for (
+    let conversationIndex = 0;
+    conversationIndex < state.chat.conversations.length;
+    conversationIndex++
+  ) {
+    if (conversationIndex === currentConversationIndex) continue;
+
+    const conversation = state.chat.conversations[conversationIndex];
+    const messageIndex = conversation.messages.findIndex((msg) => msg.id === messageId);
+
+    if (messageIndex !== -1) {
+      return { conversationIndex, messageIndex };
+    }
+  }
+
+  return null;
 };
 
 export const createChatSlice: StateCreator<
@@ -113,6 +146,7 @@ export const createChatSlice: StateCreator<
   addMessage: (message) => {
     const messageId = crypto.randomUUID();
     const status: MessageStatus = message.role === "user" ? "success" : "pending";
+    const timestamp = Date.now();
 
     set((state) => {
       const conversations = [...state.chat.conversations];
@@ -127,11 +161,11 @@ export const createChatSlice: StateCreator<
           {
             ...message,
             id: messageId,
-            timestamp: Date.now(),
+            timestamp,
             status,
           },
         ],
-        lastModified: Date.now(),
+        lastModified: timestamp,
       };
 
       conversations[conversationIndex] = updatedConversation;
@@ -146,7 +180,7 @@ export const createChatSlice: StateCreator<
     return {
       id: messageId,
       ...message,
-      timestamp: Date.now(),
+      timestamp,
       status,
     };
   },
@@ -215,14 +249,42 @@ export const createChatSlice: StateCreator<
       };
     }),
 
+  deleteMessage: (messageId) =>
+    set((state) => {
+      const location = findMessageLocation(state, messageId);
+      if (!location) return state;
+
+      const { conversationIndex, messageIndex } = location;
+      const conversation = state.chat.conversations[conversationIndex];
+
+      const updatedConversation: Conversation = {
+        ...conversation,
+        messages: [
+          ...conversation.messages.slice(0, messageIndex),
+          ...conversation.messages.slice(messageIndex + 1),
+        ],
+        lastModified: Date.now(),
+      };
+
+      const conversations = [...state.chat.conversations];
+      conversations[conversationIndex] = updatedConversation;
+
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
+        },
+      };
+    }),
+
   updateMessageContent: (messageId, additionalContent) =>
     set((state) => {
-      const conversationIndex = getCurrentConversationIndex(state);
-      if (conversationIndex === -1) return state;
+      const location = findMessageLocation(state, messageId);
+      if (!location) return state;
+
+      const { conversationIndex, messageIndex } = location;
 
       const conversation = state.chat.conversations[conversationIndex];
-      const messageIndex = conversation.messages.findIndex((msg) => msg.id === messageId);
-      if (messageIndex === -1) return state;
 
       const updatedMessage = {
         ...conversation.messages[messageIndex],
@@ -250,38 +312,40 @@ export const createChatSlice: StateCreator<
       };
     }),
 
-  lastMessageToSuccess: () =>
+  setMessageStatus: (messageId, status) =>
     set((state) => {
+      const location = findMessageLocation(state, messageId);
+      if (!location) return state;
+
+      const { conversationIndex, messageIndex } = location;
+      const conversation = state.chat.conversations[conversationIndex];
+      const message = conversation.messages[messageIndex];
+
+      if (message.status === status) return state;
+
+      const updatedMessage: Message = {
+        ...message,
+        status,
+      };
+
+      const updatedMessages = [...conversation.messages];
+      updatedMessages[messageIndex] = updatedMessage;
+
+      const updatedConversation: Conversation = {
+        ...conversation,
+        messages: updatedMessages,
+        lastModified: Date.now(),
+      };
+
       const conversations = [...state.chat.conversations];
-      const conversationIndex = getCurrentConversationIndex(state);
+      conversations[conversationIndex] = updatedConversation;
 
-      if (conversationIndex === -1) return state;
-
-      const messages = [...conversations[conversationIndex].messages];
-      const lastMessageIndex = messages.length - 1;
-      const lastMessage = messages[lastMessageIndex];
-
-      if (lastMessage.status !== "success") {
-        messages[lastMessageIndex] = {
-          ...lastMessage,
-          status: "success",
-        };
-
-        conversations[conversationIndex] = {
-          ...conversations[conversationIndex],
-          messages,
-          lastModified: Date.now(),
-        };
-
-        return {
-          chat: {
-            ...state.chat,
-            conversations,
-          },
-        };
-      }
-
-      return state;
+      return {
+        chat: {
+          ...state.chat,
+          conversations,
+        },
+      };
     }),
 
   lastMessageToError: () =>

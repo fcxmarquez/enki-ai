@@ -4,7 +4,6 @@ import { UIState } from "../types";
 
 export interface UISlice {
   ui: UIState;
-  setStatus: (status: UIState["status"], message: string) => void;
   showModal: (children: React.JSX.Element) => void;
   hideModal: () => void;
   setSettingsModalOpen: (open: boolean) => void;
@@ -17,8 +16,6 @@ export const createUISlice: StateCreator<
   UISlice
 > = (set) => ({
   ui: {
-    status: "idle",
-    message: "",
     modal: {
       isOpen: false,
       children: null,
@@ -27,9 +24,6 @@ export const createUISlice: StateCreator<
       settings: false,
     },
   },
-
-  setStatus: (status, message) =>
-    set((state) => ({ ui: { ...state.ui, status, message } })),
 
   showModal: (children) =>
     set((state) => ({ ui: { ...state.ui, modal: { isOpen: true, children } } })),
