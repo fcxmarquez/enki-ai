@@ -8,6 +8,12 @@ interface UseChatScrollOptions {
   buttonThreshold?: number;
 }
 
+interface ScrollState {
+  isAtBottom: boolean;
+  isAtBottomForButton: boolean;
+  hasOverflow: boolean;
+}
+
 export const useChatScroll = ({
   enabled = true,
   followKey,
@@ -45,15 +51,12 @@ export const useChatScroll = ({
 
   const updateScrollButtonState = useCallback(
     (hasOverflow: boolean, isAtBottom: boolean) => {
-      setShowScrollButton((prev) => {
-        const newValue = hasOverflow && !isAtBottom;
-        return prev === newValue ? prev : newValue;
-      });
+      setShowScrollButton(hasOverflow && !isAtBottom);
     },
     []
   );
 
-  const computeScrollState = useCallback(() => {
+  const computeScrollState = useCallback((): ScrollState | null => {
     const el = scrollContainerRef.current;
     if (!el) return null;
 
@@ -67,7 +70,7 @@ export const useChatScroll = ({
   }, [bottomThreshold, buttonThreshold]);
 
   const handleProgrammaticScroll = useCallback(
-    (state: { isAtBottomForButton: boolean }) => {
+    (state: ScrollState) => {
       if (!isProgrammaticScrollRef.current) return false;
 
       if (state.isAtBottomForButton) {
@@ -80,24 +83,32 @@ export const useChatScroll = ({
     [updateScrollButtonState]
   );
 
+  const applyScrollState = useCallback(
+    (state: ScrollState, syncAutoScroll: boolean) => {
+      if (handleProgrammaticScroll(state)) return;
+
+      if (syncAutoScroll) {
+        shouldAutoScrollRef.current = state.isAtBottom;
+      }
+
+      updateScrollButtonState(state.hasOverflow, state.isAtBottomForButton);
+    },
+    [handleProgrammaticScroll, updateScrollButtonState]
+  );
+
   const syncScrollButtonState = useCallback(() => {
     const state = computeScrollState();
     if (!state) return;
 
-    if (handleProgrammaticScroll(state)) return;
-
-    updateScrollButtonState(state.hasOverflow, state.isAtBottomForButton);
-  }, [computeScrollState, handleProgrammaticScroll, updateScrollButtonState]);
+    applyScrollState(state, false);
+  }, [applyScrollState, computeScrollState]);
 
   const onScroll = useCallback(() => {
     const state = computeScrollState();
     if (!state) return;
 
-    if (handleProgrammaticScroll(state)) return;
-
-    shouldAutoScrollRef.current = state.isAtBottom;
-    updateScrollButtonState(state.hasOverflow, state.isAtBottomForButton);
-  }, [computeScrollState, handleProgrammaticScroll, updateScrollButtonState]);
+    applyScrollState(state, true);
+  }, [applyScrollState, computeScrollState]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -107,13 +118,12 @@ export const useChatScroll = ({
       syncScrollButtonState();
     });
 
-    if (!shouldAutoScrollRef.current) {
-      return () => cancelAnimationFrame(raf);
+    if (shouldAutoScrollRef.current) {
+      const behavior = pendingScrollBehaviorRef.current ?? "auto";
+      pendingScrollBehaviorRef.current = null;
+      scrollToBottom(behavior);
     }
 
-    const behavior = pendingScrollBehaviorRef.current ?? "auto";
-    pendingScrollBehaviorRef.current = null;
-    scrollToBottom(behavior);
     return () => cancelAnimationFrame(raf);
   }, [enabled, followKey, scrollToBottom, syncScrollButtonState]);
 
@@ -139,12 +149,12 @@ export const useChatScroll = ({
     if (!enabled) return;
 
     if (isLoading) {
-      const interval = setInterval(() => {
-        syncScrollButtonState();
-      }, 100);
       const raf = requestAnimationFrame(() => {
         syncScrollButtonState();
       });
+      const interval = setInterval(() => {
+        syncScrollButtonState();
+      }, 100);
 
       return () => {
         cancelAnimationFrame(raf);
