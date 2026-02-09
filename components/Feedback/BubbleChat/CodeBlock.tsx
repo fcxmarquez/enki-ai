@@ -39,76 +39,93 @@ export const CodeBlock = ({ language, children }: CodeBlockProps) => {
       setIsCopied(true);
       toast.success("Copied to clipboard");
       setTimeout(() => setIsCopied(false), 2000);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy");
     }
   };
 
   return (
-    <motion.div className="rounded-md overflow-hidden max-w-full relative group my-4" {...fadeInAnimation}>
-      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <TooltipProvider>
-          <Tooltip delayDuration={300}>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md border border-white/10 backdrop-blur-sm"
-                onClick={toggleWrap}
-              >
-                <HiOutlineBars3BottomLeft className={`h-4 w-4 ${isWrapped ? "text-primary" : ""}`} />
-                <span className="sr-only">Toggle word wrap</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{isWrapped ? "Disable word wrap" : "Enable word wrap"}</p>
-            </TooltipContent>
-          </Tooltip>
+    <motion.div
+      className="relative my-4 w-full min-w-0 max-w-full overflow-hidden rounded-md"
+      {...fadeInAnimation}
+    >
+      <div className="flex items-center justify-between bg-zinc-800 px-3 py-1.5">
+        <span className="text-xs text-zinc-400 select-none">{language}</span>
+        <div className="flex gap-1">
+          <TooltipProvider>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
+                  onClick={toggleWrap}
+                >
+                  <HiOutlineBars3BottomLeft
+                    className={`h-4 w-4 ${isWrapped ? "text-primary" : ""}`}
+                  />
+                  <span className="sr-only">Toggle word wrap</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isWrapped ? "Disable word wrap" : "Enable word wrap"}</p>
+              </TooltipContent>
+            </Tooltip>
 
-          <Tooltip delayDuration={300}>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md border border-white/10 backdrop-blur-sm"
-                onClick={handleCopy}
-              >
-                {isCopied ? (
-                  <HiCheck className="h-4 w-4 text-green-500" />
-                ) : (
-                  <HiOutlineClipboard className="h-4 w-4" />
-                )}
-                <span className="sr-only">Copy code</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Copy code</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
+                  onClick={handleCopy}
+                >
+                  {isCopied ? (
+                    <HiCheck className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <HiOutlineClipboard className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">Copy code</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Copy code</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
 
-      <SyntaxHighlighter
-        language={language}
-        style={vscDarkPlus}
-        customStyle={{
-          borderRadius: "0.5rem",
-          padding: "1rem",
-          margin: 0,
-          maxWidth: "100%",
-          overflow: isWrapped ? "hidden" : "auto",
-        }}
-        PreTag="div"
-        wrapLongLines={isWrapped}
-        codeTagProps={{
-          style: {
-            whiteSpace: isWrapped ? "pre-wrap" : "pre",
-            wordBreak: isWrapped ? "break-word" : "normal",
-          },
-        }}
+      <div
+        className={`w-full min-w-0 ${
+          isWrapped
+            ? "overflow-x-hidden"
+            : "overflow-x-auto [-webkit-overflow-scrolling:touch]"
+        }`}
       >
-        {String(children).replace(/\n$/, "")}
-      </SyntaxHighlighter>
+        <SyntaxHighlighter
+          language={language}
+          style={vscDarkPlus}
+          customStyle={{
+            borderRadius: "0 0 0.5rem 0.5rem",
+            padding: "1rem",
+            margin: 0,
+            width: isWrapped ? "100%" : "max-content",
+            minWidth: "100%",
+            overflow: "visible",
+          }}
+          PreTag="div"
+          wrapLongLines={isWrapped}
+          codeTagProps={{
+            style: {
+              whiteSpace: isWrapped ? "pre-wrap" : "pre",
+              wordBreak: isWrapped ? "break-word" : "normal",
+            },
+          }}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      </div>
     </motion.div>
   );
 };
