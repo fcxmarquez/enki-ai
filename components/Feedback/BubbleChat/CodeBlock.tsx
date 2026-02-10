@@ -5,7 +5,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
 import { motion } from "motion/react";
-import { HiOutlineBars3BottomLeft, HiOutlineClipboard, HiCheck } from "react-icons/hi2";
+import { HiOutlineClipboard, HiCheck } from "react-icons/hi2";
+import { LuWrapText, LuArrowRightFromLine } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -56,14 +57,16 @@ export const CodeBlock = ({ language, children }: CodeBlockProps) => {
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="h-7 w-7 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
+                  className="h-7 w-7 border-zinc-600 bg-transparent hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
                   onClick={toggleWrap}
                 >
-                  <HiOutlineBars3BottomLeft
-                    className={`h-4 w-4 ${isWrapped ? "text-primary" : ""}`}
-                  />
+                  {isWrapped ? (
+                    <LuWrapText className="h-4 w-4" />
+                  ) : (
+                    <LuArrowRightFromLine className="h-4 w-4" />
+                  )}
                   <span className="sr-only">Toggle word wrap</span>
                 </Button>
               </TooltipTrigger>
@@ -75,9 +78,9 @@ export const CodeBlock = ({ language, children }: CodeBlockProps) => {
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="h-7 w-7 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
+                  className="h-7 w-7 border-zinc-600 bg-transparent hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-md"
                   onClick={handleCopy}
                 >
                   {isCopied ? (
