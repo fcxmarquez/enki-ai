@@ -28,7 +28,7 @@ export interface ChatSlice {
   setChatError: (error: string | null) => void;
   clearChat: () => void;
   createNewConversation: (initialMessage: string) => string;
-  setCurrentConversation: (conversationId: string) => void;
+  setCurrentConversation: (conversationId: string | null) => void;
   updateConversationTitle: (conversationId: string, title: string) => void;
   deleteConversation: (conversationId: string) => void;
   deleteMessage: (messageId: string) => void;

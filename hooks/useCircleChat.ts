@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
@@ -9,6 +10,7 @@ export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const isSendingRef = useRef(false);
+  const router = useRouter();
   const { currentConversationId, messages } = useChat();
   const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
     useChatActions();
@@ -28,7 +30,8 @@ export const useCircleChat = () => {
     setIsLoading(true);
 
     if (!currentConversationId) {
-      createNewConversation(trimmedMessage);
+      const newId = createNewConversation(trimmedMessage);
+      router.replace(`/chat/${newId}`);
     }
 
     addMessage({

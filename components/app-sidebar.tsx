@@ -11,6 +11,7 @@ import {
   Search,
 } from "lucide-react";
 
+import { useRouter } from "next/navigation";
 import { NavProjects } from "@/components/nav-projects";
 import { NavMain } from "@/components/nav-main";
 import { NavChatHistory } from "@/components/nav-chat-history";
@@ -21,20 +22,20 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useChat, useChatActions } from "@/store";
+import { useChat } from "@/store";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { conversations } = useChat();
-  const { createNewConversation } = useChatActions();
+  const router = useRouter();
 
   const handleNewChat = () => {
-    createNewConversation("New conversation");
+    router.push("/");
   };
 
   const chatHistory = conversations.map((conversation) => ({
     id: conversation.id,
     title: conversation.title,
-    url: `#${conversation.id}`,
+    url: `/chat/${conversation.id}`,
     date: new Date(conversation.lastModified).toISOString(),
   }));
 
