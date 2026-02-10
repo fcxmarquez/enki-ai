@@ -1,8 +1,7 @@
 import { Components } from "react-markdown";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import type { ComponentPropsWithoutRef } from "react";
 import { motion } from "motion/react";
+import { CodeBlock } from "./CodeBlock";
 
 type CodeBlockProps = ComponentPropsWithoutRef<"code"> & {
   inline?: boolean;
@@ -19,24 +18,7 @@ export const MarkdownComponents: Components = {
   code({ inline, className, children, ...props }: CodeBlockProps) {
     const match = /language-(\w+)/.exec(className || "");
     return !inline && match ? (
-      <motion.div className="rounded-md overflow-hidden max-w-full" {...fadeInAnimation}>
-        <SyntaxHighlighter
-          language={match[1]}
-          style={vscDarkPlus}
-          customStyle={{
-            borderRadius: "0.5rem",
-            padding: "1rem",
-            margin: 0,
-            maxWidth: "100%",
-            overflow: "hidden",
-          }}
-          PreTag="div"
-          wrapLongLines={true}
-          codeTagProps={{ style: { whiteSpace: "pre-wrap", wordBreak: "break-word" } }}
-        >
-          {String(children).replace(/\n$/, "")}
-        </SyntaxHighlighter>
-      </motion.div>
+      <CodeBlock language={match[1]}>{String(children)}</CodeBlock>
     ) : (
       <code className="rounded-sm bg-muted px-1 py-0.5 text-muted-foreground" {...props}>
         {children}
