@@ -29,9 +29,9 @@ export const useCircleChat = () => {
     setError(null);
     setIsLoading(true);
 
+    let newConversationId: string | null = null;
     if (!currentConversationId) {
-      const newId = createNewConversation(trimmedMessage);
-      router.replace(`/chat/${newId}`);
+      newConversationId = createNewConversation(trimmedMessage);
     }
 
     addMessage({
@@ -67,6 +67,10 @@ export const useCircleChat = () => {
         setIsLoading(false);
 
         setMessageStatus(assistantMessage.id, "success");
+
+        if (newConversationId) {
+          router.replace(`/c/${newConversationId}`);
+        }
       },
       onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
@@ -91,6 +95,10 @@ export const useCircleChat = () => {
         toast.error(errorMessage);
         isSendingRef.current = false;
         setIsLoading(false);
+
+        if (newConversationId) {
+          router.replace(`/c/${newConversationId}`);
+        }
       },
     });
   };
