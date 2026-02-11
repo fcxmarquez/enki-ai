@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useStore, useChat, useChatActions } from "@/store";
 
 function useStoreHydration() {
-  const [hydrated, setHydrated] = useState(() => useStore.persist.hasHydrated());
+  const [hydrated, setHydrated] = useState(
+    () => useStore.persist?.hasHydrated() ?? false
+  );
 
   useEffect(() => {
     if (hydrated) return;
