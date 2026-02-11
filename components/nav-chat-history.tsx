@@ -42,7 +42,7 @@ export function NavChatHistory({
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const handleConversationClick = (conversationId: string) => {
-    router.push(`/chat/${conversationId}`);
+    router.push(`/c/${conversationId}`);
     if (isMobile) {
       setOpenMobile(false);
     }

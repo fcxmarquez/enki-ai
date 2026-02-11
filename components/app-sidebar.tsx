@@ -35,7 +35,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const chatHistory = conversations.map((conversation) => ({
     id: conversation.id,
     title: conversation.title,
-    url: `/chat/${conversation.id}`,
+    url: `/c/${conversation.id}`,
     date: new Date(conversation.lastModified).toISOString(),
   }));
 
