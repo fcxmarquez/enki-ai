@@ -1,28 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStore, useChat, useChatActions } from "@/store";
 
 function useStoreHydration() {
-  const [hydrated, setHydrated] = useState(false);
-  const checked = useRef(false);
+  const [hydrated, setHydrated] = useState(() => useStore.persist.hasHydrated());
 
   useEffect(() => {
-    if (checked.current) return;
-    checked.current = true;
-
-    if (useStore.persist.hasHydrated()) {
-      queueMicrotask(() => setHydrated(true));
-      return;
-    }
+    if (hydrated) return;
 
     const unsub = useStore.persist.onFinishHydration(() => {
       setHydrated(true);
     });
 
     return unsub;
-  }, []);
+  }, [hydrated]);
 
   return hydrated;
 }
