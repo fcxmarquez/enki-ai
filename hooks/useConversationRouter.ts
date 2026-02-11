@@ -13,7 +13,6 @@ function useStoreHydration() {
     checked.current = true;
 
     if (useStore.persist.hasHydrated()) {
-      // Already hydrated: schedule state update for next tick to avoid sync setState in effect
       queueMicrotask(() => setHydrated(true));
       return;
     }

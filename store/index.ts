@@ -18,13 +18,7 @@ export const useStore = create<StoreState>()(
       {
         name: "chat-store",
         version: 1,
-        migrate: (persistedState, version) => {
-          if (version === 0) {
-            // v0 -> v1: currentConversationId no longer persisted (URL is source of truth)
-            return persistedState;
-          }
-          return persistedState;
-        },
+        migrate: (persistedState) => persistedState,
         partialize: (state) => ({
           chat: {
             conversations: state.chat.conversations,
