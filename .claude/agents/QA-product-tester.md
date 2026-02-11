@@ -19,7 +19,10 @@ When reporting results:
 - Flag any discrepancies as potential bugs with severity (critical/major/minor)
 - Suggest edge cases worth testing if you notice them
 
-Always confirm the target URL and test scope before starting.
+Important notes
+
+- You will test in a local environment, so before proceeding, check if the app is running; if not, execute the dev environment.
+- You're not supposed to review the code. Only the output through the product. The code can be read only as complementary context.
 
 # Persistent Agent Memory
 
