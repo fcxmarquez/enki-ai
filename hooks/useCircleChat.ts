@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
 import { useSendMessageStream } from "@/fetch/chat/mutations";
@@ -9,6 +10,7 @@ export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const isSendingRef = useRef(false);
+  const router = useRouter();
   const { currentConversationId, messages } = useChat();
   const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
     useChatActions();
@@ -27,8 +29,9 @@ export const useCircleChat = () => {
     setError(null);
     setIsLoading(true);
 
+    let newConversationId: string | null = null;
     if (!currentConversationId) {
-      createNewConversation(trimmedMessage);
+      newConversationId = createNewConversation(trimmedMessage);
     }
 
     addMessage({
@@ -64,6 +67,10 @@ export const useCircleChat = () => {
         setIsLoading(false);
 
         setMessageStatus(assistantMessage.id, "success");
+
+        if (newConversationId) {
+          router.replace(`/c/${newConversationId}`);
+        }
       },
       onError: (error: Error, partialResponse: string) => {
         console.error("Streaming error:", error);
@@ -88,6 +95,10 @@ export const useCircleChat = () => {
         toast.error(errorMessage);
         isSendingRef.current = false;
         setIsLoading(false);
+
+        if (newConversationId) {
+          router.replace(`/c/${newConversationId}`);
+        }
       },
     });
   };

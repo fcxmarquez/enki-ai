@@ -17,10 +17,11 @@ export const useStore = create<StoreState>()(
       }),
       {
         name: "chat-store",
+        version: 1,
+        migrate: (persistedState) => persistedState,
         partialize: (state) => ({
           chat: {
             conversations: state.chat.conversations,
-            currentConversationId: state.chat.currentConversationId,
           },
           config: state.config,
         }),

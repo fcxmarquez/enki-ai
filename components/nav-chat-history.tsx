@@ -19,8 +19,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 import { groupAndSortChats } from "@/lib/utils";
-import { useChat, useChatActions } from "@/store";
+import { useChat } from "@/store";
 import { cn } from "@/lib/utils";
 
 export function NavChatHistory({
@@ -35,13 +36,13 @@ export function NavChatHistory({
 }) {
   const sortedGroupEntries = groupAndSortChats(chats);
   const { currentConversationId } = useChat();
-  const { setCurrentConversation } = useChatActions();
+  const router = useRouter();
   const { isMobile, setOpenMobile } = useSidebar();
   const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const handleConversationClick = (conversationId: string) => {
-    setCurrentConversation(conversationId);
+    router.push(`/c/${conversationId}`);
     if (isMobile) {
       setOpenMobile(false);
     }
