@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -128,10 +128,11 @@ export function NavChatHistory({
                               </span>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuItem>
+                              {/* Temporary disabled archive feature until developed */}
+                              {/* <DropdownMenuItem>
                                 <Archive className="mr-2 h-4 w-4" />
                                 Archive
-                              </DropdownMenuItem>
+                              </DropdownMenuItem> */}
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -170,10 +171,7 @@ export function NavChatHistory({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteConfirm}
-              className="bg-destructive text-white hover:bg-destructive/90"
-            >
+            <AlertDialogAction onClick={handleDeleteConfirm} variant="destructive">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
