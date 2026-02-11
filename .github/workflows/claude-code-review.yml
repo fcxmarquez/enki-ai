@@ -1,18 +1,12 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, ready_for_review]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+  issue_comment:
+    types: [created]
 
 jobs:
   claude-review:
-    if: ${{ !github.event.pull_request.draft }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '@claude-review') }}
     # Optional: Filter by PR author
     # if: |
     #   github.event.pull_request.user.login == 'external-contributor' ||
@@ -38,6 +32,8 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
+            Review pull request #${{ github.event.issue.number }}.
+
             Please review this pull request and provide feedback on:
             - Code quality and best practices
             - Potential bugs or issues
