@@ -68,10 +68,16 @@ export function NavChatHistory({
 
       input.focus();
       input.select();
-      pendingRenameChatIdRef.current = null;
     });
 
-    return () => cancelAnimationFrame(frame);
+    const timer = setTimeout(() => {
+      pendingRenameChatIdRef.current = null;
+    }, 500);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
   }, [editingChatId]);
 
   const handleDeleteConfirm = () => {
@@ -141,12 +147,14 @@ export function NavChatHistory({
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") {
                                   e.preventDefault();
+                                  pendingRenameChatIdRef.current = null;
                                   e.currentTarget.blur();
                                 }
 
                                 if (e.key === "Escape") {
                                   e.preventDefault();
                                   isCancelledRef.current = true;
+                                  pendingRenameChatIdRef.current = null;
                                   e.currentTarget.blur();
                                 }
                               }}
@@ -155,6 +163,12 @@ export function NavChatHistory({
                                   isCancelledRef.current = false;
                                   setEditingChatId(null);
                                   setDraftTitle("");
+                                  return;
+                                }
+                                if (pendingRenameChatIdRef.current) {
+                                  requestAnimationFrame(() =>
+                                    renameInputRef.current?.focus()
+                                  );
                                   return;
                                 }
                                 commitRenamingConversation(chat.id, chat.title);
