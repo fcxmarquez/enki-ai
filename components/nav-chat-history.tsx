@@ -57,6 +57,7 @@ export function NavChatHistory({
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const renameInputRef = useRef<HTMLInputElement | null>(null);
   const pendingRenameChatIdRef = useRef<string | null>(null);
+  const isCancelledRef = useRef(false);
 
   useEffect(() => {
     if (!editingChatId) return;
@@ -145,13 +146,19 @@ export function NavChatHistory({
 
                                 if (e.key === "Escape") {
                                   e.preventDefault();
-                                  setDraftTitle(chat.title);
+                                  isCancelledRef.current = true;
                                   e.currentTarget.blur();
                                 }
                               }}
-                              onBlur={() =>
-                                commitRenamingConversation(chat.id, chat.title)
-                              }
+                              onBlur={() => {
+                                if (isCancelledRef.current) {
+                                  isCancelledRef.current = false;
+                                  setEditingChatId(null);
+                                  setDraftTitle("");
+                                  return;
+                                }
+                                commitRenamingConversation(chat.id, chat.title);
+                              }}
                               className="h-7 flex-1 border-0 bg-transparent p-0 text-inherit shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-0"
                             />
                           ) : (
