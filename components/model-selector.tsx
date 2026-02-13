@@ -1,5 +1,8 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,12 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
-import { useConfig } from "@/store";
-import { ModelType } from "@/store/types";
 import { MODEL_LABELS } from "@/constants/models";
+import { useConfig } from "@/store";
+import type { ModelType } from "@/store/types";
 
 export function ModelSelector() {
   const { config, setConfig, hasValidApiKey } = useConfig();

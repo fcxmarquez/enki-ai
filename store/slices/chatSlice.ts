@@ -1,5 +1,5 @@
-import { StateCreator } from "zustand";
-import { StoreState } from "../types";
+import type { StateCreator } from "zustand";
+import type { StoreState } from "../types";
 
 type MessageStatus = "pending" | "success" | "error";
 
@@ -95,7 +95,7 @@ export const createChatSlice: StateCreator<
         id: newId,
         title:
           initialMessage.length > 30
-            ? initialMessage.slice(0, 30) + "..."
+            ? `${initialMessage.slice(0, 30)}...`
             : initialMessage,
         messages: [],
         lastModified: Date.now(),

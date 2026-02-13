@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { breakpoints } from "@/constants/systemDesign";
 
 export const useViewMobile = (toDesktop: boolean, viewport?: number) => {
@@ -23,6 +23,6 @@ export const useViewMobile = (toDesktop: boolean, viewport?: number) => {
   }
 
   return toDesktop
-    ? width < parseInt(breakpoints.desktop)
-    : width < (viewport ?? parseInt(breakpoints.tablet));
+    ? width < parseInt(breakpoints.desktop, 10)
+    : width < (viewport ?? parseInt(breakpoints.tablet, 10));
 };

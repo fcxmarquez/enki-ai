@@ -1,6 +1,6 @@
 "use client";
 
-import { type LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -37,7 +37,7 @@ export function NavMain({
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={false}>
-            <button onClick={() => handleClick(item.onClick)}>
+            <button type="button" onClick={() => handleClick(item.onClick)}>
               <div className="flex size-6 items-center justify-center">
                 <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>

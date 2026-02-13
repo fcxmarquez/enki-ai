@@ -1,7 +1,7 @@
 "use client";
 
-import { useUI, useUIActions } from "@/store";
 import { Modal, ModalOverlay } from "@chakra-ui/react";
+import { useUI, useUIActions } from "@/store";
 
 export const ModalRender = () => {
   const { hideModal } = useUIActions();

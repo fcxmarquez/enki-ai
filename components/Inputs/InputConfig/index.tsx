@@ -1,6 +1,6 @@
-import { Input, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { IconButton, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Eye, EyeOff } from "lucide-react";
+import { type FC, useState } from "react";
 
 type InputConfigProps = {
   label: string;

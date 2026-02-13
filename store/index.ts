@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import { createUISlice } from "./slices/uiSlice";
 import { createChatSlice } from "./slices/chatSlice";
 import { createConfigSlice } from "./slices/configSlice";
+import { createUISlice } from "./slices/uiSlice";
 import { createUserSlice } from "./slices/userSlice";
-import { StoreState } from "./types";
+import type { StoreState } from "./types";
 
 export const useStore = create<StoreState>()(
   devtools(

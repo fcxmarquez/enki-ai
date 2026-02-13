@@ -1,8 +1,8 @@
-import { ChatOpenAI } from "@langchain/openai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { ModelType } from "@/store/types";
+import { ChatOpenAI } from "@langchain/openai";
 import { getModelConfig } from "@/constants/models";
+import type { ModelType } from "@/store/types";
 
 type ChatModel = ChatOpenAI | ChatAnthropic;
 
@@ -130,12 +130,12 @@ export class ChatService {
       maxRetries: config.maxRetries,
       temperature: config.temperature,
     });
-    if (configHash !== this.lastConfig || !this.instance) {
-      this.instance = new ChatService(config);
-      this.lastConfig = configHash;
+    if (configHash !== ChatService.lastConfig || !ChatService.instance) {
+      ChatService.instance = new ChatService(config);
+      ChatService.lastConfig = configHash;
     }
 
-    return this.instance;
+    return ChatService.instance;
   }
 
   private convertToLangChainMessages(history: ChatMessage[]) {

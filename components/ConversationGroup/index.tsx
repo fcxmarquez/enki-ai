@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 // this component will be used to group multiple Conversation components by day, week, or months
 

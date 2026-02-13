@@ -1,6 +1,6 @@
-import { Components } from "react-markdown";
-import type { ComponentPropsWithoutRef } from "react";
 import { motion } from "motion/react";
+import type { ComponentPropsWithoutRef } from "react";
+import type { Components } from "react-markdown";
 import { CodeBlock } from "./CodeBlock";
 
 type CodeBlockProps = ComponentPropsWithoutRef<"code"> & {

@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
+import { usePathname } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { createClient } from "@/utils/supabase/client";
-import { usePathname } from "next/navigation";
 
 export function GoogleAuthButton() {
   const pathname = usePathname();

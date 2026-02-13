@@ -1,14 +1,15 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Cpu, Eye, EyeOff, KeyRound, LogOut, Settings2, SunMoon } from "lucide-react";
+import { useTheme } from "next-themes";
 import * as React from "react";
 import { useState } from "react";
-import { Eye, EyeOff, Settings2, LogOut, KeyRound, Cpu, SunMoon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,21 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import {
-  MultipleCombobox,
-  MultipleComboboxOption,
-} from "@/components/ui/multiple-combobox";
 import {
   Form,
   FormControl,
@@ -40,15 +26,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useConfig, useUserActions } from "@/store";
-import { ModelType } from "@/store/types";
-import { createClient } from "@/utils/supabase/client";
+import { Input } from "@/components/ui/input";
 import {
+  MultipleCombobox,
+  type MultipleComboboxOption,
+} from "@/components/ui/multiple-combobox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  DEFAULT_ENABLED_MODELS,
+  DEFAULT_MODEL,
   MODEL_OPTIONS,
   MODEL_VALUES,
-  DEFAULT_MODEL,
-  DEFAULT_ENABLED_MODELS,
 } from "@/constants/models";
+import { useConfig, useUserActions } from "@/store";
+import type { ModelType } from "@/store/types";
+import { createClient } from "@/utils/supabase/client";
 
 interface SettingsModalProps {
   open: boolean;

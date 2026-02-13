@@ -13,8 +13,9 @@ This file provides guidance to AI agent when working with code in this repositor
 - `bun dev` - Start development server with Turbopack
 - `bun build` - Build for production
 - `bun start` - Start production server
-- `bun lint` - Run ESLint
-- `bun format` - Format code with Prettier
+- `bun lint` - Run Biome (lint + format check)
+- `bun format` - Format code with Biome
+- `bun lint:fix` - Auto-fix lint and format issues with Biome
 - `bun install` - Install dependencies
 
 ### Database Management

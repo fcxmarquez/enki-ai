@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import styles from "./styles.module.css";
 
 type HamburgerButtonProps = {
@@ -9,6 +9,7 @@ type HamburgerButtonProps = {
 export const HamburgerButton: FC<HamburgerButtonProps> = ({ isOpen, toggleMenu }) => {
   return (
     <button
+      type="button"
       className={`${styles.hamburgerNew} z-50 ${
         isOpen ? styles.open : ""
       } focus:outline-hidden`}

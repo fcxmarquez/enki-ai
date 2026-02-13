@@ -1,6 +1,6 @@
 "use client";
 
-import { Archive, ChevronDown, Settings2, LogOut } from "lucide-react";
+import { Archive, ChevronDown, LogOut, Settings2 } from "lucide-react";
 
 import {
   DropdownMenu,

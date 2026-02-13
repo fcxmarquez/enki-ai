@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { useSendMessageStream } from "@/fetch/chat/mutations";
+import type { ChatMessage } from "@/lib/langchain/chatService";
 import { useChat, useChatActions } from "@/store";
 import { useManageChunks } from "./useManageChunks";
-import { useSendMessageStream } from "@/fetch/chat/mutations";
-import { toast } from "sonner";
-import { ChatMessage } from "@/lib/langchain/chatService";
 
 export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);

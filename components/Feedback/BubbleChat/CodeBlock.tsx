@@ -1,12 +1,12 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useState } from "react";
+import { HiCheck, HiOutlineClipboard } from "react-icons/hi2";
+import { LuArrowRightFromLine, LuWrapText } from "react-icons/lu";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
-import { motion } from "motion/react";
-import { HiOutlineClipboard, HiCheck } from "react-icons/hi2";
-import { LuWrapText, LuArrowRightFromLine } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,

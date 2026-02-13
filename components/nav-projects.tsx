@@ -39,7 +39,7 @@ export function NavProjects({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <button title="New project" disabled>
+              <button type="button" title="New project" disabled>
                 <div className="flex size-6 items-center justify-center">
                   <FolderPlus className="size-4 shrink-0" />
                 </div>
@@ -50,7 +50,7 @@ export function NavProjects({
           {projects.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <button title={item.name} disabled>
+                <button type="button" title={item.name} disabled>
                   <div className="flex size-6 items-center justify-center">
                     <FolderClosed className="size-4 shrink-0" />
                   </div>
@@ -61,7 +61,7 @@ export function NavProjects({
           ))}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <button className="text-sidebar-foreground/70" disabled>
+              <button type="button" className="text-sidebar-foreground/70" disabled>
                 <MoreHorizontal />
                 <span>More</span>
               </button>

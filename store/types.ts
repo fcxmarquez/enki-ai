@@ -1,8 +1,8 @@
-import { UISlice } from "./slices/uiSlice";
-import { ChatSlice } from "./slices/chatSlice";
-import { ConfigSlice } from "./slices/configSlice";
-import { UserSlice } from "./slices/userSlice";
-import { MODEL_VALUES } from "@/constants/models";
+import type { MODEL_VALUES } from "@/constants/models";
+import type { ChatSlice } from "./slices/chatSlice";
+import type { ConfigSlice } from "./slices/configSlice";
+import type { UISlice } from "./slices/uiSlice";
+import type { UserSlice } from "./slices/userSlice";
 
 export type ModelType = (typeof MODEL_VALUES)[number];
 
