@@ -22,10 +22,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useChat } from "@/store";
+import { useChat, useUIActions } from "@/store";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { conversations } = useChat();
+  const { setSearchChatsModalOpen } = useUIActions();
   const router = useRouter();
 
   const handleNewChat = () => {
@@ -52,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Search chats",
-        onClick: () => {},
+        onClick: () => setSearchChatsModalOpen(true),
         icon: Search,
       },
     ],
