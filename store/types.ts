@@ -20,6 +20,7 @@ export interface UIState {
   };
   modals: {
     settings: boolean;
+    searchChats: boolean;
   };
 }
 

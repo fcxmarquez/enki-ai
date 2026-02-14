@@ -40,11 +40,13 @@ export const useUIActions = () => {
   const showModal = useStore((state) => state.showModal);
   const hideModal = useStore((state) => state.hideModal);
   const setSettingsModalOpen = useStore((state) => state.setSettingsModalOpen);
+  const setSearchChatsModalOpen = useStore((state) => state.setSearchChatsModalOpen);
 
   return {
     showModal,
     hideModal,
     setSettingsModalOpen,
+    setSearchChatsModalOpen,
   };
 };
 

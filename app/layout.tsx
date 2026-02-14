@@ -35,9 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} relative`}>
         <Providers>
           <ModalRender />
-          <ShadcnModalRender />
           <Toaster />
           <SidebarProvider>
+            <ShadcnModalRender />
             <AppSidebar />
             <SidebarInset className="relative min-h-dvh max-h-dvh h-full overflow-y-hidden overflow-x-hidden">
               <header className="flex h-14 sticky top-0 z-10 bg-background/50 backdrop-blur-lg shrink-0 items-center gap-2 overflow-hidden max-w-full">
