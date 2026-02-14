@@ -42,11 +42,22 @@ export function SearchChatsDialog({ open, onOpenChange }: SearchChatsDialogProps
         event.preventDefault();
         onOpenChange(!open);
       }
+
+      if (
+        event.key.toLowerCase() === "o" &&
+        (event.metaKey || event.ctrlKey) &&
+        event.shiftKey
+      ) {
+        event.preventDefault();
+        router.push("/");
+        onOpenChange(false);
+        if (isMobile) setOpenMobile(false);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onOpenChange, open]);
+  }, [onOpenChange, open, router, isMobile, setOpenMobile]);
 
   const chatHistory = conversations.map((conversation) => ({
     id: conversation.id,
