@@ -55,6 +55,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Search chats",
         onClick: () => setSearchChatsModalOpen(true),
         icon: Search,
+        shortcut: "K",
       },
     ],
     navSecondary: [
