@@ -10,6 +10,7 @@ export const useCircleChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const isSendingRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const router = useRouter();
   const { currentConversationId, messages } = useChat();
   const { createNewConversation, addMessage, setMessageStatus, deleteMessage } =
@@ -49,13 +50,19 @@ export const useCircleChat = () => {
       content: msg.content,
     }));
 
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     sendMessageStream.mutate({
       message: trimmedMessage,
       history,
+      signal: abortController.signal,
       onChunk: (chunk: string) => {
         accumulateChunk(assistantMessage.id, chunk);
       },
       onComplete: () => {
+        abortControllerRef.current = null;
+
         if (flushIntervalRef.current) {
           clearInterval(flushIntervalRef.current);
           flushIntervalRef.current = null;
@@ -73,14 +80,35 @@ export const useCircleChat = () => {
         }
       },
       onError: (error: Error, partialResponse: string) => {
-        console.error("Streaming error:", error);
-        setError(error);
+        abortControllerRef.current = null;
 
         if (flushIntervalRef.current) {
           clearInterval(flushIntervalRef.current);
           flushIntervalRef.current = null;
         }
         flushChunks();
+
+        const isAborted =
+          error.name === "AbortError" || error.message?.includes("aborted");
+
+        if (isAborted) {
+          if (!partialResponse || !partialResponse.trim()) {
+            deleteMessage(assistantMessage.id);
+          } else {
+            setMessageStatus(assistantMessage.id, "success");
+          }
+
+          isSendingRef.current = false;
+          setIsLoading(false);
+
+          if (newConversationId) {
+            router.replace(`/c/${newConversationId}`);
+          }
+          return;
+        }
+
+        console.error("Streaming error:", error);
+        setError(error);
 
         if (!partialResponse || !partialResponse.trim()) {
           deleteMessage(assistantMessage.id);
@@ -103,11 +131,18 @@ export const useCircleChat = () => {
     });
   };
 
+  const stopGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+  };
+
   return {
     isError: Boolean(error),
     error,
     messages,
     sendMessage,
+    stopGeneration,
     isLoading,
   };
 };
