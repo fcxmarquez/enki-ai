@@ -16,7 +16,11 @@ export function useNewChatShortcut() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "o" && event.shiftKey && (event.metaKey || event.ctrlKey)) {
+      if (
+        event.key.toLowerCase() === "o" &&
+        event.shiftKey &&
+        (event.metaKey || event.ctrlKey)
+      ) {
         event.preventDefault();
         router.push("/");
         if (isMobile) setOpenMobile(false);
