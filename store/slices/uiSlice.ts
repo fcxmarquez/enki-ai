@@ -6,6 +6,7 @@ export interface UISlice {
   showModal: (children: React.JSX.Element) => void;
   hideModal: () => void;
   setSettingsModalOpen: (open: boolean) => void;
+  setSearchChatsModalOpen: (open: boolean) => void;
 }
 
 export const createUISlice: StateCreator<
@@ -21,6 +22,7 @@ export const createUISlice: StateCreator<
     },
     modals: {
       settings: false,
+      searchChats: false,
     },
   },
 
@@ -37,6 +39,17 @@ export const createUISlice: StateCreator<
         modals: {
           ...state.ui.modals,
           settings: open,
+        },
+      },
+    })),
+
+  setSearchChatsModalOpen: (open) =>
+    set((state) => ({
+      ui: {
+        ...state.ui,
+        modals: {
+          ...state.ui.modals,
+          searchChats: open,
         },
       },
     })),

@@ -1,6 +1,7 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
+import { Command, type LucideIcon } from "lucide-react";
+import { useSyncExternalStore } from "react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -21,9 +22,15 @@ export function NavMain({
     title: string;
     icon: LucideIcon;
     onClick: () => void;
+    shortcut?: string;
   }[];
 }) {
   const { isMobile, setOpenMobile } = useSidebar();
+  const isMac = useSyncExternalStore(
+    () => () => {},
+    () => navigator.userAgent.toUpperCase().includes("MAC"),
+    () => false
+  );
 
   const handleClick = (onClick: () => void) => {
     onClick();
@@ -37,11 +44,20 @@ export function NavMain({
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={false}>
-            <button type="button" onClick={() => handleClick(item.onClick)}>
+            <button
+              type="button"
+              className="group/navitem"
+              onClick={() => handleClick(item.onClick)}
+            >
               <div className="flex size-6 items-center justify-center">
                 <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>
               <span>{item.title}</span>
+              {item.shortcut && !isMobile && (
+                <kbd className="ml-auto hidden items-center gap-0.5 text-xs text-muted-foreground group-hover/navitem:inline-flex">
+                  {isMac ? <Command className="size-3" /> : "Ctrl"} {item.shortcut}
+                </kbd>
+              )}
             </button>
           </SidebarMenuButton>
         </SidebarMenuItem>

@@ -1,8 +1,8 @@
 "use client";
 
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -45,12 +45,38 @@ export function NavChatHistory({
 }) {
   const sortedGroupEntries = groupAndSortChats(chats);
   const { currentConversationId } = useChat();
-  const { deleteConversation } = useChatActions();
+  const { deleteConversation, updateConversationTitle } = useChatActions();
   const router = useRouter();
   const { isMobile, setOpenMobile } = useSidebar();
   const [hoveredChatId, setHoveredChatId] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
+  const [draftTitle, setDraftTitle] = useState("");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const renameInputRef = useRef<HTMLInputElement | null>(null);
+  const pendingRenameChatIdRef = useRef<string | null>(null);
+  const isCancelledRef = useRef(false);
+
+  useEffect(() => {
+    if (!editingChatId) return;
+
+    const frame = requestAnimationFrame(() => {
+      const input = renameInputRef.current;
+      if (!input) return;
+
+      input.focus();
+      input.select();
+    });
+
+    const timer = setTimeout(() => {
+      pendingRenameChatIdRef.current = null;
+    }, 500);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+    };
+  }, [editingChatId]);
 
   const handleDeleteConfirm = () => {
     if (!deleteTargetId) return;
@@ -64,6 +90,23 @@ export function NavChatHistory({
     if (isMobile) {
       setOpenMobile(false);
     }
+  };
+
+  const startRenamingConversation = (conversationId: string, currentTitle: string) => {
+    setEditingChatId(conversationId);
+    setDraftTitle(currentTitle);
+    setOpenDropdownId(null);
+  };
+
+  const commitRenamingConversation = (conversationId: string, currentTitle: string) => {
+    const nextTitle = draftTitle.trim();
+
+    if (nextTitle.length > 0 && nextTitle !== currentTitle) {
+      updateConversationTitle(conversationId, nextTitle);
+    }
+
+    setEditingChatId(null);
+    setDraftTitle("");
   };
 
   return (
@@ -87,19 +130,59 @@ export function NavChatHistory({
                         )}
                       >
                         <div
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => handleConversationClick(chat.id)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              handleConversationClick(chat.id);
-                            }
-                          }}
+                          role="group"
                           onMouseEnter={() => setHoveredChatId(chat.id)}
                           onMouseLeave={() => setHoveredChatId(null)}
-                          className="flex items-center justify-between w-full cursor-pointer"
+                          className="flex items-center justify-between w-full gap-2"
                         >
-                          <span>{chat.title}</span>
+                          {editingChatId === chat.id ? (
+                            <input
+                              ref={renameInputRef}
+                              type="text"
+                              value={draftTitle}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => setDraftTitle(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  pendingRenameChatIdRef.current = null;
+                                  e.currentTarget.blur();
+                                }
+
+                                if (e.key === "Escape") {
+                                  e.preventDefault();
+                                  isCancelledRef.current = true;
+                                  pendingRenameChatIdRef.current = null;
+                                  e.currentTarget.blur();
+                                }
+                              }}
+                              onBlur={() => {
+                                if (isCancelledRef.current) {
+                                  isCancelledRef.current = false;
+                                  setEditingChatId(null);
+                                  setDraftTitle("");
+                                  return;
+                                }
+                                if (pendingRenameChatIdRef.current) {
+                                  requestAnimationFrame(() =>
+                                    renameInputRef.current?.focus()
+                                  );
+                                  return;
+                                }
+                                commitRenamingConversation(chat.id, chat.title);
+                              }}
+                              className="h-7 flex-1 border-0 bg-transparent p-0 text-inherit shadow-none outline-none ring-0 focus:outline-none focus-visible:ring-0"
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleConversationClick(chat.id)}
+                              className="truncate flex-1 cursor-pointer text-left"
+                            >
+                              {chat.title}
+                            </button>
+                          )}
 
                           <DropdownMenu
                             onOpenChange={(open) =>
@@ -108,6 +191,7 @@ export function NavChatHistory({
                           >
                             <DropdownMenuTrigger
                               asChild
+                              onPointerDown={(e) => e.stopPropagation()}
                               onClick={(e) => e.stopPropagation()}
                             >
                               <span
@@ -116,21 +200,37 @@ export function NavChatHistory({
                                 className="inline-flex items-center justify-center"
                               >
                                 <MoreHorizontal
-                                  className={`${
-                                    hoveredChatId === chat.id ||
-                                    openDropdownId === chat.id
+                                  className={cn(
+                                    "transition-opacity",
+                                    isMobile ||
+                                      hoveredChatId === chat.id ||
+                                      openDropdownId === chat.id ||
+                                      editingChatId === chat.id
                                       ? "opacity-100"
                                       : "opacity-0"
-                                  } transition-opacity`}
+                                  )}
                                 />
                               </span>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              {/* Temporary disabled archive feature until developed */}
-                              {/* <DropdownMenuItem>
-                                <Archive className="mr-2 h-4 w-4" />
-                                Archive
-                              </DropdownMenuItem> */}
+                            <DropdownMenuContent
+                              onCloseAutoFocus={(event) => {
+                                if (
+                                  pendingRenameChatIdRef.current === chat.id ||
+                                  editingChatId === chat.id
+                                ) {
+                                  event.preventDefault();
+                                }
+                              }}
+                            >
+                              <DropdownMenuItem
+                                onSelect={() => {
+                                  pendingRenameChatIdRef.current = chat.id;
+                                  startRenamingConversation(chat.id, chat.title);
+                                }}
+                              >
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Rename
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
