@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Providers } from "./providers";
 import "./globals.css";
+import { AppSidebar } from "@/components/app-sidebar";
 import { ModalRender } from "@/components/modals/ModalRender";
 import { ShadcnModalRender } from "@/components/modals/shadcn-modal-render";
-import { AppSidebar } from "@/components/app-sidebar";
+import { ModelSelector } from "@/components/model-selector";
 import { NavActions } from "@/components/nav-actions";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { ModelSelector } from "@/components/model-selector";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = localFont({

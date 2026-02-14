@@ -1,5 +1,5 @@
-import { StateCreator } from "zustand";
-import { StoreState } from "../types";
+import type { StateCreator } from "zustand";
+import type { StoreState } from "../types";
 
 export interface UserSlice {
   user: {

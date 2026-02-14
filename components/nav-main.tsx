@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { Command, type LucideIcon } from "lucide-react";
+import { useSyncExternalStore } from "react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -44,7 +44,11 @@ export function NavMain({
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={false}>
-            <button className="group/navitem" onClick={() => handleClick(item.onClick)}>
+            <button
+              type="button"
+              className="group/navitem"
+              onClick={() => handleClick(item.onClick)}
+            >
               <div className="flex size-6 items-center justify-center">
                 <item.icon className="size-4 shrink-0 text-muted-foreground" />
               </div>

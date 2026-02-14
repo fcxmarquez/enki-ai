@@ -1,27 +1,26 @@
 "use client";
 
-import * as React from "react";
 import {
   Blocks,
   Calendar,
   MessageCircleQuestion,
-  SquarePen,
-  Settings2,
-  Trash2,
   Search,
+  Settings2,
+  SquarePen,
+  Trash2,
 } from "lucide-react";
-
 import { useRouter } from "next/navigation";
-import { NavProjects } from "@/components/nav-projects";
-import { NavMain } from "@/components/nav-main";
+import type * as React from "react";
 import { NavChatHistory } from "@/components/nav-chat-history";
-import { UserBadge } from "@/components/user-badge";
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { UserBadge } from "@/components/user-badge";
 import { useChat, useUIActions } from "@/store";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

@@ -1,18 +1,18 @@
 "use client";
 
-import { InputChat } from "@/components/Inputs/InputChat";
-import { useConfig, useUIActions } from "@/store";
+import { ArrowDownIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+// import { hasActiveSession } from "@/utils/supabase/session";
+import { Thread } from "@/components/chat/Thread";
+import { InputChat } from "@/components/Inputs/InputChat";
 // TEMP: Disabled for rebuild - FCX-30
 // import { ModalLogin } from "@/components/Modals/ChakraModals/Login";
 import { colors } from "@/constants/systemDesign/colors";
-// import { hasActiveSession } from "@/utils/supabase/session";
-import { Thread } from "@/components/chat/Thread";
-import { useCircleChat } from "@/hooks/useCircleChat";
 import { useChatScroll } from "@/hooks/useChatScroll";
-import { ArrowDownIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { useCircleChat } from "@/hooks/useCircleChat";
+import { useConfig, useUIActions } from "@/store";
 
 export const ChatArea = () => {
   // const { setSettingsModalOpen } = useUIActions();

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useStore, useChat, useChatActions } from "@/store";
+import { useEffect, useState } from "react";
+import { useChat, useChatActions, useStore } from "@/store";
 
 function useStoreHydration() {
   const [hydrated, setHydrated] = useState(

@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { SquarePen } from "lucide-react";
-
-import { useChat } from "@/store";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useSidebar } from "@/components/ui/sidebar";
-import { groupAndSortChats } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   Command,
   CommandDialog,
@@ -20,10 +15,14 @@ import {
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
 } from "@/components/ui/drawer";
+import { useSidebar } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { groupAndSortChats } from "@/lib/utils";
+import { useChat } from "@/store";
 
 interface SearchChatsDialogProps {
   open: boolean;

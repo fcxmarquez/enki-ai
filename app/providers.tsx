@@ -2,8 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
 import { ThemeProvider } from "next-themes";
+import { useState } from "react";
 // TEMP: Disabled for rebuild - FCX-30
 // import { useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";

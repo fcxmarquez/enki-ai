@@ -1,11 +1,11 @@
 "use client";
 
+import { type FC, useState } from "react";
 import { IoMdSend } from "react-icons/io";
-import { FC, useState } from "react";
-import { useConfig, useUIActions } from "@/store";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useConfig, useUIActions } from "@/store";
 
 interface InputChatProps {
   onSubmit: (message: string) => void;

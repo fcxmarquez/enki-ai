@@ -1,5 +1,5 @@
 import { BubbleChat } from "@/components/Feedback/BubbleChat";
-import { Message } from "@/store/slices/chatSlice";
+import type { Message } from "@/store/slices/chatSlice";
 
 interface ThreadProps {
   messages: Message[];

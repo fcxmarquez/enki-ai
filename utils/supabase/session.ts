@@ -1,4 +1,4 @@
-import { Session } from "@supabase/supabase-js";
+import type { Session } from "@supabase/supabase-js";
 import { createClient } from "./client";
 
 export const hasActiveSession = async (): Promise<boolean> => {

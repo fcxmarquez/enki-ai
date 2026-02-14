@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ChatMessage, ChatService } from "@/lib/langchain/chatService";
+import { type ChatMessage, ChatService } from "@/lib/langchain/chatService";
 import { useConfig } from "@/store";
 
 interface SendMessageStreamVariables {

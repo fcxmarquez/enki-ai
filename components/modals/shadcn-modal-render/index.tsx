@@ -1,8 +1,8 @@
 "use client";
 
-import { useUI, useUIActions } from "@/store";
-import { SettingsModal } from "@/components/modals/settings";
 import { SearchChatsDialog } from "@/components/modals/search-chats";
+import { SettingsModal } from "@/components/modals/settings";
+import { useUI, useUIActions } from "@/store";
 
 export const ShadcnModalRender = () => {
   const { modals } = useUI();

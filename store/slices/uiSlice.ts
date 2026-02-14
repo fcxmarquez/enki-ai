@@ -1,6 +1,5 @@
-import { StateCreator } from "zustand";
-import { StoreState } from "../types";
-import { UIState } from "../types";
+import type { StateCreator } from "zustand";
+import type { StoreState, UIState } from "../types";
 
 export interface UISlice {
   ui: UIState;

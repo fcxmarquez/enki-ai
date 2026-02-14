@@ -1,7 +1,7 @@
 "use client";
 
-import { GoogleAuthButton } from "@/components/auth/AuthButton";
 import { Box, Container, Heading, Text, VStack } from "@chakra-ui/react";
+import { GoogleAuthButton } from "@/components/auth/AuthButton";
 
 export default function LoginPage() {
   return (

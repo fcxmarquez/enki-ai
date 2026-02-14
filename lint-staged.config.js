@@ -13,13 +13,11 @@ module.exports = {
       (file) => !file.includes("stories/") && !file.includes(".storybook/")
     );
     return filteredFiles.length > 0
-      ? [
-          `npx eslint --fix ${filteredFiles.join(" ")}`,
-          `npx prettier --write ${filteredFiles.join(" ")}`,
-        ]
+      ? [`npx biome check --write ${filteredFiles.join(" ")}`]
       : [];
   },
 
   // this will Format MarkDown and JSON
-  "**/*.(md|json)": (filenames) => `npx prettier --write ${filenames.join(" ")}`,
+  "**/*.(md|json)": (filenames) =>
+    `npx biome format --write ${filenames.join(" ")}`,
 };
